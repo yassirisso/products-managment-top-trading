@@ -35,7 +35,10 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::create($request->only('reference'));
+        $product = Product::create([
+            'reference' => $request->reference,
+            'price' => $request->price
+        ]);
 
         // Attach suppliers with buying prices
         if ($request->has('suppliers')) {
@@ -88,17 +91,32 @@ class ProductController extends Controller
 
     public function import(Request $request)
     {
-        $file = fopen($request->file('file')->getRealPath(), 'r');
+        $path = $request->file('file')->getRealPath();
+        $file = fopen($path, 'r');
 
-        // Skip the header row
         $header = fgetcsv($file, 0, ';');
 
-        while (($row = fgetcsv($file, 0, ';')) !== false) {
-            $item_no = $row[0]; // Only the item_no column
+        while (($line = fgets($file)) !== false) {
+            // Detect and convert encoding
+            $encoding = mb_detect_encoding($line, ['UTF-8', 'GB2312', 'BIG5', 'SJIS', 'ISO-8859-1', 'Windows-1252'], true);
+            $utf8Line = mb_convert_encoding($line, 'UTF-8', $encoding ?: 'UTF-8');
+
+            // Parse CSV from the UTF-8 encoded line
+            $row = str_getcsv($utf8Line, ';');
+
+            $item_no = $row[0];
+            $raw_price = $row[1] ?? null;
 
             if (!empty($item_no)) {
+                $price = null;
+                if ($raw_price) {
+                    // Remove unwanted characters and replace comma with a period for decimal
+                    $price = preg_replace('/[^\d,]/', '', $raw_price);
+                    $price = str_replace(',', '.', $price); // Convert comma to decimal point
+                }
                 Product::create([
                     'reference' => $item_no,
+                    'price' => $price
                 ]);
             }
         }

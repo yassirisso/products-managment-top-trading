@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
-    protected $fillable = ['reference'];
+    protected $fillable = ['reference','price'];
 
     public function suppliers(): BelongsToMany
     {
