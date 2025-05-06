@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Laravel') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -13,7 +14,7 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-gray-800">
                 <div class="flex items-center h-16 px-4 bg-gray-900">
-                    <span class="text-white font-semibold text-lg">Your Logo</span>
+                    <span class="text-white font-semibold text-lg">TOP TRADING</span>
                 </div>
                 <div class="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
                     <nav class="flex-1 px-2 space-y-1">
@@ -57,7 +58,7 @@
         <div class="flex flex-col flex-1 overflow-hidden">
             <!-- Mobile header -->
             <div class="md:hidden bg-gray-800 text-white p-4 flex justify-between items-center">
-                <span class="font-semibold text-lg">Your Logo</span>
+                <span class="font-semibold text-lg">TOP TRADING</span>
                 <button id="mobile-menu-button" class="text-white focus:outline-none">
                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -92,5 +93,7 @@
             menu.classList.toggle('hidden');
         });
     </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 </html>

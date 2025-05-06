@@ -55,7 +55,7 @@
                             <p class="text-sm text-gray-500">{{ $invoice->invoice_date->format('M d, Y') }}</p>
                         </div>
                         <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-                            ${{ number_format($invoice->total_amount, 2) }}
+                            ¥{{ number_format($invoice->total_amount, 2) }}
                         </span>
                     </div>
 
@@ -63,7 +63,7 @@
                         @foreach ($invoice->items as $item)
                             <div class="flex justify-between text-sm">
                                 <span>{{ $item->product->reference }}</span>
-                                <span>${{ number_format($item->unit_price, 2) }} × {{ $item->quantity }}</span>
+                                <span>¥{{ number_format($item->unit_price, 2) }} × {{ $item->quantity }}</span>
                             </div>
                         @endforeach
                     </div>

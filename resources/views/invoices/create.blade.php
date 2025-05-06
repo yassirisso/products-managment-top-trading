@@ -32,7 +32,7 @@
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Items</h3>
 
                     <div id="items-container">
-                        <!-- Dynamic items will be added here -->
+                        <!-- Initial item row -->
                         <div class="item-row grid grid-cols-12 gap-4 mb-4">
                             <div class="col-span-5">
                                 <select name="items[0][product_id]"
@@ -40,7 +40,9 @@
                                     required>
                                     <option value="">Select Product</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->reference }}</option>
+                                        <option value="{{ $product->id }}" data-price="{{ $product->price }}">
+                                            {{ $product->reference }} - {{ $product->name }} ({{ $product->price }}¥)
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -83,11 +85,89 @@
         </form>
     </div>
 
+    <!-- Optimized JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('items-container');
             const addButton = document.getElementById('add-item');
             let itemCount = 1;
+
+            // Store all products from the initial render
+            const allProducts = [];
+            $('.product-select').first().find('option').each(function() {
+                if ($(this).val()) {
+                    allProducts.push({
+                        id: $(this).val(),
+                        text: $(this).text(),
+                        price: $(this).data('price')
+                    });
+                }
+            });
+
+            // Initialize the first select2 dropdown
+            initSelect2($('.product-select').first());
+
+            function initSelect2($select) {
+                $select.select2({
+                    placeholder: "Select Product",
+                    allowClear: true,
+                    width: '100%',
+                    data: getAvailableProducts($select)
+                }).on('select2:select', function(e) {
+                    // Auto-fill price when product is selected
+                    const price = e.params.data.price;
+                    if (price) {
+                        $(this).closest('.item-row').find('.price').val(price);
+                    }
+                    // Update other selects when a product is selected
+                    updateAllSelects();
+                }).on('select2:unselect', function() {
+                    // Update other selects when a product is deselected
+                    updateAllSelects();
+                });
+            }
+
+            function getAvailableProducts(currentSelect) {
+                // Get all currently selected product IDs except the current select's value
+                const selectedIds = [];
+                $('.product-select').not(currentSelect).each(function() {
+                    const val = $(this).val();
+                    if (val) selectedIds.push(val);
+                });
+
+                // Filter products that aren't selected elsewhere
+                return allProducts.filter(product =>
+                    !selectedIds.includes(product.id) ||
+                    product.id === currentSelect.val()
+                );
+            }
+
+            function updateAllSelects() {
+                $('.product-select').each(function() {
+                    const $select = $(this);
+                    const currentValue = $select.val();
+
+                    // Get new available products
+                    const availableProducts = getAvailableProducts($select);
+
+                    // Check if current value is still available
+                    const currentValueValid = currentValue &&
+                        availableProducts.some(p => p.id === currentValue);
+
+                    // Update select2 data
+                    $select.empty().select2({
+                        placeholder: "Select Product",
+                        allowClear: true,
+                        width: '100%',
+                        data: availableProducts
+                    });
+
+                    // Restore previous value if still valid
+                    if (currentValueValid) {
+                        $select.val(currentValue).trigger('change');
+                    }
+                });
+            }
 
             // Add new item row
             addButton.addEventListener('click', function() {
@@ -95,22 +175,19 @@
                 newRow.className = 'item-row grid grid-cols-12 gap-4 mb-4';
                 newRow.innerHTML = `
             <div class="col-span-5">
-                <select name="items[${itemCount}][product_id]" 
+                <select name="items[${itemCount}][product_id]"
                         class="product-select shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required>
                     <option value="">Select Product</option>
-                    @foreach ($products as $product)
-                    <option value="{{ $product->id }}">{{ $product->reference }}</option>
-                    @endforeach
                 </select>
             </div>
             <div class="col-span-2">
-                <input type="number" name="items[${itemCount}][quantity]" min="1" value="1" 
+                <input type="number" name="items[${itemCount}][quantity]" min="1" value="1"
                        class="quantity shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required>
             </div>
             <div class="col-span-3">
-                <input type="number" step="0.01" name="items[${itemCount}][unit_price]" placeholder="Price" 
+                <input type="number" step="0.01" name="items[${itemCount}][unit_price]" placeholder="Price"
                        class="price shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required>
             </div>
@@ -123,6 +200,9 @@
             </div>
         `;
                 container.appendChild(newRow);
+
+                // Initialize select2 for the new row with filtered products
+                initSelect2($(newRow).find('.product-select'));
                 itemCount++;
             });
 
@@ -130,11 +210,14 @@
             container.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-item')) {
                     const row = e.target.closest('.item-row');
-                    if (container.querySelectorAll('.item-row').length > 1) {
-                        row.remove();
-                    } else {
-                        row.querySelectorAll('input, select').forEach(el => el.value = '');
-                    }
+                    const select = $(row).find('.product-select');
+
+                    // Destroy select2 and remove row
+                    select.select2('destroy');
+                    row.remove();
+
+                    // Update remaining selects to show newly available products
+                    updateAllSelects();
                 }
             });
         });
