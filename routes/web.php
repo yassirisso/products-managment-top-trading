@@ -30,3 +30,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('clients/{client}/invoices/create', 'create')->name('invoices.create');
     Route::post('clients/{client}/invoices', 'store')->name('invoices.store');
 });
+Route::get('/products/import', function () {
+    return view('products.import');
+});
+Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');

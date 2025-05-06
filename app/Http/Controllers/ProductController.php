@@ -85,4 +85,26 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function import(Request $request)
+    {
+        $file = fopen($request->file('file')->getRealPath(), 'r');
+
+        // Skip the header row
+        $header = fgetcsv($file, 0, ';');
+
+        while (($row = fgetcsv($file, 0, ';')) !== false) {
+            $item_no = $row[0]; // Only the item_no column
+
+            if (!empty($item_no)) {
+                Product::create([
+                    'reference' => $item_no,
+                ]);
+            }
+        }
+
+        fclose($file);
+
+        return redirect()->back()->with('success', 'Products imported successfully!');
+    }
 }
