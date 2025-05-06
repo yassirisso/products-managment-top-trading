@@ -12,13 +12,15 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['suppliers', 'clients'])
-            ->when(request('search'), function ($query) {
-                $query->where('reference', 'like', '%' . request('search') . '%');
-            })
-            ->paginate(10);
+        $query = Product::query();
+
+        if ($request->filled('search')) {
+            $query->where('reference', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->paginate(10);
 
         return view('products.index', compact('products'));
     }

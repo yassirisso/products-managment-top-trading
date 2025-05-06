@@ -2,9 +2,25 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-wrap justify-between items-center mb-6 gap-2">
             <h1 class="text-2xl font-bold text-gray-800">Products Management</h1>
-            <div class="flex space-x-2">
+
+            <div class="flex flex-wrap gap-2 items-center">
+                <!-- Search Form -->
+                <form action="{{ route('products.index') }}" method="GET" class="flex">
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Search by reference..."
+                        class="px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-md">
+                        Search
+                    </button>
+                </form>
+
+                <!-- Add Product Button -->
                 <a href="{{ route('products.create') }}"
                     class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -15,13 +31,11 @@
                     Add Product
                 </a>
 
-                <!-- Import Form Button -->
                 <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label
                         class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
-                            fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M3 4a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm7 1a1 1 0 00-1 1v3H7a1 1 0 000 2h2v3a1 1 0 102 0v-3h2a1 1 0 100-2h-2V6a1 1 0 00-1-1z"
                                 clip-rule="evenodd" />
