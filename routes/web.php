@@ -34,3 +34,8 @@ Route::get('/products/import', function () {
     return view('products.import');
 });
 Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
+Route::post('/suppliers/{supplier}/products', [SupplierController::class, 'attachProduct'])
+    ->name('suppliers.attach-product');
+
+Route::delete('/suppliers/{supplier}/products/{productId}', [SupplierController::class, 'detachProduct'])
+    ->name('suppliers.detach-product');
