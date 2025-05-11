@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -72,7 +73,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('products.edit', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -80,7 +83,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'reference' => 'required|string|max:50|unique:products,reference,'.$product->id,
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        $product->update($validatedData);
+
+        return redirect()->route('products.index', $product)
+            ->with('success', 'Product updated successfully');
     }
 
     /**
@@ -88,7 +100,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return redirect()->route('products.index', $product)
+            ->with('success', 'Product deleted successfully');
     }
 
     public function import(Request $request)
