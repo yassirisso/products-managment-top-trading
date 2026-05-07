@@ -13,13 +13,29 @@
 
         <div class="bg-white shadow-md rounded-lg p-6">
             <form action="{{ isset($product) ? route('products.update', $product->id) : route('products.store') }}"
-                method="POST">
+                method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (isset($product))
                     @method('PUT')
                 @endif
 
                 <div class="mb-4 flex space-x-4">
+                    <!-- Product Image Field -->
+                    <div class="w-1/3">
+                        <label for="image" class="block text-gray-700 text-sm font-bold mb-2">
+                            Product Picture
+                        </label>
+
+                        <input type="file"
+                            name="image"
+                            id="image"
+                            accept="image/*"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        @error('image')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                     <!-- Product Reference Field -->
                     <div class="w-1/2">
                         <label for="reference" class="block text-gray-700 text-sm font-bold mb-2">Product Reference

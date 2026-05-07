@@ -13,11 +13,34 @@
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-6">
-        <form action="{{ route('products.update', $product->id) }}" method="POST">
+        <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
     
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Product Image Field -->
+                <div>
+                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">
+                        Product Image
+                    </label>
+
+                    <input type="file"
+                        name="image"
+                        id="image"
+                        accept="image/*"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                    @error('image')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    @enderror
+
+                    <!-- Current Image Preview -->
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}"
+                            alt="Product Image"
+                            class="mt-3 w-24 h-24 object-cover rounded border">
+                    @endif
+                </div>
                 <!-- Product Reference Field -->
                 <div>
                     <label for="reference" class="block text-gray-700 text-sm font-bold mb-2">Product Reference *</label>

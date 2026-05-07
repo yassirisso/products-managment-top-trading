@@ -42,22 +42,44 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Validation
+        $request->validate([
+            'reference' => 'required|string|max:50|unique:products,reference',
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'reference.unique' => 'This product reference already exists.',
+        ]);
+
+        // Upload image if exists
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
+        // Create product
         $product = Product::create([
             'reference' => $request->reference,
-            'price' => $request->price
+            'price' => $request->price,
+            'image' => $imagePath,
         ]);
 
         // Attach suppliers with buying prices
         if ($request->has('suppliers')) {
             foreach ($request->suppliers as $supplierId => $buyingPrice) {
-                $product->suppliers()->attach($supplierId, ['buying_price' => $buyingPrice]);
+                $product->suppliers()->attach($supplierId, [
+                    'buying_price' => $buyingPrice
+                ]);
             }
         }
 
         // Attach clients with selling prices
         if ($request->has('clients')) {
             foreach ($request->clients as $clientId => $sellingPrice) {
-                $product->clients()->attach($clientId, ['price' => $sellingPrice]);
+                $product->clients()->attach($clientId, [
+                    'price' => $sellingPrice
+                ]);
             }
         }
 
@@ -89,10 +111,22 @@ class ProductController extends Controller
     {
         // Validate the incoming request data
         $validatedData = $request->validate([
-            'reference' => 'required|string|max:50|unique:products,reference,'.$product->id,
-            'price' => 'required|numeric|min:0'
+            'reference' => 'required|string|max:50|unique:products,reference,' . $product->id,
+            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        // Upload new image if selected
+        if ($request->hasFile('image')) {
+
+            // Store image
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            // Save path into validated data
+            $validatedData['image'] = $imagePath;
+        }
+
+        // Update product
         $product->update($validatedData);
 
         return redirect()->route('products.index', $product)

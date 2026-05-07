@@ -78,12 +78,11 @@
                             <tr class="hover:bg-gray-50">
                                 <!-- Image Column -->
                                 <td class="px-6 py-4 whitespace-nowrap flex items-center justify-center">
-                                    @if($product->image_path)
+                                    @if($product->image)
                                         <div class="flex-shrink-0 h-30 w-30">
-                                            <img class="h-30 w-30 rounded-full object-cover"
-                                                src="{{ asset('storage/' . $product->image_path) }}"
-                                                alt="{{ $product->reference }}"
-                                                onerror="this.onerror=null;this.src='{{ asset('images/default-product.png') }}'">
+                                            <img src="{{ asset('storage/' . $product->image) }}"
+                                                alt="Product Image"
+                                                class="w-20 h-20 object-cover rounded">
                                         </div>
                                     @else
                                         <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
