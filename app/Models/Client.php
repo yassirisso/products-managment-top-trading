@@ -25,4 +25,9 @@ class Client extends Model
             'product_id'  // Foreign key on invoice_items table
         )->through('invoices');
     }
+
+    public function packingLists()
+    {
+        return $this->hasMany(PackingList::class);
+    }
 }

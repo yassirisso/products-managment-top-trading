@@ -30,4 +30,11 @@ class Product extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+
+    public function packingLists()
+    {
+        return $this->belongsToMany(PackingList::class)
+            ->withPivot('ctn')
+            ->withTimestamps();
+    }
 }

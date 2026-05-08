@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PackingListController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -39,3 +40,4 @@ Route::post('/suppliers/{supplier}/products', [SupplierController::class, 'attac
 
 Route::delete('/suppliers/{supplier}/products/{productId}', [SupplierController::class, 'detachProduct'])
     ->name('suppliers.detach-product');
+Route::resource('packing-lists', PackingListController::class);
