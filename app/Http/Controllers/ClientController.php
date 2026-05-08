@@ -23,14 +23,16 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:30',
+            'address' => 'nullable|string',
         ]);
 
-        Client::create($request->only('name'));
+        Client::create($validatedData);
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client created successfully.');
+            ->with('success', 'Client created successfully');
     }
 
     public function show(Client $client)
@@ -48,14 +50,16 @@ class ClientController extends Controller
 
     public function update(Request $request, Client $client)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:30',
+            'address' => 'nullable|string',
         ]);
 
-        $client->update($request->only('name'));
+        $client->update($validatedData);
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client updated successfully.');
+            ->with('success', 'Client updated successfully');
     }
 
     public function destroy(Client $client)

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Client extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name','phone','address'];
 
     public function invoices()
     {

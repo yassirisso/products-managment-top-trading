@@ -20,15 +20,36 @@
         <!-- Client Info Card -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
             <div class="px-6 py-4">
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Left Side -->
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800">{{ $client->name }}</h2>
-                        <p class="text-gray-600 mt-1">Registered: {{ $client->created_at->format('M d, Y') }}</p>
+                        <h2 class="text-xl font-semibold text-gray-800">
+                            {{ $client->name }}
+                        </h2>
+
+                        <p class="text-gray-600 mt-2">
+                            📍 {{ $client->address ?? 'No address added' }}
+                        </p>
+
+                        <p class="text-gray-600 mt-1">
+                            📞 {{ $client->phone ?? 'No phone added' }}
+                        </p>
                     </div>
+
+                    <!-- Right Side -->
                     <div class="md:text-right">
-                        <p class="text-sm text-gray-600">Last updated: {{ $client->updated_at->diffForHumans() }}</p>
+                        <p class="text-sm text-gray-600">
+                            Last updated: {{ $client->updated_at->diffForHumans() }}
+                        </p>
+
+                        <p class="text-gray-600 mt-1">
+                            Registered: {{ $client->created_at->format('M d, Y') }}
+                        </p>
                     </div>
+
                 </div>
+
             </div>
         </div>
 
