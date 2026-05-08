@@ -14,7 +14,9 @@ class PackingListController extends Controller
      */
     public function index()
     {
-        //
+        $packingLists = PackingList::with('client')->latest()->get();
+
+        return view('packing-lists.index', compact('packingLists'));
     }
 
     /**
@@ -88,9 +90,17 @@ class PackingListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PackingList $packingList)
     {
-        //
+        $packingList->load([
+            'client',
+            'products'
+        ]);
+
+        return view(
+            'packing-lists.show',
+            compact('packingList')
+        );
     }
 
     /**
