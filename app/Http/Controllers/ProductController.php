@@ -47,6 +47,11 @@ class ProductController extends Controller
             'reference' => 'required|string|max:50|unique:products,reference',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'pcs_cts' => 'nullable|integer|min:0',
+            'unit_cbm' => 'nullable|numeric|min:0',
+            'unit_gw' => 'nullable|numeric|min:0',
+            'unit_nw' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
         ], [
             'reference.unique' => 'This product reference already exists.',
         ]);
@@ -63,6 +68,11 @@ class ProductController extends Controller
             'reference' => $request->reference,
             'price' => $request->price,
             'image' => $imagePath,
+            'pcs_cts' => $request->pcs_cts,
+            'unit_cbm' => $request->unit_cbm,
+            'unit_gw' => $request->unit_gw,
+            'unit_nw' => $request->unit_nw,
+            'description' => $request->description,
         ]);
 
         // Attach suppliers with buying prices
@@ -114,6 +124,11 @@ class ProductController extends Controller
             'reference' => 'required|string|max:50|unique:products,reference,' . $product->id,
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'pcs_cts' => 'nullable|integer|min:0',
+            'unit_cbm' => 'nullable|numeric|min:0',
+            'unit_gw' => 'nullable|numeric|min:0',
+            'unit_nw' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
         ]);
 
         // Upload new image if selected

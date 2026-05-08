@@ -10,7 +10,7 @@ class Product extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['reference','price', 'image_path', 'image'];
+    protected $fillable = ['reference','price', 'image_path', 'image','pcs_cts','unit_cbm','unit_gw','unit_nw','description',];
 
     public function suppliers(): BelongsToMany
     {
