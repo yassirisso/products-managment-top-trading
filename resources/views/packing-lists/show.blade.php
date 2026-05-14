@@ -4,6 +4,16 @@
 
 <div class="container mx-auto px-4 py-6">
 
+    <div class="mb-6">
+
+        <a href="{{ route('packing-lists.download', $packingList->id) }}"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+
+            Download Excel
+
+        </a>
+
+    </div>  
     <!-- HEADER -->
     <div class="bg-white shadow-lg rounded-lg p-8">
 

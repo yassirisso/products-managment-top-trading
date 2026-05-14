@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\PackingList;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PackingListExport;
 
 class PackingListController extends Controller
 {
@@ -125,5 +127,13 @@ class PackingListController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function downloadExcel(PackingList $packingList)
+    {
+        return Excel::download(
+            new PackingListExport($packingList),
+            'packing-list-' . $packingList->id . '.xlsx'
+        );
     }
 }

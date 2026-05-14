@@ -41,3 +41,7 @@ Route::post('/suppliers/{supplier}/products', [SupplierController::class, 'attac
 Route::delete('/suppliers/{supplier}/products/{productId}', [SupplierController::class, 'detachProduct'])
     ->name('suppliers.detach-product');
 Route::resource('packing-lists', PackingListController::class);
+Route::get(
+    'packing-lists/{packingList}/download',
+    [PackingListController::class, 'downloadExcel']
+)->name('packing-lists.download');
