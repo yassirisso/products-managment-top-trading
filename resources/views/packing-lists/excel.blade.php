@@ -3,20 +3,20 @@
     <!-- COMPANY HEADER -->
     <tr>
         <td colspan="9" style="text-align:center;font-size:20px;font-weight:bold;border:1px solid black;">
-            TOP COOPERATION TRADING CO., LIMITED
+            {{ auth()->user()->company_name }}
         </td>
     </tr>
 
     <tr>
         <td colspan="9" style="text-align:center;font-size:13px;font-weight:bold;border:1px solid black;">
-            Room 1235,12F Wealth Mansion Building A, Yiwu, Zhejiang, China
+            {{ auth()->user()->company_address }}
         </td>
     </tr>
 
     <tr>
         <td colspan="9" style="text-align:center;font-size:13px;font-weight:bold;border:1px solid black;">
-            TEL: 86-0579-85539970
-            FAX: 86-0579-85539970
+            TEL: {{ auth()->user()->company_phone }}
+            FAX: {{ auth()->user()->company_fax }}
         </td>
     </tr>
 
