@@ -84,6 +84,16 @@
 
                         </a>
 
+                        <!-- PROFORMA INVOICE -->
+                        <a href="{{ route('proforma-invoices.index') }}"
+                           class="@if(request()->routeIs('proforma-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+
+                            Proforma Invoices
+
+                        </a>
+
+                        </a>
+
                     </nav>
 
                 </div>

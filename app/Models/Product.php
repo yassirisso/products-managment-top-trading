@@ -37,4 +37,14 @@ class Product extends Model
             ->withPivot('ctn')
             ->withTimestamps();
     }
+
+    public function proformaInvoices()
+    {
+        return $this->belongsToMany(
+            ProformaInvoice::class,
+            'proforma_invoice_product'
+        )
+        ->withPivot('ctn', 'unit_price')
+        ->withTimestamps();
+    }
 }

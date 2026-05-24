@@ -9,7 +9,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PackingListController;
-
+use App\Http\Controllers\ProformaInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,6 +206,23 @@ Route::middleware(['auth'])->group(function () {
         'packing-lists/{packingList}/download',
         [PackingListController::class, 'downloadExcel']
     )->name('packing-lists.download');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROFORMA INVOICES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'proforma-invoices',
+        ProformaInvoiceController::class
+    );
+
+    Route::get(
+        'proforma-invoices/{proformaInvoice}/download',
+        [ProformaInvoiceController::class, 'downloadExcel']
+    )->name('proforma-invoices.download');
 
 });
 
