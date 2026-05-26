@@ -11,6 +11,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\CommercialInvoiceController;
+use App\Http\Controllers\BankAccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -240,6 +241,17 @@ Route::middleware(['auth'])->group(function () {
         'commercial-invoices/{commercialInvoice}/download',
         [CommercialInvoiceController::class, 'downloadExcel']
     )->name('commercial-invoices.download');
+
+    /*
+    |--------------------------------------------------------------------------
+    | BANK ACCOUNTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'bank-accounts',
+        BankAccountController::class
+    );
 
 });
 

@@ -147,6 +147,42 @@
 
                     </div>
 
+                    <!-- BANK -->
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Bank Account
+
+                        </label>
+
+                        <select
+                            name="bank_account_id"
+                            class="w-full border rounded-lg px-3 py-2"
+                        >
+
+                            <option value="">
+
+                                Select Bank Account
+
+                            </option>
+
+                            @foreach($bankAccounts as $bank)
+
+                                <option value="{{ $bank->id }}">
+
+                                    {{ $bank->bank_name }}
+                                    -
+                                    {{ $bank->account_number }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
                 </div>
 
                 <!-- PRODUCTS -->

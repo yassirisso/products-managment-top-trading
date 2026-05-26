@@ -15,6 +15,7 @@ class CommercialInvoice extends Model
         'port_of_discharge',
         'mode_of_delivery',
         'country_of_origin',
+        'bank_account_id',
     ];
 
     public function client()
@@ -30,5 +31,10 @@ class CommercialInvoice extends Model
                         'unit_price'
                     ])
                     ->withTimestamps();
+    }
+
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccount::class);
     }
 }

@@ -35,9 +35,16 @@ class CommercialInvoiceController extends Controller
 
         $products = Product::all();
 
+        $bankAccounts =
+            auth()->user()->bankAccounts;
+
         return view(
             'commercial-invoices.create',
-            compact('clients', 'products')
+            compact(
+                'clients',
+                'products',
+                'bankAccounts'
+            )
         );
     }
 
@@ -62,6 +69,8 @@ class CommercialInvoiceController extends Controller
 
             'country_of_origin' => 'nullable|string',
 
+            'bank_account_id' => 'nullable|exists:bank_accounts,id',
+
             'products' => 'nullable|array',
         ]);
 
@@ -80,6 +89,8 @@ class CommercialInvoiceController extends Controller
             'mode_of_delivery' => $request->mode_of_delivery,
 
             'country_of_origin' => $request->country_of_origin,
+
+            'bank_account_id' => $request->bank_account_id,
         ]);
 
         if ($request->has('products')) {

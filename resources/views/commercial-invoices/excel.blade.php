@@ -320,7 +320,7 @@
                 border:1px solid black;">
 
             BENEFICIARY NAME :
-            {{ auth()->user()->company_name }}
+            {{ $commercialInvoice->bankAccount?->beneficiary_name }}
 
         </td>
 
@@ -334,7 +334,7 @@
                 border:1px solid black;">
 
             A/C NO :
-            NRA3387020511420100045928
+            {{ $commercialInvoice->bankAccount?->account_number }}
 
         </td>
 
@@ -348,21 +348,7 @@
                 border:1px solid black;">
 
             SWIFT :
-            ZJCBCN2N
-
-        </td>
-
-    </tr>
-
-    <!-- BANK -->
-    <tr>
-
-        <td colspan="7"
-            style="font-weight:bold;
-                border:1px solid black;">
-
-            BENEFICIARY BANK :
-            CHINA ZHESHANG BANK YIWU BRANCH
+            {{ $commercialInvoice->bankAccount?->swift }}
 
         </td>
 
@@ -376,8 +362,7 @@
                 border:1px solid black;">
 
             BANK ADDRESS :
-            NO.955,BEICUN ROAD,YIWU,ZHEJIANG,CHINA
-
+            {{ $commercialInvoice->bankAccount?->bank_address }}
         </td>
 
     </tr>
