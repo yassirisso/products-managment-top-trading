@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\ProformaInvoiceController;
+use App\Http\Controllers\CommercialInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -223,6 +224,22 @@ Route::middleware(['auth'])->group(function () {
         'proforma-invoices/{proformaInvoice}/download',
         [ProformaInvoiceController::class, 'downloadExcel']
     )->name('proforma-invoices.download');
+
+    /*
+    |--------------------------------------------------------------------------
+    | COMMERCIAL INVOICES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource(
+        'commercial-invoices',
+        CommercialInvoiceController::class
+    );
+
+    Route::get(
+        'commercial-invoices/{commercialInvoice}/download',
+        [CommercialInvoiceController::class, 'downloadExcel']
+    )->name('commercial-invoices.download');
 
 });
 

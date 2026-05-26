@@ -47,4 +47,14 @@ class Product extends Model
         ->withPivot('ctn', 'unit_price')
         ->withTimestamps();
     }
+
+    public function commercialInvoices()
+    {
+        return $this->belongsToMany(CommercialInvoice::class)
+                    ->withPivot([
+                        'ctn',
+                        'unit_price'
+                    ])
+                    ->withTimestamps();
+    }
 }
