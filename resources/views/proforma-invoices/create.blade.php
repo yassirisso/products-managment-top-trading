@@ -19,128 +19,132 @@
 
                 @csrf
 
-                <!-- CLIENT -->
-                <div class="mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                    <!-- CLIENT -->
+                    <div>
 
-                        Client
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                    </label>
+                            Client
 
-                    <select name="client_id"
-                            required
-                            class="w-full border rounded-lg px-3 py-2">
+                        </label>
 
-                        <option value="">
+                        <select name="client_id"
+                                required
+                                class="w-full border rounded-lg px-3 py-2">
 
-                            Select Client
+                            <option value="">
 
-                        </option>
-
-                        @foreach($clients as $client)
-
-                            <option value="{{ $client->id }}">
-
-                                {{ $client->name }}
+                                Select Client
 
                             </option>
 
-                        @endforeach
+                            @foreach($clients as $client)
 
-                    </select>
+                                <option value="{{ $client->id }}">
 
-                </div>
+                                    {{ $client->name }}
 
-                <!-- DATE -->
-                <div class="mb-4">
+                                </option>
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                            @endforeach
 
-                        Date
+                        </select>
 
-                    </label>
+                    </div>
 
-                    <input type="date"
-                           name="date"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- DATE -->
+                    <div>
 
-                </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                <!-- CONTAINER -->
-                <div class="mb-4">
+                            Date
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        </label>
 
-                        Container No
+                        <input type="date"
+                            name="date"
+                            class="w-full border rounded-lg px-3 py-2">
 
-                    </label>
+                    </div>
 
-                    <input type="text"
-                           name="container_no"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- CONTAINER -->
+                    <div>
 
-                </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                <!-- SEAL -->
-                <div class="mb-4">
+                            Container No
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        </label>
 
-                        Seal No
+                        <input type="text"
+                            name="container_no"
+                            class="w-full border rounded-lg px-3 py-2">
 
-                    </label>
+                    </div>
 
-                    <input type="text"
-                           name="seal_no"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- SEAL -->
+                    <div>
 
-                </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                <!-- PORT LOADING -->
-                <div class="mb-4">
+                            Seal No
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        </label>
 
-                        Port Of Loading
+                        <input type="text"
+                            name="seal_no"
+                            class="w-full border rounded-lg px-3 py-2">
 
-                    </label>
+                    </div>
 
-                    <input type="text"
-                           name="port_of_loading"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- PORT LOADING -->
+                    <div>
 
-                </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                <!-- PORT DISCHARGE -->
-                <div class="mb-4">
+                            Port Of Loading
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        </label>
 
-                        Port Of Discharge
+                        <input type="text"
+                            name="port_of_loading"
+                            class="w-full border rounded-lg px-3 py-2">
 
-                    </label>
+                    </div>
 
-                    <input type="text"
-                           name="port_of_discharge"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- PORT DISCHARGE -->
+                    <div>
 
-                </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
 
-                <!-- LOCAL CHARGE -->
-                <div class="mb-6">
+                            Port Of Discharge
 
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        </label>
 
-                        Local Charge
+                        <input type="text"
+                            name="port_of_discharge"
+                            class="w-full border rounded-lg px-3 py-2">
 
-                    </label>
+                    </div>
 
-                    <input type="number"
-                           step="0.01"
-                           name="local_charge"
-                           value="0"
-                           class="w-full border rounded-lg px-3 py-2">
+                    <!-- LOCAL CHARGE -->
+                    <div>
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+
+                            Local Charge
+
+                        </label>
+
+                        <input type="number"
+                            step="0.01"
+                            name="local_charge"
+                            value="0"
+                            class="w-full border rounded-lg px-3 py-2">
+
+                    </div>
 
                 </div>
 
