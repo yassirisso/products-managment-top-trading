@@ -11,7 +11,21 @@ class SupplierController extends Controller
 {
     public function index()
     {
-        $suppliers = Supplier::withCount('products')->latest()->get();
+        $suppliers = Supplier::with('products.clients')
+            ->latest()
+            ->get();
+
+        $suppliers->each(function ($supplier) {
+
+            $clients = $supplier->products
+                ->flatMap(function ($product) {
+                    return $product->clients;
+                })
+                ->unique('id');
+
+            $supplier->clients_count = $clients->count();
+        });
+
         return view('suppliers.index', compact('suppliers'));
     }
 
@@ -24,6 +38,8 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:suppliers',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
         ]);
 
         Supplier::create($validated);
@@ -50,11 +66,14 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:suppliers,name,' . $supplier->id,
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
         ]);
 
         $supplier->update($validated);
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier updated successfully.');
     }
 
     public function destroy(Supplier $supplier)
@@ -81,5 +100,31 @@ class SupplierController extends Controller
     {
         $supplier->products()->detach($productId);
         return back()->with('success', 'Product removed from supplier successfully.');
+    }
+
+    public function clients(Supplier $supplier)
+    {
+        $supplier->load('products.clients');
+
+        $clients = $supplier->products
+            ->flatMap(function ($product) {
+                return $product->clients;
+            })
+            ->unique('id')
+            ->values()
+            ->map(function ($client) use ($supplier) {
+
+                $productsCount = $supplier->products
+                    ->filter(function ($product) use ($client) {
+                        return $product->clients->contains('id', $client->id);
+                    })
+                    ->count();
+
+                $client->products_count = $productsCount;
+
+                return $client;
+            });
+
+        return view('suppliers.clients', compact('supplier', 'clients'));
     }
 }

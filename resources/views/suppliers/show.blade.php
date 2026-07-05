@@ -75,47 +75,64 @@
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
 
             <h2 class="text-xl font-semibold mb-4">
-
                 Supplier Information
-
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+                <!-- NAME -->
                 <div>
 
                     <p class="text-gray-600">
-
                         Supplier Name:
-
                     </p>
 
                     <p class="font-medium">
-
                         {{ $supplier->name }}
-
                     </p>
 
                 </div>
 
+                <!-- EMAIL -->
                 <div>
 
                     <p class="text-gray-600">
-
-                        Total Products:
-
+                        Email:
                     </p>
 
                     <p class="font-medium">
+                        {{ $supplier->email ?? '—' }}
+                    </p>
 
-                        {{ $supplier->products->count() }}
+                </div>
 
+                <!-- PHONE -->
+                <div>
+
+                    <p class="text-gray-600">
+                        Phone:
+                    </p>
+
+                    <p class="font-medium">
+                        {{ $supplier->phone ?? '—' }}
+                    </p>
+
+                </div>
+
+                <!-- TOTAL CLIENTS -->
+                <div>
+
+                    <p class="text-gray-600">
+                        Total Clients:
+                    </p>
+
+                    <p class="font-medium">
+                        {{ $supplier->products->flatMap->clients->unique('id')->count() }}
                     </p>
 
                 </div>
 
             </div>
-
         </div>
 
         <!-- PRODUCTS -->

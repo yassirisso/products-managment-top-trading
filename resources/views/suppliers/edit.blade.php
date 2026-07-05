@@ -50,34 +50,66 @@
                 @csrf
                 @method('PUT')
 
-                <!-- SUPPLIER NAME -->
+                
                 <div class="mb-6">
 
-                    <label for="name"
-                           class="block text-gray-700 text-sm font-bold mb-2">
-
-                        Supplier Name *
-
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        Supplier Information
                     </label>
 
-                    <input type="text"
-                           name="name"
-                           id="name"
-                           value="{{ old('name', $supplier->name) }}"
-                           required
-                           autofocus
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="flex flex-col md:flex-row gap-4">
 
-                    @error('name')
+                        <!-- NAME -->
+                        <div class="flex-1">
 
-                        <p class="text-red-500 text-xs italic mt-1">
+                            <input type="text"
+                                name="name"
+                                id="name"
+                                value="{{ old('name', $supplier->name) }}"
+                                required
+                                autofocus
+                                placeholder="Supplier name"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                            {{ $message }}
+                            @error('name')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
 
-                        </p>
+                        </div>
 
-                    @enderror
+                        <!-- EMAIL -->
+                        <div class="flex-1">
 
+                            <input type="email"
+                                name="email"
+                                id="email"
+                                value="{{ old('email', $supplier->email) }}"
+                                placeholder="Supplier email"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            @error('email')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
+                        <!-- PHONE -->
+                        <div class="flex-1">
+
+                            <input type="text"
+                                name="phone"
+                                id="phone"
+                                value="{{ old('phone', $supplier->phone) }}"
+                                placeholder="Supplier phone"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            @error('phone')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
+                    </div>
                 </div>
 
                 <!-- BUTTONS -->

@@ -214,8 +214,9 @@
 
                 <select
                     name="products[${productIndex}][id]"
-                    class="w-full border rounded-lg px-3 py-2"
+                    class="w-full border rounded-lg px-3 py-2 product-select"
                     required
+                    onchange="updatePrice(this)"
                 >
 
                     <option value="">
@@ -226,7 +227,10 @@
 
                     @foreach($products as $product)
 
-                        <option value="{{ $product->id }}">
+                        <option
+                            value="{{ $product->id }}"
+                            data-price="{{ $product->price ?? 0 }}"
+                        >
 
                             {{ $product->reference }}
 
@@ -272,7 +276,7 @@
                     name="products[${productIndex}][unit_price]"
                     value="0"
                     min="0"
-                    class="w-full border rounded-lg px-3 py-2"
+                    class="w-full border rounded-lg px-3 py-2 unit-price"
                 >
 
             </div>
@@ -298,6 +302,26 @@
 
         productIndex++;
     }
+
+    </script>
+
+    <script>
+
+        function updatePrice(selectElement)
+        {
+            const selectedOption =
+                selectElement.options[
+                    selectElement.selectedIndex
+                ];
+
+            const price =
+                selectedOption.getAttribute('data-price');
+
+            const row =
+                selectElement.closest('.grid');
+
+            row.querySelector('.unit-price').value = price;
+        }
 
     </script>
 

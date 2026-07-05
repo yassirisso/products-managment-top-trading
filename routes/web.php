@@ -102,6 +102,9 @@ Route::middleware(['auth'])->group(function () {
         [SupplierController::class, 'detachProduct']
     )->name('suppliers.detach-product');
 
+    Route::get('/suppliers/{supplier}/clients', [SupplierController::class, 'clients'])
+    ->name('suppliers.clients');
+
 
     /*
     |--------------------------------------------------------------------------

@@ -67,7 +67,7 @@
 
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 
-                            Products
+                            Clients
 
                         </th>
 
@@ -90,7 +90,7 @@
                             <!-- NAME -->
                             <td class="px-6 py-4 whitespace-nowrap">
 
-                                <a href="{{ route('suppliers.show', $supplier) }}"
+                                <a href="{{ route('suppliers.clients', $supplier) }}"
                                    class="text-blue-600 hover:text-blue-800 font-medium">
 
                                     {{ $supplier->name }}
@@ -99,10 +99,10 @@
 
                             </td>
 
-                            <!-- PRODUCTS COUNT -->
+                            <!-- CLIENTS COUNT -->
                             <td class="px-6 py-4 whitespace-nowrap text-gray-700">
 
-                                {{ $supplier->products_count }} products
+                                {{ $supplier->clients_count }} clients
 
                             </td>
 

@@ -10,12 +10,23 @@ class Supplier extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+    ];
 
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)
-            ->withPivot('buying_price')
+            ->withPivot([
+                'buying_price',
+                'payment_status',
+                'payment_method',
+                'date_first_payment',
+                'date_rest_payment',
+                'discount',
+            ])
             ->withTimestamps();
     }
 }

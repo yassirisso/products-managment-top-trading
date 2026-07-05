@@ -47,35 +47,73 @@
 
                 @csrf
 
-                <!-- SUPPLIER NAME -->
                 <div class="mb-6">
 
-                    <label for="name"
-                           class="block text-gray-700 text-sm font-bold mb-2">
+                    <div class="flex gap-4">
 
-                        Supplier Name *
+                        <!-- NAME -->
+                        <div class="w-1/3">
 
-                    </label>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Supplier Information
+                            </label>
 
-                    <input type="text"
-                           name="name"
-                           id="name"
-                           value="{{ old('name') }}"
-                           required
-                           autofocus
-                           placeholder="Enter supplier name"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text"
+                                name="name"
+                                id="name"
+                                value="{{ old('name') }}"
+                                required
+                                autofocus
+                                placeholder="Supplier name"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
-                    @error('name')
+                            @error('name')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
 
-                        <p class="text-red-500 text-xs italic mt-1">
+                        </div>
 
-                            {{ $message }}
+                        <!-- EMAIL -->
+                        <div class="w-1/3">
 
-                        </p>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Supplier Email
+                            </label>
 
-                    @enderror
+                            <input type="email"
+                                name="email"
+                                id="email"
+                                value="{{ old('email') }}"
+                                placeholder="Supplier email"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
+                            @error('email')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
+                        <!-- PHONE -->
+                        <div class="w-1/3">
+
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Supplier Phone
+                            </label>
+
+                            <input type="text"
+                                name="phone"
+                                id="phone"
+                                value="{{ old('phone') }}"
+                                placeholder="Supplier phone"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            @error('phone')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
+                    </div>
                 </div>
 
                 <!-- BUTTONS -->
