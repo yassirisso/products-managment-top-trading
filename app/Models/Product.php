@@ -71,26 +71,30 @@ class Product extends Model
     /**
      * Proforma invoices relation
      */
-    public function proformaInvoices(): BelongsToMany
+    public function proformaInvoices()
     {
         return $this->belongsToMany(
-                ProformaInvoice::class,
-                'proforma_invoice_product'
-            )
-            ->withPivot(['ctn', 'unit_price'])
-            ->withTimestamps();
+            ProformaInvoice::class,
+            'proforma_invoice_product'
+        );
     }
 
     /**
      * Commercial invoices relation
      */
-    public function commercialInvoices(): BelongsToMany
+    public function commercialInvoices()
     {
-        return $this->belongsToMany(CommercialInvoice::class)
-            ->withPivot([
-                'ctn',
-                'unit_price'
-            ])
-            ->withTimestamps();
+        return $this->belongsToMany(
+            CommercialInvoice::class,
+            'commercial_invoice_product'
+        );
+    }
+
+    public function invoices()
+    {
+        return $this->belongsToMany(
+            Invoice::class,
+            'invoice_items'
+        );
     }
 }

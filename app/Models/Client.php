@@ -30,4 +30,11 @@ class Client extends Model
     {
         return $this->hasMany(PackingList::class);
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class)
+            ->withPivot('price')
+            ->withTimestamps();
+    }
 }

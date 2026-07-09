@@ -104,27 +104,76 @@ class SupplierController extends Controller
 
     public function clients(Supplier $supplier)
     {
-        $supplier->load('products.clients');
+        $supplier->load([
+            'products.commercialInvoices.client',
+            'products.invoices.client',
+            'products.proformaInvoices.client',
+        ]);
 
-        $clients = $supplier->products
-            ->flatMap(function ($product) {
-                return $product->clients;
+
+        $clients = collect();
+
+
+        foreach ($supplier->products as $product) {
+
+
+            // Commercial invoices
+            foreach ($product->commercialInvoices as $invoice) {
+
+                $clients->push([
+                    'client' => $invoice->client,
+                    'product_id' => $product->id
+                ]);
+
+            }
+
+
+            // Normal invoices
+            foreach ($product->invoices as $invoice) {
+
+                $clients->push([
+                    'client' => $invoice->client,
+                    'product_id' => $product->id
+                ]);
+
+            }
+
+
+            // Proforma invoices
+            foreach ($product->proformaInvoices as $invoice) {
+
+                $clients->push([
+                    'client' => $invoice->client,
+                    'product_id' => $product->id
+                ]);
+
+            }
+
+        }
+
+
+        $clients = $clients
+            ->groupBy(function ($item) {
+                return $item['client']->id;
             })
-            ->unique('id')
-            ->values()
-            ->map(function ($client) use ($supplier) {
+            ->map(function ($items) {
 
-                $productsCount = $supplier->products
-                    ->filter(function ($product) use ($client) {
-                        return $product->clients->contains('id', $client->id);
-                    })
+                $client = $items->first()['client'];
+
+                $client->products_count = $items
+                    ->pluck('product_id')
+                    ->unique()
                     ->count();
 
-                $client->products_count = $productsCount;
-
                 return $client;
-            });
 
-        return view('suppliers.clients', compact('supplier', 'clients'));
+            })
+            ->values();
+
+
+        return view('suppliers.clients', compact(
+            'supplier',
+            'clients'
+        ));
     }
 }

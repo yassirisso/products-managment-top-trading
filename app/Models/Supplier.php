@@ -16,7 +16,7 @@ class Supplier extends Model
         'phone',
     ];
 
-    public function products(): BelongsToMany
+    public function products()
     {
         return $this->belongsToMany(Product::class)
             ->withPivot([
@@ -25,8 +25,14 @@ class Supplier extends Model
                 'payment_method',
                 'date_first_payment',
                 'date_rest_payment',
-                'discount',
-            ])
-            ->withTimestamps();
+                'discount'
+            ]);
+    }
+
+    public function clients()
+    {
+        return Client::whereHas('products.suppliers', function ($query) {
+            $query->where('suppliers.id', $this->id);
+        })->distinct();
     }
 }
