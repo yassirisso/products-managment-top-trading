@@ -47,6 +47,7 @@ class ProductController extends Controller
             'reference' => 'required|string|max:50|unique:products,reference',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'supplier_id' => 'required|exists:suppliers,id',
             'pcs_cts' => 'nullable|integer|min:0',
             'unit_cbm' => 'nullable|numeric|min:0',
             'unit_gw' => 'nullable|numeric|min:0',
@@ -56,12 +57,14 @@ class ProductController extends Controller
             'reference.unique' => 'This product reference already exists.',
         ]);
 
+
         // Upload image if exists
         $imagePath = null;
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
         }
+
 
         // Create product
         $product = Product::create([
@@ -75,23 +78,12 @@ class ProductController extends Controller
             'description' => $request->description,
         ]);
 
-        // Attach suppliers with buying prices
-        if ($request->has('suppliers')) {
-            foreach ($request->suppliers as $supplierId => $buyingPrice) {
-                $product->suppliers()->attach($supplierId, [
-                    'buying_price' => $buyingPrice
-                ]);
-            }
-        }
 
-        // Attach clients with selling prices
-        if ($request->has('clients')) {
-            foreach ($request->clients as $clientId => $sellingPrice) {
-                $product->clients()->attach($clientId, [
-                    'price' => $sellingPrice
-                ]);
-            }
-        }
+        // Attach supplier automatically in product_supplier table
+        $product->suppliers()->attach($request->supplier_id, [
+            'buying_price' => $request->price
+        ]);
+
 
         return redirect()->route('products.index');
     }
@@ -109,9 +101,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', [
-            'product' => $product
-        ]);
+        $suppliers = Supplier::all();
+
+        return view('products.edit', compact('product', 'suppliers'));
     }
 
     /**
@@ -123,6 +115,7 @@ class ProductController extends Controller
         $validatedData = $request->validate([
             'reference' => 'required|string|max:50|unique:products,reference,' . $product->id,
             'price' => 'required|numeric|min:0',
+            'supplier_id' => 'required|exists:suppliers,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'pcs_cts' => 'nullable|integer|min:0',
             'unit_cbm' => 'nullable|numeric|min:0',
@@ -144,7 +137,14 @@ class ProductController extends Controller
         // Update product
         $product->update($validatedData);
 
-        return redirect()->route('products.index', $product)
+        // Update supplier in product_supplier table
+        $product->suppliers()->sync([
+            $request->supplier_id => [
+                'buying_price' => $request->price
+            ]
+        ]);
+
+        return redirect()->route('products.index')
             ->with('success', 'Product updated successfully');
     }
 

@@ -223,6 +223,46 @@
 
                     </div>
 
+                    <!-- Supplier Field -->
+                    <div>
+
+                        <label for="supplier_id"
+                            class="block text-gray-700 text-sm font-bold mb-2">
+
+                            Supplier *
+
+                        </label>
+
+                        <select name="supplier_id"
+                                id="supplier_id"
+                                required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+
+                            <option value="">
+                                Select Supplier
+                            </option>
+
+                            @foreach($suppliers as $supplier)
+
+                                <option value="{{ $supplier->id }}"
+                                    {{ old('supplier_id', isset($product) ? $product->suppliers->first()?->id : '') == $supplier->id ? 'selected' : '' }}>
+
+                                    {{ $supplier->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        @error('supplier_id')
+                            <p class="text-red-500 text-xs italic mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
                     <!-- Description -->
                     <div>
 
