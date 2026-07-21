@@ -70,18 +70,20 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)
+        ->middleware('permission:view products');
 
     Route::get('/products/import', function () {
 
         return view('products.import');
 
-    });
+    })->middleware('permission:create products');
 
     Route::post(
         '/products/import',
         [ProductController::class, 'import']
-    )->name('products.import');
+    )->name('products.import')
+    ->middleware('permission:create products');
 
 
     /*
@@ -90,20 +92,24 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('suppliers', SupplierController::class);
+    Route::resource('suppliers', SupplierController::class)
+        ->middleware('permission:view suppliers');
 
     Route::post(
         '/suppliers/{supplier}/products',
         [SupplierController::class, 'attachProduct']
-    )->name('suppliers.attach-product');
+    )->name('suppliers.attach-product')
+    ->middleware('permission:edit suppliers');
 
     Route::delete(
         '/suppliers/{supplier}/products/{productId}',
         [SupplierController::class, 'detachProduct']
-    )->name('suppliers.detach-product');
+    )->name('suppliers.detach-product')
+    ->middleware('permission:edit suppliers');
 
     Route::get('/suppliers/{supplier}/clients', [SupplierController::class, 'clients'])
-    ->name('suppliers.clients');
+        ->name('suppliers.clients')
+        ->middleware('permission:view suppliers');
 
 
     /*
@@ -112,7 +118,8 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('clients', ClientController::class);
+    Route::resource('clients', ClientController::class)
+        ->middleware('permission:view clients');
 
     Route::get(
         'clients/trash',
