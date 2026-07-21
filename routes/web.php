@@ -12,6 +12,7 @@ use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\CommercialInvoiceController;
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -262,6 +263,15 @@ Route::middleware(['auth'])->group(function () {
         'bank-accounts',
         BankAccountController::class
     );
+
+    /*
+    |--------------------------------------------------------------------------
+    | USERS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('users', UserController::class)
+        ->middleware('permission:view users');
 
 });
 
