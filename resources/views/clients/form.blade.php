@@ -136,6 +136,33 @@
 
                     </div>
 
+                    <!-- Email -->
+                    <div>
+
+                        <label for="email"
+                            class="block text-gray-700 text-sm font-bold mb-2">
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            value="{{ old('email', $client->email ?? '') }}"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="client@example.com"
+                        >
+
+                        @error('email')
+                            <p class="text-red-500 text-xs italic mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
                 </div>
 
                 <div class="flex items-center justify-end space-x-4 mt-6">
