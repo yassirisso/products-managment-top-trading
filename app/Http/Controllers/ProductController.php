@@ -25,7 +25,9 @@ class ProductController extends Controller
             $query->where('reference', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->paginate(10);
+        $products = $query
+            ->latest()         
+            ->paginate(10);
 
         return view('products.index', compact('products'));
     }
@@ -85,7 +87,8 @@ class ProductController extends Controller
         ]);
 
 
-        return redirect()->route('products.index');
+        return redirect()->route('products.index')
+            ->with('success', 'Product created successfully');
     }
 
     /**
@@ -93,7 +96,12 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $product->load([
+            'proformaInvoices.client',
+            'suppliers'
+        ]);
+
+        return view('products.show', compact('product'));
     }
 
     /**
@@ -323,5 +331,65 @@ class ProductController extends Controller
             \Log::error("Error saving image for {$reference}: " . $e->getMessage());
             return null;
         }
+    }
+
+    public function createSupplier(Product $product)
+    {
+        $suppliers = Supplier::all();
+
+        return view('products.suppliers.create', compact(
+            'product',
+            'suppliers'
+        ));
+    }
+
+    public function storeSupplier(Request $request, Product $product)
+    {
+        $request->validate([
+
+            'supplier_id' => 'required|exists:suppliers,id',
+
+            'buying_price' => 'required|numeric',
+
+            'payment_status' => 'required|string',
+
+            'payment_method' => 'nullable|string',
+
+            'date_first_payment' => 'nullable|date',
+
+            'date_rest_payment' => 'nullable|date',
+
+            'discount' => 'nullable|numeric',
+
+        ]);
+
+
+        $product->suppliers()->attach(
+
+            $request->supplier_id,
+
+            [
+                'buying_price' => $request->buying_price,
+
+                'payment_status' => $request->payment_status,
+
+                'payment_method' => $request->payment_method,
+
+                'date_first_payment' => $request->date_first_payment,
+
+                'date_rest_payment' => $request->date_rest_payment,
+
+                'discount' => $request->discount ?? 0,
+            ]
+
+        );
+
+
+        return redirect()
+
+            ->route('products.show', $product->id)
+
+            ->with('success', 'Supplier added successfully');
+
     }
 }

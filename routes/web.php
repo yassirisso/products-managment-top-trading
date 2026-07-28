@@ -36,6 +36,17 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
 
 
+
+    Route::get('/debug-permission-check', function () {
+
+        return [
+            'create_clients' => auth()->user()->can('create clients'),
+            'view_clients' => auth()->user()->can('view clients'),
+        ];
+
+    });
+
+
     /*
     |--------------------------------------------------------------------------
     | DASHBOARD
@@ -112,6 +123,26 @@ Route::middleware(['auth'])->group(function () {
         ->name('suppliers.clients')
         ->middleware('permission:view suppliers');
 
+    /*
+    |--------------------------------------------------------------------------
+    | PRODUCT SUPPLIERS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/products/{product}/suppliers/create',
+        [ProductController::class, 'createSupplier']
+    )
+    ->name('products.suppliers.create')
+    ->middleware('permission:edit products');
+
+
+    Route::post(
+        '/products/{product}/suppliers',
+        [ProductController::class, 'storeSupplier']
+    )
+    ->name('products.suppliers.store')
+    ->middleware('permission:edit products');
 
     /*
     |--------------------------------------------------------------------------
@@ -119,8 +150,54 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
+    Route::get(
+        'clients/create',
+        [ClientController::class, 'create']
+    )
+    ->middleware('permission:create clients')
+    ->name('clients.create');
+
     Route::resource('clients', ClientController::class)
-        ->middleware('permission:view clients');
+        ->middleware('permission:view clients')
+        ->except([
+            'create',
+            'store',
+            'edit',
+            'update',
+            'destroy'
+    ]);
+
+
+    Route::post(
+        'clients',
+        [ClientController::class, 'store']
+    )
+    ->middleware('permission:create clients')
+    ->name('clients.store');
+
+
+    Route::get(
+        'clients/{client}/edit',
+        [ClientController::class, 'edit']
+    )
+    ->middleware('permission:edit clients')
+    ->name('clients.edit');
+
+
+    Route::put(
+        'clients/{client}',
+        [ClientController::class, 'update']
+    )
+    ->middleware('permission:edit clients')
+    ->name('clients.update');
+
+
+    Route::delete(
+        'clients/{client}',
+        [ClientController::class, 'destroy']
+    )
+    ->middleware('permission:delete clients')
+    ->name('clients.destroy');
 
     Route::get(
         'clients/trash',

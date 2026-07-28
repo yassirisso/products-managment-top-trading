@@ -76,7 +76,11 @@ class Product extends Model
         return $this->belongsToMany(
             ProformaInvoice::class,
             'proforma_invoice_product'
-        );
+        )
+        ->withPivot([
+            'ctn',
+            'unit_price'
+        ]);
     }
 
     /**
@@ -96,5 +100,14 @@ class Product extends Model
             Invoice::class,
             'invoice_items'
         );
+    }
+
+    public function proformaClients()
+    {
+        return Client::whereHas('proformaInvoices.products', function ($query) {
+
+            $query->where('products.id', $this->id);
+
+        });
     }
 }
