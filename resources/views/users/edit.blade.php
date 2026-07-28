@@ -1,171 +1,173 @@
 <x-app-layout>
 
-<x-slot name="header">
+    <x-slot name="header">
 
-<h2 class="font-semibold text-xl text-gray-800">
-    Edit User
-</h2>
+        <h2 class="font-semibold text-xl text-gray-800">
+            Edit User
+        </h2>
 
-</x-slot>
+    </x-slot>
 
 
-<div class="container mx-auto px-4 py-6">
+    <div class="container mx-auto px-4 py-6">
 
 
-<div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg p-6">
 
 
-<form method="POST"
-      action="{{ route('users.update',$user->id) }}">
+            <form method="POST" action="{{ route('users.update', $user->id) }}">
 
 
-@csrf
+                @csrf
 
-@method('PUT')
+                @method('PUT')
 
 
 
-<!-- Name -->
+                <!-- Name -->
 
-<div class="mb-4">
+                <div class="mb-4">
 
-<label class="block font-bold mb-2">
-Name
-</label>
+                    <label class="block font-bold mb-2">
+                        Name
+                    </label>
 
-<input type="text"
-name="name"
-value="{{ $user->name }}"
-class="border rounded w-full p-2">
+                    <input type="text" name="name" value="{{ $user->name }}" class="border rounded w-full p-2">
 
-</div>
+                </div>
 
 
 
-<!-- Email -->
+                <!-- Email -->
 
-<div class="mb-4">
+                <div class="mb-4">
 
-<label class="block font-bold mb-2">
-Email
-</label>
+                    <label class="block font-bold mb-2">
+                        Email
+                    </label>
 
-<input type="email"
-name="email"
-value="{{ $user->email }}"
-class="border rounded w-full p-2">
+                    <input type="email" name="email" value="{{ $user->email }}" class="border rounded w-full p-2">
 
-</div>
+                </div>
 
 
-<!-- Roles -->
+                <!-- Roles -->
 
-<div class="mb-6">
+                <div class="mb-6">
 
-    <label class="block text-gray-700 font-bold mb-2">
-        Role
-    </label>
+                    <label class="block text-gray-700 font-bold mb-2">
+                        Role
+                    </label>
 
-    @foreach($roles as $role)
+                    @foreach ($roles as $role)
+                        <label class="block">
 
-        <label class="block">
+                            <input type="radio" name="role" class="role-radio" value="{{ $role->name }}"
+                                data-permissions='@json($role->permissions->pluck('name'))'
+                                {{ $user->hasRole($role->name) ? 'checked' : '' }}>
 
-            <input 
-                type="radio"
-                name="role"
-                class="role-radio"
-                value="{{ $role->name }}"
-                data-permissions='@json($role->permissions->pluck("name"))'
-                {{ $user->hasRole($role->name) ? 'checked' : '' }}
-            >
+                            {{ $role->name }}
 
-            {{ $role->name }}
+                        </label>
+                    @endforeach
 
-        </label>
+                </div>
 
-    @endforeach
+                <!-- Account Status -->
 
-</div>
+                <div class="mb-6">
 
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Account Status
+                    </label>
 
 
-<!-- Permissions -->
+                    <select name="is_active" class="w-full border-gray-300 rounded-lg">
 
-<div class="mb-6">
+                        <option value="1" {{ $user->is_active ? 'selected' : '' }}>
+                            Active
+                        </option>
 
-    <label class="block text-gray-700 font-bold mb-2">
-        Permissions
-    </label>
 
+                        <option value="0" {{ !$user->is_active ? 'selected' : '' }}>
+                            Inactive
+                        </option>
 
-    @foreach($permissions as $permission)
 
-        <label class="block">
+                    </select>
 
-            <input 
-                type="checkbox"
-                class="permission-checkbox"
-                name="permissions[]"
-                value="{{ $permission->name }}"
-                {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}
-            >
+                </div>
 
-            {{ $permission->name }}
 
-        </label>
 
-    @endforeach
+                <!-- Permissions -->
 
+                <div class="mb-6">
 
-</div>
+                    <label class="block text-gray-700 font-bold mb-2">
+                        Permissions
+                    </label>
 
 
+                    @foreach ($permissions as $permission)
+                        <label class="block">
 
-<button
-class="bg-blue-500 text-white px-4 py-2 rounded">
+                            <input type="checkbox" class="permission-checkbox" name="permissions[]"
+                                value="{{ $permission->name }}"
+                                {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}>
 
-Save Changes
+                            {{ $permission->name }}
 
-</button>
+                        </label>
+                    @endforeach
 
 
+                </div>
 
-</form>
 
 
-</div>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">
 
+                    Save Changes
 
-</div>
+                </button>
 
-<script>
 
-document.addEventListener('DOMContentLoaded', function () {
 
-    const roles = document.querySelectorAll('.role-radio');
-    const permissions = document.querySelectorAll('.permission-checkbox');
+            </form>
 
 
-    roles.forEach(function(role){
+        </div>
 
-        role.addEventListener('change', function(){
 
-            let rolePermissions = JSON.parse(this.dataset.permissions);
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-            permissions.forEach(function(permission){
+            const roles = document.querySelectorAll('.role-radio');
+            const permissions = document.querySelectorAll('.permission-checkbox');
 
-                permission.checked = rolePermissions.includes(permission.value);
+
+            roles.forEach(function(role) {
+
+                role.addEventListener('change', function() {
+
+                    let rolePermissions = JSON.parse(this.dataset.permissions);
+
+
+                    permissions.forEach(function(permission) {
+
+                        permission.checked = rolePermissions.includes(permission.value);
+
+                    });
+
+                });
 
             });
 
         });
-
-    });
-
-});
-
-</script>
+    </script>
 
 
 </x-app-layout>
