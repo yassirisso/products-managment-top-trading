@@ -35,4 +35,9 @@ class Supplier extends Model
             $query->where('suppliers.id', $this->id);
         })->distinct();
     }
+
+    public function purchases()
+    {
+        return $this->hasMany(SupplierPurchase::class);
+    }
 }

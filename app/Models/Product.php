@@ -110,4 +110,14 @@ class Product extends Model
 
         });
     }
+
+    public function supplierPayments()
+    {
+        return $this->hasMany(SupplierPayment::class);
+    }
+
+    public function supplierPurchases()
+    {
+        return $this->hasMany(SupplierPurchase::class);
+    }
 }

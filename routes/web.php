@@ -23,7 +23,6 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
 
     return redirect()->route('dashboard');
-
 });
 
 
@@ -43,7 +42,6 @@ Route::middleware(['auth'])->group(function () {
             'create_clients' => auth()->user()->can('create clients'),
             'view_clients' => auth()->user()->can('view clients'),
         ];
-
     });
 
 
@@ -56,7 +54,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
 
         return view('dashboard');
-
     })->name('dashboard');
 
 
@@ -88,14 +85,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/products/import', function () {
 
         return view('products.import');
-
     })->middleware('permission:create products');
 
     Route::post(
         '/products/import',
         [ProductController::class, 'import']
     )->name('products.import')
-    ->middleware('permission:create products');
+        ->middleware('permission:create products');
 
 
     /*
@@ -111,13 +107,13 @@ Route::middleware(['auth'])->group(function () {
         '/suppliers/{supplier}/products',
         [SupplierController::class, 'attachProduct']
     )->name('suppliers.attach-product')
-    ->middleware('permission:edit suppliers');
+        ->middleware('permission:edit suppliers');
 
     Route::delete(
         '/suppliers/{supplier}/products/{productId}',
         [SupplierController::class, 'detachProduct']
     )->name('suppliers.detach-product')
-    ->middleware('permission:edit suppliers');
+        ->middleware('permission:edit suppliers');
 
     Route::get('/suppliers/{supplier}/clients', [SupplierController::class, 'clients'])
         ->name('suppliers.clients')
@@ -133,16 +129,49 @@ Route::middleware(['auth'])->group(function () {
         '/products/{product}/suppliers/create',
         [ProductController::class, 'createSupplier']
     )
-    ->name('products.suppliers.create')
-    ->middleware('permission:edit products');
+        ->name('products.suppliers.create')
+        ->middleware('permission:edit products');
 
 
     Route::post(
         '/products/{product}/suppliers',
         [ProductController::class, 'storeSupplier']
     )
-    ->name('products.suppliers.store')
-    ->middleware('permission:edit products');
+        ->name('products.suppliers.store')
+        ->middleware('permission:edit products');
+
+    Route::get(
+        'products/{product}/suppliers/{supplier}/history',
+        [ProductController::class, 'supplierHistory']
+    )
+        ->name('products.supplier-history')
+        ->middleware('permission:view products');
+
+    Route::post(
+        '/suppliers/quick-create',
+        [SupplierController::class, 'quickCreate']
+    )->name('suppliers.quick-create');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRODUCT SUPPLIER PURCHASES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/products/{product}/purchases/create',
+        [ProductController::class, 'createPurchase']
+    )
+        ->name('products.purchases.create')
+        ->middleware('permission:edit products');
+
+
+    Route::post(
+        '/products/{product}/purchases',
+        [ProductController::class, 'storePurchase']
+    )
+        ->name('products.purchases.store')
+        ->middleware('permission:edit products');
 
     /*
     |--------------------------------------------------------------------------
@@ -154,8 +183,8 @@ Route::middleware(['auth'])->group(function () {
         'clients/create',
         [ClientController::class, 'create']
     )
-    ->middleware('permission:create clients')
-    ->name('clients.create');
+        ->middleware('permission:create clients')
+        ->name('clients.create');
 
     Route::resource('clients', ClientController::class)
         ->middleware('permission:view clients')
@@ -165,39 +194,39 @@ Route::middleware(['auth'])->group(function () {
             'edit',
             'update',
             'destroy'
-    ]);
+        ]);
 
 
     Route::post(
         'clients',
         [ClientController::class, 'store']
     )
-    ->middleware('permission:create clients')
-    ->name('clients.store');
+        ->middleware('permission:create clients')
+        ->name('clients.store');
 
 
     Route::get(
         'clients/{client}/edit',
         [ClientController::class, 'edit']
     )
-    ->middleware('permission:edit clients')
-    ->name('clients.edit');
+        ->middleware('permission:edit clients')
+        ->name('clients.edit');
 
 
     Route::put(
         'clients/{client}',
         [ClientController::class, 'update']
     )
-    ->middleware('permission:edit clients')
-    ->name('clients.update');
+        ->middleware('permission:edit clients')
+        ->name('clients.update');
 
 
     Route::delete(
         'clients/{client}',
         [ClientController::class, 'destroy']
     )
-    ->middleware('permission:delete clients')
-    ->name('clients.destroy');
+        ->middleware('permission:delete clients')
+        ->name('clients.destroy');
 
     Route::get(
         'clients/trash',
@@ -235,14 +264,14 @@ Route::middleware(['auth'])->group(function () {
         'clients.purchases',
         PurchaseController::class
     )
-    ->only([
-        'create',
-        'store',
-        'edit',
-        'update',
-        'destroy'
-    ])
-    ->shallow();
+        ->only([
+            'create',
+            'store',
+            'edit',
+            'update',
+            'destroy'
+        ])
+        ->shallow();
 
 
     /*
@@ -277,7 +306,6 @@ Route::middleware(['auth'])->group(function () {
             'clients/{client}/invoices',
             'store'
         )->name('invoices.store');
-
     });
 
 
@@ -350,6 +378,26 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class)
         ->middleware('permission:view users');
 
+    /*
+    |--------------------------------------------------------------------------
+    | SUPPLIER PAYMENTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/supplier-purchases/{purchase}/payments/create',
+        [ProductController::class, 'createPayment']
+    )
+        ->name('supplier-payments.create')
+        ->middleware('permission:edit products');
+
+
+    Route::post(
+        '/supplier-purchases/{purchase}/payments',
+        [ProductController::class, 'storePayment']
+    )
+        ->name('supplier-payments.store')
+        ->middleware('permission:edit products');
 });
 
 
@@ -359,4 +407,4 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

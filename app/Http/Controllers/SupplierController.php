@@ -55,7 +55,7 @@ class SupplierController extends Controller
 
     public function edit(Supplier $supplier)
     {
-        $availableProducts = Product::whereDoesntHave('suppliers', function($query) use ($supplier) {
+        $availableProducts = Product::whereDoesntHave('suppliers', function ($query) use ($supplier) {
             $query->where('supplier_id', $supplier->id);
         })->get();
 
@@ -124,7 +124,6 @@ class SupplierController extends Controller
                     'client' => $invoice->client,
                     'product_id' => $product->id
                 ]);
-
             }
 
 
@@ -135,7 +134,6 @@ class SupplierController extends Controller
                     'client' => $invoice->client,
                     'product_id' => $product->id
                 ]);
-
             }
 
 
@@ -146,9 +144,7 @@ class SupplierController extends Controller
                     'client' => $invoice->client,
                     'product_id' => $product->id
                 ]);
-
             }
-
         }
 
 
@@ -166,7 +162,6 @@ class SupplierController extends Controller
                     ->count();
 
                 return $client;
-
             })
             ->values();
 
@@ -175,5 +170,21 @@ class SupplierController extends Controller
             'supplier',
             'clients'
         ));
+    }
+
+    public function quickCreate(Request $request)
+    {
+        $supplier = Supplier::create([
+
+            'name' => $request->name,
+
+            'phone' => $request->phone,
+
+            'email' => $request->email,
+
+        ]);
+
+
+        return response()->json($supplier);
     }
 }

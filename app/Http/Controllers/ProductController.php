@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Client;
+use App\Models\SupplierPurchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,7 @@ class ProductController extends Controller
         }
 
         $products = $query
-            ->latest()         
+            ->latest()
             ->paginate(10);
 
         return view('products.index', compact('products'));
@@ -97,11 +98,36 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load([
+            'suppliers',
+            'supplierPurchases.supplier',
+            'supplierPurchases.payments',
             'proformaInvoices.client',
-            'suppliers'
         ]);
 
-        return view('products.show', compact('product'));
+
+        // Last buying price
+        $lastSupplier = $product->suppliers()
+            ->orderBy('product_supplier.created_at', 'desc')
+            ->first();
+
+
+        $lastBuyPrice = $lastSupplier?->pivot->buying_price;
+
+
+        // Last selling price
+        $lastSale = $product->proformaInvoices()
+            ->orderBy('proforma_invoice_product.created_at', 'desc')
+            ->first();
+
+
+        $lastSellPrice = $lastSale?->pivot->unit_price;
+
+
+        return view('products.show', compact(
+            'product',
+            'lastBuyPrice',
+            'lastSellPrice'
+        ));
     }
 
     /**
@@ -326,7 +352,6 @@ class ProductController extends Controller
 
             // Return just the relative path without 'public/'
             return $filename;
-
         } catch (\Exception $e) {
             \Log::error("Error saving image for {$reference}: " . $e->getMessage());
             return null;
@@ -390,6 +415,150 @@ class ProductController extends Controller
             ->route('products.show', $product->id)
 
             ->with('success', 'Supplier added successfully');
+    }
 
+    public function createPurchase(Product $product)
+    {
+        $suppliers = Supplier::all();
+
+        return view('products.purchases.create', compact(
+            'product',
+            'suppliers'
+        ));
+    }
+
+    public function storePurchase(Request $request, Product $product)
+    {
+        $request->validate([
+
+            'supplier_id' => 'required|exists:suppliers,id',
+
+            'quantity' => 'required|numeric',
+
+            'unit_price' => 'required|numeric',
+
+            'total_amount' => 'required|numeric',
+
+            'currency' => 'required|in:RMB,USD',
+
+            'payment_status' => 'required|in:unpaid,partial,paid',
+
+            'purchase_date' => 'required|date',
+
+            'note' => 'nullable|string',
+
+        ]);
+
+
+        $product->supplierPurchases()->create([
+
+            'supplier_id' => $request->supplier_id,
+
+            'quantity' => $request->quantity,
+
+            'unit_price' => $request->unit_price,
+
+            'total_amount' => $request->total_amount,
+
+            'currency' => $request->currency,
+
+            'payment_status' => $request->payment_status,
+
+            'purchase_date' => $request->purchase_date,
+
+            'note' => $request->note,
+
+        ]);
+
+
+        return redirect()
+
+            ->route('products.show', $product->id)
+
+            ->with('success', 'Purchase added successfully');
+    }
+
+    public function createPayment(SupplierPurchase $purchase)
+    {
+        return view('products.payments.create', compact('purchase'));
+    }
+
+    public function storePayment(Request $request, SupplierPurchase $purchase)
+    {
+        $request->validate([
+
+            'amount' => 'required|numeric|min:0',
+
+            'currency' => 'required|in:RMB,USD',
+
+            'payment_date' => 'required|date',
+
+            'note' => 'nullable|string',
+
+        ]);
+
+
+        $purchase->payments()->create([
+
+            'amount' => $request->amount,
+
+            'currency' => $request->currency,
+
+            'payment_date' => $request->payment_date,
+
+            'note' => $request->note,
+
+        ]);
+
+
+
+        // Calculate total paid
+
+        $totalPaid = $purchase->payments()
+            ->sum('amount');
+
+
+
+        // Update payment status
+
+        if ($totalPaid >= $purchase->total_amount) {
+
+            $purchase->update([
+                'payment_status' => 'paid'
+            ]);
+        } elseif ($totalPaid > 0) {
+
+            $purchase->update([
+                'payment_status' => 'partial'
+            ]);
+        } else {
+
+            $purchase->update([
+                'payment_status' => 'unpaid'
+            ]);
+        }
+
+
+
+        return redirect()
+
+            ->route('products.show', $purchase->product_id)
+
+            ->with('success', 'Payment added successfully');
+    }
+
+    public function supplierHistory(Product $product, Supplier $supplier)
+    {
+        $purchases = $product->supplierPurchases()
+            ->where('supplier_id', $supplier->id)
+            ->with('payments')
+            ->get();
+
+
+        return view('products.supplier-history', compact(
+            'product',
+            'supplier',
+            'purchases'
+        ));
     }
 }
