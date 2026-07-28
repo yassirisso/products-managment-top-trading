@@ -106,12 +106,12 @@ class ProductController extends Controller
 
 
         // Last buying price
-        $lastSupplier = $product->suppliers()
-            ->orderBy('product_supplier.created_at', 'desc')
+        $lastPurchase = $product->supplierPurchases()
+            ->orderBy('purchase_date', 'desc')
             ->first();
 
 
-        $lastBuyPrice = $lastSupplier?->pivot->buying_price;
+        $lastBuyPrice = $lastPurchase?->unit_price;
 
 
         // Last selling price

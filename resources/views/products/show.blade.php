@@ -377,14 +377,6 @@
                         Suppliers
                     </h3>
 
-
-                    <a href="{{ route('products.suppliers.create', $product->id) }}"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-
-                        + Add Supplier
-
-                    </a>
-
                 </div>
 
                 <div class="overflow-x-auto">
