@@ -72,6 +72,7 @@ class CommercialInvoiceController extends Controller
             'bank_account_id' => 'nullable|exists:bank_accounts,id',
 
             'products' => 'nullable|array',
+            'currency' => 'required|in:RMB,USD',
         ]);
 
         $commercialInvoice = CommercialInvoice::create([
@@ -91,6 +92,8 @@ class CommercialInvoiceController extends Controller
             'country_of_origin' => $request->country_of_origin,
 
             'bank_account_id' => $request->bank_account_id,
+
+            'currency' => $request->currency,
         ]);
 
         if ($request->has('products')) {

@@ -207,13 +207,13 @@
 
                             <th class="border p-2">
 
-                                U.PRICE USD
+                                U.PRICE {{ $commercialInvoice->currency }}
 
                             </th>
 
                             <th class="border p-2">
 
-                                AMOUNT USD
+                                AMOUNT {{ $commercialInvoice->currency }}
 
                             </th>
 
@@ -279,14 +279,14 @@
                                 <!-- PRICE -->
                                 <td class="border p-2 text-center">
 
-                                    ${{ number_format($product->pivot->unit_price, 2) }}
+                                    {{ number_format($product->pivot->unit_price, 2) }} {{ $commercialInvoice->currency }}
 
                                 </td>
 
                                 <!-- AMOUNT -->
                                 <td class="border p-2 text-center font-bold">
 
-                                    ${{ number_format($amount, 2) }}
+                                    {{ number_format($amount, 2) }} {{ $commercialInvoice->currency }}
 
                                 </td>
 
@@ -304,13 +304,13 @@
                             <td colspan="6"
                                 class="border p-3 text-center">
 
-                                TOTAL AMOUNT FOB BY USD
+                                TOTAL AMOUNT FOB BY {{ $commercialInvoice->currency }}
 
                             </td>
 
                             <td class="border p-3 text-center">
 
-                                ${{ number_format($total, 2) }}
+                                {{ number_format($total, 2) }} {{ $commercialInvoice->currency }}
 
                             </td>
 

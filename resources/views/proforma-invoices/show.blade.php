@@ -41,7 +41,7 @@
 
                 <!-- DOWNLOAD -->
                 <a href="{{ route('proforma-invoices.download', $proformaInvoice->id) }}"
-                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
 
                     Download Excel
 
@@ -49,7 +49,7 @@
 
                 <!-- BACK -->
                 <a href="{{ route('proforma-invoices.index') }}"
-                   class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
 
                     Back
 
@@ -227,8 +227,7 @@
 
                     <tbody>
 
-                        @foreach($proformaInvoice->products as $product)
-
+                        @foreach ($proformaInvoice->products as $product)
                             @php
 
                                 $qty = $product->pivot->ctn * $product->pcs_cts;
@@ -244,22 +243,17 @@
                                 <!-- IMAGE -->
                                 <td class="border p-2 text-center">
 
-                                    @if($product->image)
-
-                                        <img
-                                            src="{{ asset('storage/' . $product->image) }}"
+                                    @if ($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}"
                                             alt="{{ $product->reference }}"
-                                            class="w-24 h-24 object-cover rounded mx-auto border"
-                                        >
-
+                                            class="w-24 h-24 object-cover rounded mx-auto border">
                                     @else
-
-                                        <div class="w-24 h-24 bg-gray-100 flex items-center justify-center text-gray-400 text-xs mx-auto rounded border">
+                                        <div
+                                            class="w-24 h-24 bg-gray-100 flex items-center justify-center text-gray-400 text-xs mx-auto rounded border">
 
                                             NO IMAGE
 
                                         </div>
-
                                     @endif
 
                                 </td>
@@ -302,19 +296,20 @@
                                 <!-- UNIT PRICE -->
                                 <td class="border p-2 text-center">
 
-                                    ¥{{ number_format($product->pivot->unit_price, 2) }}
+                                    {{ number_format($product->pivot->unit_price, 2) }}
+                                    {{ $proformaInvoice->currency }}
 
                                 </td>
 
                                 <!-- AMOUNT -->
                                 <td class="border p-2 text-center font-bold">
 
-                                    ¥{{ number_format($amount, 2) }}
+                                    {{ number_format($amount, 2) }}
+                                    {{ $proformaInvoice->currency }}
 
                                 </td>
 
                             </tr>
-
                         @endforeach
 
                     </tbody>
@@ -325,8 +320,7 @@
                         <!-- TOTAL EXW -->
                         <tr>
 
-                            <td colspan="7"
-                                class="border p-2 text-right">
+                            <td colspan="7" class="border p-2 text-right">
 
                                 TOTAL EXW
 
@@ -334,7 +328,8 @@
 
                             <td class="border p-2 text-center">
 
-                                ¥{{ number_format($total, 2) }}
+                                {{ number_format($total, 2) }}
+                                {{ $proformaInvoice->currency }}
 
                             </td>
 
@@ -343,8 +338,7 @@
                         <!-- COMMISSION -->
                         <tr>
 
-                            <td colspan="7"
-                                class="border p-2 text-right">
+                            <td colspan="7" class="border p-2 text-right">
 
                                 COMMISSION (3%)
 
@@ -352,7 +346,8 @@
 
                             <td class="border p-2 text-center">
 
-                                ¥{{ number_format($total * 0.03, 2) }}
+                                {{ number_format($total * 0.03, 2) }}
+                                {{ $proformaInvoice->currency }}
 
                             </td>
 
@@ -361,8 +356,7 @@
                         <!-- LOCAL CHARGE -->
                         <tr>
 
-                            <td colspan="7"
-                                class="border p-2 text-right">
+                            <td colspan="7" class="border p-2 text-right">
 
                                 LOCAL CHARGE
 
@@ -370,7 +364,8 @@
 
                             <td class="border p-2 text-center">
 
-                                ¥{{ number_format($proformaInvoice->local_charge, 2) }}
+                                {{ number_format($proformaInvoice->local_charge, 2) }}
+                                {{ $proformaInvoice->currency }}
 
                             </td>
 
@@ -379,21 +374,18 @@
                         <!-- FOB TOTAL -->
                         <tr class="bg-yellow-100">
 
-                            <td colspan="7"
-                                class="border p-3 text-right text-lg">
+                            <td colspan="7" class="border p-3 text-right text-lg">
 
                                 FOB TOTAL
 
                             </td>
 
                             <td class="border p-3 text-center text-lg">
+                                @php
+                                    $fobTotal = $total + $total * 0.03 + $proformaInvoice->local_charge;
+                                @endphp
 
-                                ¥{{ number_format(
-                                    $total +
-                                    ($total * 0.03) +
-                                    $proformaInvoice->local_charge,
-                                    2
-                                ) }}
+                                {{ number_format($fobTotal, 2) }} {{ $proformaInvoice->currency }}
 
                             </td>
 

@@ -14,8 +14,7 @@
 
         <div class="bg-white shadow-md rounded-lg p-6">
 
-            <form action="{{ route('proforma-invoices.store') }}"
-                  method="POST">
+            <form action="{{ route('proforma-invoices.store') }}" method="POST">
 
                 @csrf
 
@@ -30,9 +29,7 @@
 
                         </label>
 
-                        <select name="client_id"
-                                required
-                                class="w-full border rounded-lg px-3 py-2">
+                        <select name="client_id" required class="w-full border rounded-lg px-3 py-2">
 
                             <option value="">
 
@@ -40,18 +37,35 @@
 
                             </option>
 
-                            @foreach($clients as $client)
-
+                            @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">
 
                                     {{ $client->name }}
 
                                 </option>
-
                             @endforeach
 
                         </select>
 
+                    </div>
+
+                    <!-- Currency -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Currency
+                        </label>
+
+                        <select name="currency" class="w-full rounded-lg border-gray-300" required>
+
+                            <option value="RMB" selected>
+                                RMB (¥)
+                            </option>
+
+                            <option value="USD">
+                                USD ($)
+                            </option>
+
+                        </select>
                     </div>
 
                     <!-- DATE -->
@@ -63,9 +77,7 @@
 
                         </label>
 
-                        <input type="date"
-                            name="date"
-                            class="w-full border rounded-lg px-3 py-2">
+                        <input type="date" name="date" class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -78,9 +90,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="container_no"
-                            class="w-full border rounded-lg px-3 py-2">
+                        <input type="text" name="container_no" class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -93,9 +103,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="seal_no"
-                            class="w-full border rounded-lg px-3 py-2">
+                        <input type="text" name="seal_no" class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -108,9 +116,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="port_of_loading"
-                            class="w-full border rounded-lg px-3 py-2">
+                        <input type="text" name="port_of_loading" class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -123,9 +129,7 @@
 
                         </label>
 
-                        <input type="text"
-                            name="port_of_discharge"
-                            class="w-full border rounded-lg px-3 py-2">
+                        <input type="text" name="port_of_discharge" class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -138,10 +142,7 @@
 
                         </label>
 
-                        <input type="number"
-                            step="0.01"
-                            name="local_charge"
-                            value="0"
+                        <input type="number" step="0.01" name="local_charge" value="0"
                             class="w-full border rounded-lg px-3 py-2">
 
                     </div>
@@ -161,9 +162,8 @@
 
                     </div>
 
-                    <button type="button"
-                            onclick="addProductRow()"
-                            class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">
+                    <button type="button" onclick="addProductRow()"
+                        class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">
 
                         Add Product
 
@@ -174,8 +174,7 @@
                 <!-- SUBMIT -->
                 <div class="flex justify-end">
 
-                    <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded">
 
                         Create Invoice
 
@@ -190,18 +189,16 @@
     </div>
 
     <script>
+        let productIndex = 0;
 
-    let productIndex = 0;
+        function addProductRow() {
+            const container = document.getElementById('products-container');
 
-    function addProductRow()
-    {
-        const container = document.getElementById('products-container');
+            const row = document.createElement('div');
 
-        const row = document.createElement('div');
+            row.className = 'grid grid-cols-4 gap-4 mb-4 border p-4 rounded-lg bg-gray-50';
 
-        row.className = 'grid grid-cols-4 gap-4 mb-4 border p-4 rounded-lg bg-gray-50';
-
-        row.innerHTML = `
+            row.innerHTML = `
 
             <!-- PRODUCT -->
             <div>
@@ -225,7 +222,7 @@
 
                     </option>
 
-                    @foreach($products as $product)
+                    @foreach ($products as $product)
 
                         <option
                             value="{{ $product->id }}"
@@ -298,17 +295,14 @@
 
         `;
 
-        container.appendChild(row);
+            container.appendChild(row);
 
-        productIndex++;
-    }
-
+            productIndex++;
+        }
     </script>
 
     <script>
-
-        function updatePrice(selectElement)
-        {
+        function updatePrice(selectElement) {
             const selectedOption =
                 selectElement.options[
                     selectElement.selectedIndex
@@ -322,7 +316,6 @@
 
             row.querySelector('.unit-price').value = price;
         }
-
     </script>
 
 </x-app-layout>

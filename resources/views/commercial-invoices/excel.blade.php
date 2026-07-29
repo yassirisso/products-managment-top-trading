@@ -192,11 +192,11 @@
         </td>
 
         <td style="border:1px solid black;">
-            U.PRICE USD
+            U.PRICE {{ $commercialInvoice->currency }}
         </td>
 
         <td style="border:1px solid black;">
-            AMOUNT USD
+            AMOUNT {{ $commercialInvoice->currency }}
         </td>
 
     </tr>
@@ -281,7 +281,7 @@
         <td colspan="6"
             style="border:1px solid black;">
 
-            TOTAL AMOUNT FOB BY USD
+            TOTAL AMOUNT FOB BY {{ $commercialInvoice->currency }}
 
         </td>
 

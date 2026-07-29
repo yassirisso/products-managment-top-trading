@@ -20,6 +20,7 @@ class ProformaInvoice extends Model
         'seal_no',
 
         'local_charge',
+        'currency',
 
     ];
 

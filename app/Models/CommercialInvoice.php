@@ -16,6 +16,7 @@ class CommercialInvoice extends Model
         'mode_of_delivery',
         'country_of_origin',
         'bank_account_id',
+        'currency',
     ];
 
     public function client()
@@ -26,11 +27,11 @@ class CommercialInvoice extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)
-                    ->withPivot([
-                        'ctn',
-                        'unit_price'
-                    ])
-                    ->withTimestamps();
+            ->withPivot([
+                'ctn',
+                'unit_price'
+            ])
+            ->withTimestamps();
     }
 
     public function bankAccount()

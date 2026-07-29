@@ -67,9 +67,7 @@
     <!-- CLIENT + DATE -->
     <tr>
 
-        <td colspan="5"
-            rowspan="3"
-            style="border:1px solid black;
+        <td colspan="5" rowspan="3" style="border:1px solid black;
                    vertical-align:top;">
 
             <strong>TO:</strong>
@@ -87,9 +85,7 @@
 
         </td>
 
-        <td colspan="3"
-            rowspan="3"
-            style="border:1px solid black;
+        <td colspan="3" rowspan="3" style="border:1px solid black;
                    vertical-align:top;">
 
             <strong>Date:</strong>
@@ -110,16 +106,14 @@
     <!-- PORT -->
     <tr>
 
-        <td colspan="5"
-            style="border:1px solid black">
+        <td colspan="5" style="border:1px solid black">
 
             <strong>PORT OF LOADING:</strong>
             {{ $proformaInvoice->port_of_loading }}
 
         </td>
 
-        <td colspan="3"
-            style="border:1px solid black">
+        <td colspan="3" style="border:1px solid black">
 
             <strong>Seal No:</strong>
             {{ $proformaInvoice->seal_no }}
@@ -131,16 +125,14 @@
     <!-- DISCHARGE -->
     <tr>
 
-        <td colspan="5"
-            style="border:1px solid black">
+        <td colspan="5" style="border:1px solid black">
 
             <strong>PORT OF DISCHARGE:</strong>
             {{ $proformaInvoice->port_of_discharge }}
 
         </td>
 
-        <td colspan="3"
-            style="border:1px solid black"></td>
+        <td colspan="3" style="border:1px solid black"></td>
 
     </tr>
 
@@ -173,11 +165,11 @@
         </td>
 
         <td style="border:1px solid black">
-            U.PRICE RMB
+            U.PRICE {{ $proformaInvoice->currency }}
         </td>
 
         <td style="border:1px solid black">
-            AMOUNT RMB
+            AMOUNT {{ $proformaInvoice->currency }}
         </td>
 
     </tr>
@@ -190,8 +182,7 @@
         $productCount = count($proformaInvoice->products);
     @endphp
 
-    @foreach($proformaInvoice->products as $product)
-
+    @foreach ($proformaInvoice->products as $product)
         <tr style="height:80px;
                    text-align:center;
                    vertical-align:middle;">
@@ -206,13 +197,8 @@
             <!-- IMAGE -->
             <td style="border:1px solid black">
 
-                @if($product->image)
-
-                    <img
-                        src="{{ public_path('storage/'.$product->image) }}"
-                        width="60"
-                        height="60">
-
+                @if ($product->image)
+                    <img src="{{ public_path('storage/' . $product->image) }}" width="60" height="60">
                 @endif
 
             </td>
@@ -264,7 +250,6 @@
         @php
             $currentRow++;
         @endphp
-
     @endforeach
 
     @php
@@ -284,10 +269,9 @@
     <!-- TOTAL EXW -->
     <tr style="font-weight:bold;text-align:center;">
 
-        <td colspan="7"
-            style="border:1px solid black">
+        <td colspan="7" style="border:1px solid black">
 
-            TOTAL AMOUNT EXW BY RMB
+            TOTAL AMOUNT EXW BY {{ $proformaInvoice->currency }}
 
         </td>
 
@@ -302,8 +286,7 @@
     <!-- COMMISSION -->
     <tr style="font-weight:bold;text-align:center;">
 
-        <td colspan="7"
-            style="border:1px solid black">
+        <td colspan="7" style="border:1px solid black">
 
             COMMISSION
 
@@ -320,8 +303,7 @@
     <!-- LOCAL -->
     <tr style="font-weight:bold;text-align:center;">
 
-        <td colspan="7"
-            style="border:1px solid black">
+        <td colspan="7" style="border:1px solid black">
 
             LOCAL CHARGE
 
@@ -338,19 +320,29 @@
     <!-- FOB -->
     <tr style="font-weight:bold;text-align:center;">
 
-        <td colspan="7"
-            style="border:1px solid black">
+        <td colspan="7" style="border:1px solid black">
 
-            TOTAL AMOUNT FOB BY RMB
+            TOTAL AMOUNT FOB BY {{ $proformaInvoice->currency }}
 
         </td>
 
         <td style="border:1px solid black">
 
             =H{{ $totalRow }}+H{{ $commissionRow }}+H{{ $localChargeRow }}
-
         </td>
 
+    </tr>
+
+    <tr>
+        <td colspan="8"
+            style="text-align:center;
+               font-size:13px;
+               font-weight:bold;
+               border:1px solid black;">
+
+            CURRENCY: {{ $proformaInvoice->currency }}
+
+        </td>
     </tr>
 
 </table>
