@@ -221,14 +221,14 @@ class ProformaInvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProformaInvoice $proformaInvoice)
-    {
-        $proformaInvoice->delete();
+    // public function destroy(ProformaInvoice $proformaInvoice)
+    // {
+    //     $proformaInvoice->delete();
 
-        return redirect()
-            ->route('proforma-invoices.index')
-            ->with('success', 'Proforma Invoice Deleted Successfully');
-    }
+    //     return redirect()
+    //         ->route('proforma-invoices.index')
+    //         ->with('success', 'Proforma Invoice Deleted Successfully');
+    // }
 
     public function downloadExcel(ProformaInvoice $proformaInvoice)
     {

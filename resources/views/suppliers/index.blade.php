@@ -153,7 +153,7 @@
                                     </a>
 
                                     <!-- DELETE -->
-                                    <form action="{{ route('suppliers.destroy', $supplier) }}"
+                                    {{-- <form action="{{ route('suppliers.destroy', $supplier) }}"
                                           method="POST"
                                           class="inline">
 
@@ -178,7 +178,7 @@
 
                                         </button>
 
-                                    </form>
+                                    </form> --}}
 
                                 </div>
 

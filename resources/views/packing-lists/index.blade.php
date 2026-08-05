@@ -167,7 +167,7 @@
                                         </a>
 
                                         <!-- DELETE -->
-                                        <form action="{{ route('packing-lists.destroy', $list->id) }}"
+                                        {{-- <form action="{{ route('packing-lists.destroy', $list->id) }}"
                                               method="POST"
                                               class="inline">
 
@@ -191,7 +191,7 @@
 
                                             </button>
 
-                                        </form>
+                                        </form> --}}
 
                                     </div>
 

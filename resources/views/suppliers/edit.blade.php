@@ -248,7 +248,7 @@
                                             </a>
 
                                             <!-- REMOVE -->
-                                            <form action="{{ route('suppliers.detach-product', ['supplier' => $supplier, 'productId' => $product->id]) }}"
+                                            {{-- <form action="{{ route('suppliers.detach-product', ['supplier' => $supplier, 'productId' => $product->id]) }}"
                                                   method="POST"
                                                   class="inline">
 
@@ -273,7 +273,7 @@
 
                                                 </button>
 
-                                            </form>
+                                            </form> --}}
 
                                         </div>
 

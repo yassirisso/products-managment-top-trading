@@ -105,10 +105,10 @@ class PurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client, Purchase $purchase)
-    {
-        $purchase->delete();
-        return redirect()->route('clients.show', $client)
-            ->with('success', 'Purchase deleted successfully');
-    }
+    // public function destroy(Client $client, Purchase $purchase)
+    // {
+    //     $purchase->delete();
+    //     return redirect()->route('clients.show', $client)
+    //         ->with('success', 'Purchase deleted successfully');
+    // }
 }

@@ -64,13 +64,13 @@ class ClientController extends Controller
             ->with('success', 'Client updated successfully');
     }
 
-    public function destroy(Client $client)
-    {
-        $client->delete();
+    // public function destroy(Client $client)
+    // {
+    //     $client->delete();
 
-        return redirect()->route('clients.index')
-            ->with('success', 'Client moved to trash.');
-    }
+    //     return redirect()->route('clients.index')
+    //         ->with('success', 'Client moved to trash.');
+    // }
 
     public function restore($id)
     {

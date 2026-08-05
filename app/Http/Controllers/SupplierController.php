@@ -76,11 +76,11 @@ class SupplierController extends Controller
             ->with('success', 'Supplier updated successfully.');
     }
 
-    public function destroy(Supplier $supplier)
-    {
-        $supplier->delete();
-        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
-    }
+    // public function destroy(Supplier $supplier)
+    // {
+    //     $supplier->delete();
+    //     return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
+    // }
 
     public function attachProduct(Request $request, Supplier $supplier)
     {

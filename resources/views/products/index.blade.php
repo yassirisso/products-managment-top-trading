@@ -261,7 +261,7 @@
                                         </a>
 
                                         <!-- Delete -->
-                                        <form action="{{ route('products.destroy', $product->id) }}"
+                                        {{-- <form action="{{ route('products.destroy', $product->id) }}"
                                             method="POST"
                                             class="inline">
 
@@ -286,7 +286,7 @@
 
                                             </button>
 
-                                        </form>
+                                        </form> --}}
 
                                     </div>
 

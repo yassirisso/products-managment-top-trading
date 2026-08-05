@@ -136,7 +136,7 @@
 
                                         </a>
 
-                                        <form action="{{ route('clients.destroy', $client->id) }}"
+                                        {{-- <form action="{{ route('clients.destroy', $client->id) }}"
                                               method="POST"
                                               class="inline">
 
@@ -160,7 +160,7 @@
 
                                             </button>
 
-                                        </form>
+                                        </form> --}}
 
                                     </div>
 

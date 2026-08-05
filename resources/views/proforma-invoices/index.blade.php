@@ -171,7 +171,7 @@
                                         </a>
 
                                         <!-- DELETE -->
-                                        <form action="{{ route('proforma-invoices.destroy', $invoice->id) }}"
+                                        {{-- <form action="{{ route('proforma-invoices.destroy', $invoice->id) }}"
                                               method="POST"
                                               class="inline">
 
@@ -195,7 +195,7 @@
 
                                             </button>
 
-                                        </form>
+                                        </form> --}}
 
                                     </div>
 
