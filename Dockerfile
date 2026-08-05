@@ -5,11 +5,12 @@ WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libzip-dev \
-    libpng-dev \
     nodejs \
     npm \
-    && docker-php-ext-install pdo_mysql zip gd
+    libpng-dev \
+    libzip-dev
+
+RUN docker-php-ext-install pdo_mysql gd zip
 
 COPY . .
 
@@ -22,3 +23,5 @@ RUN npm install
 RUN npm run build
 
 RUN php artisan storage:link
+
+CMD php artisan serve --host=0.0.0.0 --port=8000
