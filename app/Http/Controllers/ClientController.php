@@ -9,11 +9,29 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('clients.index', [
-            'clients' => Client::latest()->paginate(10)
-        ]);
+        $query = Client::query();
+
+
+        if ($request->search) {
+
+            $query->where(function ($q) use ($request) {
+
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $clients = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+        return view('clients.index', compact('clients'));
     }
 
     public function create()

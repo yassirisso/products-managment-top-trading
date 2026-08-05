@@ -20,24 +20,36 @@
 
             </h1>
 
-            <a href="{{ route('proforma-invoices.create') }}"
-               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <div class="flex gap-2">
+                <form action="{{ route('proforma-invoices.index') }}" method="GET" class="flex">
 
-                + Create Proforma Invoice
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Search invoice or client..." class="px-3 py-2 border border-gray-300 rounded-l-md">
 
-            </a>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-md">
+
+                        Search
+
+                    </button>
+
+                </form>
+
+                <a href="{{ route('proforma-invoices.create') }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+
+                    + Create Proforma Invoice
+
+                </a>
+            </div>
 
         </div>
 
         @if (session('success'))
-
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
-                 role="alert">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
 
                 <p>{{ session('success') }}</p>
 
             </div>
-
         @endif
 
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -87,7 +99,6 @@
                     <tbody class="bg-white divide-y divide-gray-200">
 
                         @forelse($proformaInvoices as $invoice)
-
                             <tr class="hover:bg-gray-50">
 
                                 <!-- CLIENT -->
@@ -129,23 +140,16 @@
 
                                         <!-- VIEW -->
                                         <a href="{{ route('proforma-invoices.show', $invoice->id) }}"
-                                           class="text-blue-600 hover:text-blue-900">
+                                            class="text-blue-600 hover:text-blue-900">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="h-5 w-5"
-                                                 fill="none"
-                                                 viewBox="0 0 24 24"
-                                                 stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
 
-                                                <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 
-                                                <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
 
                                             </svg>
 
@@ -153,18 +157,13 @@
 
                                         <!-- DOWNLOAD -->
                                         <a href="{{ route('proforma-invoices.download', $invoice->id) }}"
-                                           class="text-green-600 hover:text-green-900">
+                                            class="text-green-600 hover:text-green-900">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="h-5 w-5"
-                                                 fill="none"
-                                                 viewBox="0 0 24 24"
-                                                 stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
 
-                                                <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
 
                                             </svg>
 
@@ -207,13 +206,12 @@
 
                             <tr>
 
-                                <td colspan="5"
-                                    class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
 
                                     No proforma invoices found.
 
                                     <a href="{{ route('proforma-invoices.create') }}"
-                                       class="text-blue-500 hover:underline">
+                                        class="text-blue-500 hover:underline">
 
                                         Create one
 
@@ -222,13 +220,15 @@
                                 </td>
 
                             </tr>
-
                         @endforelse
 
                     </tbody>
 
                 </table>
 
+                <div class="mt-6">
+                    {{ $proformaInvoices->links() }}
+                </div>
             </div>
 
         </div>

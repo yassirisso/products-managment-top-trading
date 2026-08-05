@@ -21,24 +21,37 @@
 
             </h1>
 
-            <a href="{{ route('commercial-invoices.create') }}"
-               class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            <div class="flex flex-wrap gap-2 items-center">
+                <form action="{{ route('commercial-invoices.index') }}" method="GET" class="flex">
 
-                Create Commercial Invoice
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Search invoice or client..." class="px-3 py-2 border border-gray-300 rounded-l-md">
 
-            </a>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-md">
+
+                        Search
+
+                    </button>
+
+                </form>
+
+                <a href="{{ route('commercial-invoices.create') }}"
+                    class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded">
+
+                    Create Commercial Invoice
+
+                </a>
+            </div>
 
         </div>
 
         <!-- SUCCESS -->
-        @if(session('success'))
-
+        @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
 
                 {{ session('success') }}
 
             </div>
-
         @endif
 
         <!-- TABLE -->
@@ -87,7 +100,6 @@
                 <tbody class="divide-y divide-gray-200">
 
                     @forelse($commercialInvoices as $invoice)
-
                         <tr>
 
                             <!-- ID -->
@@ -125,7 +137,7 @@
 
                                     <!-- SHOW -->
                                     <a href="{{ route('commercial-invoices.show', $invoice) }}"
-                                       class="bg-gray-500 hover:bg-gray-700 text-white px-3 py-1 rounded">
+                                        class="bg-gray-500 hover:bg-gray-700 text-white px-3 py-1 rounded">
 
                                         View
 
@@ -133,7 +145,7 @@
 
                                     <!-- EXCEL -->
                                     <a href="{{ route('commercial-invoices.download', $invoice) }}"
-                                       class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">
+                                        class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">
 
                                         Excel
 
@@ -149,21 +161,22 @@
 
                         <tr>
 
-                            <td colspan="5"
-                                class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
 
                                 No Commercial Invoices Found
 
                             </td>
 
                         </tr>
-
                     @endforelse
 
                 </tbody>
 
             </table>
 
+            <div class="mt-6">
+                {{ $commercialInvoices->links() }}
+            </div>
         </div>
 
     </div>

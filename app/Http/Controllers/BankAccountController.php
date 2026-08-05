@@ -7,13 +7,28 @@ use App\Models\BankAccount;
 
 class BankAccountController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bankAccounts =
-            auth()->user()
-                ->bankAccounts()
-                ->latest()
-                ->get();
+        $query = auth()->user()
+            ->bankAccounts();
+
+
+        if ($request->search) {
+
+            $query->where(function ($q) use ($request) {
+
+                $q->where('bank_name', 'like', '%' . $request->search . '%')
+                    ->orWhere('account_name', 'like', '%' . $request->search . '%')
+                    ->orWhere('account_number', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $bankAccounts = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view(
             'bank-accounts.index',

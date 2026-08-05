@@ -14,11 +14,29 @@ class CommercialInvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $commercialInvoices = CommercialInvoice::with('client')
+        $query = CommercialInvoice::with('client');
+
+
+        if ($request->search) {
+
+            $query->where(function ($q) use ($request) {
+
+                $q->where('invoice_no', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('client', function ($client) use ($request) {
+
+                        $client->where('name', 'like', '%' . $request->search . '%');
+                    });
+            });
+        }
+
+
+        $commercialInvoices = $query
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view(
             'commercial-invoices.index',
@@ -159,15 +177,15 @@ class CommercialInvoiceController extends Controller
         //
     }
 
-    public function downloadExcel(CommercialInvoice $commercialInvoice) 
+    public function downloadExcel(CommercialInvoice $commercialInvoice)
     {
         return Excel::download(
             new CommercialInvoiceExport(
                 $commercialInvoice
             ),
             'commercial-invoice-' .
-            $commercialInvoice->id .
-            '.xlsx'
+                $commercialInvoice->id .
+                '.xlsx'
         );
     }
 }

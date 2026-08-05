@@ -19,36 +19,45 @@
                 Clients Management
 
             </h1>
+            <div class="flex flex-wrap gap-2 items-center">
+                <form action="{{ route('clients.index') }}" method="GET" class="flex">
 
-            <a href="{{ route('clients.create') }}"
-               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search client..."
+                        class="px-3 py-2 border border-gray-300 rounded-l-md">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="h-5 w-5 mr-1"
-                     viewBox="0 0 20 20"
-                     fill="currentColor">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r-md">
 
-                    <path fill-rule="evenodd"
-                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                          clip-rule="evenodd" />
+                        Search
 
-                </svg>
+                    </button>
 
-                New Client
+                </form>
 
-            </a>
+                <a href="{{ route('clients.create') }}"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+
+                        <path fill-rule="evenodd"
+                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                            clip-rule="evenodd" />
+
+                    </svg>
+
+                    New Client
+
+                </a>
+            </div>
 
         </div>
 
-        @if(session('success'))
-
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
-                 role="alert">
+        @if (session('success'))
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
 
                 <p>{{ session('success') }}</p>
 
             </div>
-
         @endif
 
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -82,7 +91,6 @@
                     <tbody class="bg-white divide-y divide-gray-200">
 
                         @forelse($clients as $client)
-
                             <tr class="hover:bg-gray-50">
 
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -100,37 +108,29 @@
                                     <div class="flex justify-end space-x-2">
 
                                         <a href="{{ route('clients.show', $client->id) }}"
-                                           class="text-blue-600 hover:text-blue-900">
+                                            class="text-blue-600 hover:text-blue-900">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="h-5 w-5"
-                                                 fill="none"
-                                                 viewBox="0 0 24 24"
-                                                 stroke="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
 
-                                                <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 
-                                                <path stroke-linecap="round"
-                                                      stroke-linejoin="round"
-                                                      stroke-width="2"
-                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
 
                                             </svg>
 
                                         </a>
 
                                         <a href="{{ route('clients.edit', $client->id) }}"
-                                           class="text-indigo-600 hover:text-indigo-900">
+                                            class="text-indigo-600 hover:text-indigo-900">
 
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="h-5 w-5"
-                                                 viewBox="0 0 20 20"
-                                                 fill="currentColor">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                                fill="currentColor">
 
-                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                <path
+                                                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
 
                                             </svg>
 
@@ -172,13 +172,11 @@
 
                             <tr>
 
-                                <td colspan="3"
-                                    class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">
 
                                     No clients found.
 
-                                    <a href="{{ route('clients.create') }}"
-                                       class="text-blue-500 hover:underline">
+                                    <a href="{{ route('clients.create') }}" class="text-blue-500 hover:underline">
 
                                         Create one
 
@@ -187,7 +185,6 @@
                                 </td>
 
                             </tr>
-
                         @endforelse
 
                     </tbody>
@@ -196,14 +193,12 @@
 
             </div>
 
-            @if($clients->hasPages())
-
+            @if ($clients->hasPages())
                 <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
 
                     {{ $clients->withQueryString()->links() }}
 
                 </div>
-
             @endif
 
         </div>

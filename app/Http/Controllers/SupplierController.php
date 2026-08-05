@@ -9,13 +9,29 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::with('products.clients')
-            ->latest()
-            ->get();
+        $query = Supplier::with('products.clients');
 
-        $suppliers->each(function ($supplier) {
+
+        if ($request->search) {
+
+            $query->where(function ($q) use ($request) {
+
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('phone', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $suppliers = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+        $suppliers->getCollection()->each(function ($supplier) {
 
             $clients = $supplier->products
                 ->flatMap(function ($product) {

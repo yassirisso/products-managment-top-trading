@@ -14,11 +14,25 @@ class ProformaInvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $proformaInvoices = ProformaInvoice::with('client')
+        $query = ProformaInvoice::with('client');
+
+
+        if ($request->search) {
+
+            $query->whereHas('client', function ($client) use ($request) {
+
+                $client->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $proformaInvoices = $query
             ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view(
             'proforma-invoices.index',

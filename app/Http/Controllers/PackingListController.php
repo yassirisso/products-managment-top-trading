@@ -14,9 +14,25 @@ class PackingListController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $packingLists = PackingList::with('client')->latest()->get();
+        $query = PackingList::with('client');
+
+
+        if ($request->search) {
+
+            $query->whereHas('client', function ($q) use ($request) {
+
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $packingLists = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view('packing-lists.index', compact('packingLists'));
     }
