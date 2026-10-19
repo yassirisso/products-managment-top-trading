@@ -51,10 +51,11 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/dashboard', function () {
-
-        return view('dashboard');
-    })->name('dashboard');
+    Route::middleware(['auth', 'permission:view dashboard'])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+    });
 
 
     /*
@@ -79,20 +80,20 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    // 1) Static paths FIRST — must come before any {product} wildcard
+    // Static paths FIRST — must come before any {product} wildcard
     Route::middleware('permission:create products')->group(function () {
         Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
         Route::post('products', [ProductController::class, 'store'])->name('products.store');
 
-        Route::get('/products/import', function () {
+        Route::get('products/import', function () {
             return view('products.import');
-        });
+        })->name('products.import-form');
 
-        Route::post('/products/import', [ProductController::class, 'import'])
+        Route::post('products/import', [ProductController::class, 'import'])
             ->name('products.import');
     });
 
-    // 2) Dynamic paths AFTER
+    // Dynamic paths AFTER
     Route::middleware('permission:view products')->group(function () {
         Route::get('products', [ProductController::class, 'index'])->name('products.index');
         Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
@@ -114,31 +115,39 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     });
 
-
     /*
     |--------------------------------------------------------------------------
     | SUPPLIERS
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('suppliers', SupplierController::class)
-        ->middleware('permission:view suppliers');
+    // Static paths FIRST — must come before {supplier} wildcard
+    Route::middleware('permission:create suppliers')->group(function () {
+        Route::get('suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
+        Route::post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+    });
 
-    Route::post(
-        '/suppliers/{supplier}/products',
-        [SupplierController::class, 'attachProduct']
-    )->name('suppliers.attach-product')
-        ->middleware('permission:edit suppliers');
+    // View
+    Route::middleware('permission:view suppliers')->group(function () {
+        Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+        Route::get('suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
+        Route::get('suppliers/{supplier}/clients', [SupplierController::class, 'clients'])->name('suppliers.clients');
+    });
 
-    Route::delete(
-        '/suppliers/{supplier}/products/{productId}',
-        [SupplierController::class, 'detachProduct']
-    )->name('suppliers.detach-product')
-        ->middleware('permission:edit suppliers');
+    // Edit
+    Route::middleware('permission:edit suppliers')->group(function () {
+        Route::get('suppliers/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+        Route::put('suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+        Route::patch('suppliers/{supplier}', [SupplierController::class, 'update']);
 
-    Route::get('/suppliers/{supplier}/clients', [SupplierController::class, 'clients'])
-        ->name('suppliers.clients')
-        ->middleware('permission:view suppliers');
+        Route::post('suppliers/{supplier}/products', [SupplierController::class, 'attachProduct'])->name('suppliers.attach-product');
+        Route::delete('suppliers/{supplier}/products/{productId}', [SupplierController::class, 'detachProduct'])->name('suppliers.detach-product');
+    });
+
+    // Delete
+    Route::middleware('permission:delete suppliers')->group(function () {
+        Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -200,69 +209,33 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get(
-        'clients/create',
-        [ClientController::class, 'create']
-    )
-        ->middleware('permission:create clients')
-        ->name('clients.create');
+    // Static paths FIRST — must come before {client} wildcard
+    Route::middleware('permission:create clients')->group(function () {
+        Route::get('clients/create', [ClientController::class, 'create'])->name('clients.create');
+        Route::post('clients', [ClientController::class, 'store'])->name('clients.store');
+    });
 
-    Route::resource('clients', ClientController::class)
-        ->middleware('permission:view clients')
-        ->except([
-            'create',
-            'store',
-            'edit',
-            'update',
-            'destroy'
-        ]);
+    // View (index / show / trash)
+    Route::middleware('permission:view clients')->group(function () {
+        Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('clients/trash', [ClientController::class, 'trash'])->name('clients.trash');
+        Route::get('clients/{client}', [ClientController::class, 'show'])->name('clients.show');
+    });
 
+    // Edit (edit / update / restore)
+    Route::middleware('permission:edit clients')->group(function () {
+        Route::get('clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::put('clients/{client}', [ClientController::class, 'update'])->name('clients.update');
+        Route::patch('clients/{client}', [ClientController::class, 'update']);
 
-    Route::post(
-        'clients',
-        [ClientController::class, 'store']
-    )
-        ->middleware('permission:create clients')
-        ->name('clients.store');
+        Route::post('clients/{id}/restore', [ClientController::class, 'restore'])->name('clients.restore');
+    });
 
-
-    Route::get(
-        'clients/{client}/edit',
-        [ClientController::class, 'edit']
-    )
-        ->middleware('permission:edit clients')
-        ->name('clients.edit');
-
-
-    Route::put(
-        'clients/{client}',
-        [ClientController::class, 'update']
-    )
-        ->middleware('permission:edit clients')
-        ->name('clients.update');
-
-
-    Route::delete(
-        'clients/{client}',
-        [ClientController::class, 'destroy']
-    )
-        ->middleware('permission:delete clients')
-        ->name('clients.destroy');
-
-    Route::get(
-        'clients/trash',
-        [ClientController::class, 'trash']
-    )->name('clients.trash');
-
-    Route::post(
-        'clients/{id}/restore',
-        [ClientController::class, 'restore']
-    )->name('clients.restore');
-
-    Route::delete(
-        'clients/{id}/force-delete',
-        [ClientController::class, 'forceDelete']
-    )->name('clients.force-delete');
+    // Delete (destroy / force-delete)
+    Route::middleware('permission:delete clients')->group(function () {
+        Route::delete('clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+        Route::delete('clients/{id}/force-delete', [ClientController::class, 'forceDelete'])->name('clients.force-delete');
+    });
 
 
     /*
@@ -336,15 +309,30 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource(
-        'packing-lists',
-        PackingListController::class
-    );
+    // Static paths FIRST — must come before {packingList} wildcard
+    Route::middleware('permission:create packing lists')->group(function () {
+        Route::get('packing-lists/create', [PackingListController::class, 'create'])->name('packing-lists.create');
+        Route::post('packing-lists', [PackingListController::class, 'store'])->name('packing-lists.store');
+    });
 
-    Route::get(
-        'packing-lists/{packingList}/download',
-        [PackingListController::class, 'downloadExcel']
-    )->name('packing-lists.download');
+    // View (index / show / download)
+    Route::middleware('permission:view packing lists')->group(function () {
+        Route::get('packing-lists', [PackingListController::class, 'index'])->name('packing-lists.index');
+        Route::get('packing-lists/{packingList}', [PackingListController::class, 'show'])->name('packing-lists.show');
+        Route::get('packing-lists/{packingList}/download', [PackingListController::class, 'downloadExcel'])->name('packing-lists.download');
+    });
+
+    // Edit
+    Route::middleware('permission:edit packing lists')->group(function () {
+        Route::get('packing-lists/{packingList}/edit', [PackingListController::class, 'edit'])->name('packing-lists.edit');
+        Route::put('packing-lists/{packingList}', [PackingListController::class, 'update'])->name('packing-lists.update');
+        Route::patch('packing-lists/{packingList}', [PackingListController::class, 'update']);
+    });
+
+    // Delete
+    Route::middleware('permission:delete packing lists')->group(function () {
+        Route::delete('packing-lists/{packingList}', [PackingListController::class, 'destroy'])->name('packing-lists.destroy');
+    });
 
 
     /*
@@ -353,15 +341,30 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource(
-        'proforma-invoices',
-        ProformaInvoiceController::class
-    );
+    // Static paths FIRST — must come before {proformaInvoice} wildcard
+    Route::middleware('permission:create proforma invoices')->group(function () {
+        Route::get('proforma-invoices/create', [ProformaInvoiceController::class, 'create'])->name('proforma-invoices.create');
+        Route::post('proforma-invoices', [ProformaInvoiceController::class, 'store'])->name('proforma-invoices.store');
+    });
 
-    Route::get(
-        'proforma-invoices/{proformaInvoice}/download',
-        [ProformaInvoiceController::class, 'downloadExcel']
-    )->name('proforma-invoices.download');
+    // View (index / show / download)
+    Route::middleware('permission:view proforma invoices')->group(function () {
+        Route::get('proforma-invoices', [ProformaInvoiceController::class, 'index'])->name('proforma-invoices.index');
+        Route::get('proforma-invoices/{proformaInvoice}', [ProformaInvoiceController::class, 'show'])->name('proforma-invoices.show');
+        Route::get('proforma-invoices/{proformaInvoice}/download', [ProformaInvoiceController::class, 'downloadExcel'])->name('proforma-invoices.download');
+    });
+
+    // Edit
+    Route::middleware('permission:edit proforma invoices')->group(function () {
+        Route::get('proforma-invoices/{proformaInvoice}/edit', [ProformaInvoiceController::class, 'edit'])->name('proforma-invoices.edit');
+        Route::put('proforma-invoices/{proformaInvoice}', [ProformaInvoiceController::class, 'update'])->name('proforma-invoices.update');
+        Route::patch('proforma-invoices/{proformaInvoice}', [ProformaInvoiceController::class, 'update']);
+    });
+
+    // Delete
+    Route::middleware('permission:delete proforma invoices')->group(function () {
+        Route::delete('proforma-invoices/{proformaInvoice}', [ProformaInvoiceController::class, 'destroy'])->name('proforma-invoices.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -369,15 +372,30 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource(
-        'commercial-invoices',
-        CommercialInvoiceController::class
-    );
+    // Static paths FIRST — must come before {commercialInvoice} wildcard
+    Route::middleware('permission:create commercial invoices')->group(function () {
+        Route::get('commercial-invoices/create', [CommercialInvoiceController::class, 'create'])->name('commercial-invoices.create');
+        Route::post('commercial-invoices', [CommercialInvoiceController::class, 'store'])->name('commercial-invoices.store');
+    });
 
-    Route::get(
-        'commercial-invoices/{commercialInvoice}/download',
-        [CommercialInvoiceController::class, 'downloadExcel']
-    )->name('commercial-invoices.download');
+    // View (index / show / download)
+    Route::middleware('permission:view commercial invoices')->group(function () {
+        Route::get('commercial-invoices', [CommercialInvoiceController::class, 'index'])->name('commercial-invoices.index');
+        Route::get('commercial-invoices/{commercialInvoice}', [CommercialInvoiceController::class, 'show'])->name('commercial-invoices.show');
+        Route::get('commercial-invoices/{commercialInvoice}/download', [CommercialInvoiceController::class, 'downloadExcel'])->name('commercial-invoices.download');
+    });
+
+    // Edit
+    Route::middleware('permission:edit commercial invoices')->group(function () {
+        Route::get('commercial-invoices/{commercialInvoice}/edit', [CommercialInvoiceController::class, 'edit'])->name('commercial-invoices.edit');
+        Route::put('commercial-invoices/{commercialInvoice}', [CommercialInvoiceController::class, 'update'])->name('commercial-invoices.update');
+        Route::patch('commercial-invoices/{commercialInvoice}', [CommercialInvoiceController::class, 'update']);
+    });
+
+    // Delete
+    Route::middleware('permission:delete commercial invoices')->group(function () {
+        Route::delete('commercial-invoices/{commercialInvoice}', [CommercialInvoiceController::class, 'destroy'])->name('commercial-invoices.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -385,10 +403,29 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource(
-        'bank-accounts',
-        BankAccountController::class
-    );
+    // Static paths FIRST — must come before {bankAccount} wildcard
+    Route::middleware('permission:create bank accounts')->group(function () {
+        Route::get('bank-accounts/create', [BankAccountController::class, 'create'])->name('bank-accounts.create');
+        Route::post('bank-accounts', [BankAccountController::class, 'store'])->name('bank-accounts.store');
+    });
+
+    // View
+    Route::middleware('permission:view bank accounts')->group(function () {
+        Route::get('bank-accounts', [BankAccountController::class, 'index'])->name('bank-accounts.index');
+        Route::get('bank-accounts/{bankAccount}', [BankAccountController::class, 'show'])->name('bank-accounts.show');
+    });
+
+    // Edit
+    Route::middleware('permission:edit bank accounts')->group(function () {
+        Route::get('bank-accounts/{bankAccount}/edit', [BankAccountController::class, 'edit'])->name('bank-accounts.edit');
+        Route::put('bank-accounts/{bankAccount}', [BankAccountController::class, 'update'])->name('bank-accounts.update');
+        Route::patch('bank-accounts/{bankAccount}', [BankAccountController::class, 'update']);
+    });
+
+    // Delete
+    Route::middleware('permission:delete bank accounts')->group(function () {
+        Route::delete('bank-accounts/{bankAccount}', [BankAccountController::class, 'destroy'])->name('bank-accounts.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -396,8 +433,29 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('users', UserController::class)
-        ->middleware('permission:view users');
+    // Static paths FIRST — must come before {user} wildcard
+    Route::middleware('permission:create users')->group(function () {
+        Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('users', [UserController::class, 'store'])->name('users.store');
+    });
+
+    // View
+    Route::middleware('permission:view users')->group(function () {
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users/{user}', [UserController::class, 'show'])->name('users.show');
+    });
+
+    // Edit
+    Route::middleware('permission:edit users')->group(function () {
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::patch('users/{user}', [UserController::class, 'update']);
+    });
+
+    // Delete
+    Route::middleware('permission:delete users')->group(function () {
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -13,59 +13,73 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $permissions = [
-
-            // Products
-            'view products',
-            'create products',
-            'edit products',
-            'delete products',
-
-            // Suppliers
-            'view suppliers',
-            'create suppliers',
-            'edit suppliers',
-            'delete suppliers',
-
-            // Clients
-            'view clients',
-            'create clients',
-            'edit clients',
-            'delete clients',
-
-            // Users
-            'view users',
-            'create users',
-            'edit users',
-            'delete users',
+        $modules = [
+            'products',
+            'suppliers',
+            'clients',
+            'packing lists',
+            'proforma invoices',
+            'commercial invoices',
+            'bank accounts',
+            'users',
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate([
-                'name' => $permission,
-            ]);
+        Permission::firstOrCreate(['name' => 'view dashboard', 'guard_name' => 'web']);
+
+        foreach ($modules as $module) {
+            foreach (['view', 'create', 'edit', 'delete'] as $action) {
+                Permission::firstOrCreate([
+                    'name'       => "{$action} {$module}",
+                    'guard_name' => 'web',
+                ]);
+            }
         }
 
-        $admin = Role::firstOrCreate([
-            'name' => 'Admin',
-        ]);
+        Permission::firstOrCreate(['name' => 'import products', 'guard_name' => 'web']);
 
-        $employee = Role::firstOrCreate([
-            'name' => 'Employee',
-        ]);
+        $admin = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $admin->syncPermissions(Permission::all());
 
-        // Admin gets everything
-        $admin->givePermissionTo(Permission::all());
+        $manager = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
+        $manager->syncPermissions(
+            Permission::whereIn('name', $this->namesFor(['view', 'create', 'edit'], $modules))->get()
+        );
 
-        // Employee permissions
-        $employee->givePermissionTo([
-            'view products',
-            'create products',
-            'edit products',
+        $employee = Role::firstOrCreate(['name' => 'Employee', 'guard_name' => 'web']);
+        $employee->syncPermissions(
+            Permission::whereIn('name', [
+                'view dashboard',
+                'view products',
+                'create products',
+                'edit products',
+                'view suppliers',
+                'create suppliers',
+                'view clients',
+                'create clients',
+                'view packing lists',
+                'create packing lists',
+                'view proforma invoices',
+                'view commercial invoices',
+                'view bank accounts',
+            ])->get()
+        );
 
-            'view suppliers',
+        $viewer = Role::firstOrCreate(['name' => 'Viewer', 'guard_name' => 'web']);
+        $viewer->syncPermissions(
+            Permission::where('name', 'like', 'view %')->get()
+        );
 
-            'view clients',
-        ]);
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+    }
+
+    private function namesFor(array $actions, array $modules): array
+    {
+        $names = [];
+        foreach ($actions as $action) {
+            foreach ($modules as $module) {
+                $names[] = "{$action} {$module}";
+            }
+        }
+        return $names;
     }
 }

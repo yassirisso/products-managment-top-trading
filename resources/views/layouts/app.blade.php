@@ -13,11 +13,9 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
-            defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
 </head>
 
@@ -45,78 +43,76 @@
                     <nav class="flex-1 px-2 space-y-1">
 
                         <!-- Dashboard -->
-                        <a href="{{ route('dashboard') }}"
-                           class="@if(request()->routeIs('dashboard')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Dashboard
-
-                        </a>
+                        @can('view dashboard')
+                            <a href="{{ route('dashboard') }}"
+                                class="@if (request()->routeIs('dashboard')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Dashboard
+                            </a>
+                        @endcan
 
                         <!-- Products -->
-                        <a href="{{ route('products.index') }}"
-                           class="@if(request()->routeIs('products*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Products
-
-                        </a>
+                        @can('view products')
+                            <a href="{{ route('products.index') }}"
+                                class="@if (request()->routeIs('products*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Products
+                            </a>
+                        @endcan
 
                         <!-- Clients -->
-                        <a href="{{ route('clients.index') }}"
-                           class="@if(request()->routeIs('clients*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Clients
-
-                        </a>
+                        @can('view clients')
+                            <a href="{{ route('clients.index') }}"
+                                class="@if (request()->routeIs('clients*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Clients
+                            </a>
+                        @endcan
 
                         <!-- Suppliers -->
-                        <a href="{{ route('suppliers.index') }}"
-                           class="@if(request()->routeIs('suppliers*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Suppliers
-
-                        </a>
+                        @can('view suppliers')
+                            <a href="{{ route('suppliers.index') }}"
+                                class="@if (request()->routeIs('suppliers*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Suppliers
+                            </a>
+                        @endcan
 
                         <!-- Packing Lists -->
-                        <a href="{{ route('packing-lists.index') }}"
-                           class="@if(request()->routeIs('packing-lists*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        @can('view packing lists')
+                            <a href="{{ route('packing-lists.index') }}"
+                                class="@if (request()->routeIs('packing-lists*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Packing Lists
+                            </a>
+                        @endcan
 
-                            Packing Lists
+                        <!-- Proforma Invoices -->
+                        @can('view proforma invoices')
+                            <a href="{{ route('proforma-invoices.index') }}"
+                                class="@if (request()->routeIs('proforma-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Proforma Invoices
+                            </a>
+                        @endcan
 
-                        </a>
-
-                        <!-- PROFORMA INVOICE -->
-                        <a href="{{ route('proforma-invoices.index') }}"
-                           class="@if(request()->routeIs('proforma-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Proforma Invoices
-
-                        </a>
-
-                        <!-- COMMERCIAL INVOICE -->
-                        <a href="{{ route('commercial-invoices.index') }}"
-                           class="@if(request()->routeIs('commercial-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Commercial Invoices
-
-                        </a>
+                        <!-- Commercial Invoices -->
+                        @can('view commercial invoices')
+                            <a href="{{ route('commercial-invoices.index') }}"
+                                class="@if (request()->routeIs('commercial-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Commercial Invoices
+                            </a>
+                        @endcan
 
                         <!-- Bank Accounts -->
-                        <a href="{{ route('bank-accounts.index') }}"
-                           class="@if(request()->routeIs('bank-accounts*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Bank Accounts
-
-                        </a>
+                        @can('view bank accounts')
+                            <a href="{{ route('bank-accounts.index') }}"
+                                class="@if (request()->routeIs('bank-accounts*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Bank Accounts
+                            </a>
+                        @endcan
 
                         <!-- Users -->
-                        <a href="{{ route('users.index') }}"
-                        class="@if(request()->routeIs('users*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-
-                            Users
-
-                        </a>
-
-                        </a>
+                        @can('view users')
+                            <a href="{{ route('users.index') }}"
+                                class="@if (request()->routeIs('users*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                Users
+                            </a>
+                        @endcan
 
                     </nav>
 
@@ -136,9 +132,7 @@
                 <div>
 
                     @isset($header)
-
                         {{ $header }}
-
                     @endisset
 
                 </div>
@@ -151,13 +145,11 @@
 
                     </span>
 
-                    <form method="POST"
-                          action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout') }}">
 
                         @csrf
 
-                        <button type="submit"
-                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
 
                             Logout
 
@@ -184,15 +176,13 @@
 
     <!-- Mobile menu script -->
     <script>
-
-        document.getElementById('mobile-menu-button')?.addEventListener('click', function () {
+        document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
 
             const menu = document.getElementById('mobile-menu');
 
             menu.classList.toggle('hidden');
 
         });
-
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
