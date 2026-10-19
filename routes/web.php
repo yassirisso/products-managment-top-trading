@@ -79,19 +79,40 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('products', ProductController::class)
-        ->middleware('permission:view products');
+    // 1) Static paths FIRST — must come before any {product} wildcard
+    Route::middleware('permission:create products')->group(function () {
+        Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('products', [ProductController::class, 'store'])->name('products.store');
 
-    Route::get('/products/import', function () {
+        Route::get('/products/import', function () {
+            return view('products.import');
+        });
 
-        return view('products.import');
-    })->middleware('permission:create products');
+        Route::post('/products/import', [ProductController::class, 'import'])
+            ->name('products.import');
+    });
 
-    Route::post(
-        '/products/import',
-        [ProductController::class, 'import']
-    )->name('products.import')
-        ->middleware('permission:create products');
+    // 2) Dynamic paths AFTER
+    Route::middleware('permission:view products')->group(function () {
+        Route::get('products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+        Route::get('products/{product}/suppliers/{supplier}/history', [ProductController::class, 'supplierHistory'])->name('products.supplier-history');
+    });
+
+    Route::middleware('permission:edit products')->group(function () {
+        Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::patch('products/{product}', [ProductController::class, 'update']);
+
+        Route::post('products/{product}/purchases', [ProductController::class, 'storePurchase'])->name('products.purchases.store');
+        Route::get('products/{product}/purchases/create', [ProductController::class, 'createPurchase'])->name('products.purchases.create');
+        Route::post('products/{product}/suppliers', [ProductController::class, 'storeSupplier'])->name('products.suppliers.store');
+        Route::get('products/{product}/suppliers/create', [ProductController::class, 'createSupplier'])->name('products.suppliers.create');
+    });
+
+    Route::middleware('permission:delete products')->group(function () {
+        Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    });
 
 
     /*

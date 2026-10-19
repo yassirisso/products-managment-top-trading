@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -89,45 +90,67 @@ class UserController extends Controller
         ));
     }
 
-
     public function update(Request $request, User $user)
     {
-        $request->validate([
-            'role' => 'required|exists:roles,name',
-            'permissions' => 'nullable|array',
+        $validated = $request->validate([
+            'role'          => 'required|exists:roles,name',
+            'permissions'   => 'nullable|array',
             'permissions.*' => 'exists:permissions,name',
-            'is_active' => 'required|boolean',
+            'is_active'     => 'required|boolean',
         ]);
 
-        $user->update([
-            'is_active' => $request->is_active,
-        ]);
+        DB::transaction(function () use ($validated, $user) {
+            $user->update(['is_active' => $validated['is_active']]);
+            $user->syncRoles([$validated['role']]);
+            $user->syncPermissions([]);
 
+            $role = Role::findByName($validated['role']);
+            $role->syncPermissions($validated['permissions'] ?? []);
+        });
 
-        // Update user role
-        $user->syncRoles([$request->role]);
-
-
-        // Update role permissions
-        $role = Role::findByName($request->role);
-
-        if ($request->has('permissions')) {
-
-            $role->syncPermissions($request->permissions);
-        } else {
-
-            $role->syncPermissions([]);
-        }
-
-
-        // Update user permissions
-        $user->syncPermissions($request->permissions ?? []);
-
-
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User permissions updated successfully');
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully');
     }
+
+
+    // public function update(Request $request, User $user)
+    // {
+    //     $request->validate([
+    //         'role' => 'required|exists:roles,name',
+    //         'permissions' => 'nullable|array',
+    //         'permissions.*' => 'exists:permissions,name',
+    //         'is_active' => 'required|boolean',
+    //     ]);
+
+    //     $user->update([
+    //         'is_active' => $request->is_active,
+    //     ]);
+
+
+    //     // Update user role
+    //     $user->syncRoles([$request->role]);
+
+
+    //     // Update role permissions
+    //     $role = Role::findByName($request->role);
+
+    //     if ($request->has('permissions')) {
+
+    //         $role->syncPermissions($request->permissions);
+    //     } else {
+
+    //         $role->syncPermissions([]);
+    //     }
+
+
+    //     // Update user permissions
+    //     $user->syncPermissions($request->permissions ?? []);
+
+
+    //     return redirect()
+    //         ->route('users.index')
+    //         ->with('success', 'User permissions updated successfully');
+    // }
 
 
     public function destroy(User $user)

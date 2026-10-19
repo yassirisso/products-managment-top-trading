@@ -109,19 +109,20 @@
                     </label>
 
 
+                    @php $rolePermissions = $user->getPermissionsViaRoles()->pluck('name'); @endphp
+
                     @foreach ($permissions as $permission)
                         <label class="block">
-
-                            <input type="checkbox" class="permission-checkbox" name="permissions[]"
-                                value="{{ $permission->name }}"
-                                {{ $user->hasPermissionTo($permission->name) ? 'checked' : '' }}>
-
+                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                {{ $rolePermissions->contains($permission->name) ? 'checked' : '' }}>
                             {{ $permission->name }}
-
                         </label>
                     @endforeach
 
-
+                    <p class="text-sm text-red-600">
+                        ⚠️ Changing these affects <strong>all users</strong> with the role
+                        "{{ request()->old('role', $user->roles->first()?->name) }}"
+                    </p>
                 </div>
 
 
