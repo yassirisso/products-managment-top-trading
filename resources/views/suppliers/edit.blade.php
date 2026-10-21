@@ -2,7 +2,7 @@
 
     <x-slot name="header">
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight break-words">
 
             Edit Supplier: {{ $supplier->name }}
 
@@ -13,15 +13,16 @@
     <div class="container mx-auto px-4 py-6">
 
         <!-- HEADER -->
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
 
-            <h1 class="text-2xl font-bold text-gray-800">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800 break-words">
 
                 Edit Supplier: {{ $supplier->name }}
 
             </h1>
 
-            <a href="{{ route('suppliers.index') }}" class="text-gray-600 hover:text-gray-800 flex items-center">
+            <a href="{{ route('suppliers.index') }}"
+                class="text-gray-600 hover:text-gray-800 flex items-center text-sm whitespace-nowrap">
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
 
@@ -38,13 +39,12 @@
         </div>
 
         <!-- EDIT FORM -->
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="bg-white shadow-md rounded-lg p-4 md:p-6 mb-6">
 
             <form action="{{ route('suppliers.update', $supplier) }}" method="POST">
 
                 @csrf
                 @method('PUT')
-
 
                 <div class="mb-6">
 
@@ -52,10 +52,10 @@
                         Supplier Information
                     </label>
 
-                    <div class="flex flex-col md:flex-row gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                         <!-- NAME -->
-                        <div class="flex-1">
+                        <div class="min-w-0">
 
                             <input type="text" name="name" id="name"
                                 value="{{ old('name', $supplier->name) }}" required autofocus
@@ -69,7 +69,7 @@
                         </div>
 
                         <!-- TYPE -->
-                        <div class="flex-1">
+                        <div class="min-w-0">
 
                             <select name="type" id="type" required onchange="toggleShopNumber()"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -89,7 +89,7 @@
                         </div>
 
                         <!-- SHOP NUMBER -->
-                        <div class="flex-1" id="shop_number_wrapper">
+                        <div class="min-w-0" id="shop_number_wrapper">
 
                             <input type="text" name="shop_number" id="shop_number"
                                 value="{{ old('shop_number', $supplier->shop_number) }}" placeholder="Shop number"
@@ -102,7 +102,7 @@
                         </div>
 
                         <!-- EMAIL -->
-                        <div class="flex-1">
+                        <div class="min-w-0">
 
                             <input type="email" name="email" id="email"
                                 value="{{ old('email', $supplier->email) }}" placeholder="Supplier email"
@@ -115,7 +115,7 @@
                         </div>
 
                         <!-- PHONE -->
-                        <div class="flex-1">
+                        <div class="min-w-0">
 
                             <input type="text" name="phone" id="phone"
                                 value="{{ old('phone', $supplier->phone) }}" placeholder="Supplier phone"
@@ -131,17 +131,17 @@
                 </div>
 
                 <!-- BUTTONS -->
-                <div class="flex justify-end space-x-2">
+                <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-4">
 
                     <a href="{{ route('suppliers.show', $supplier) }}"
-                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-center w-full sm:w-auto">
 
                         Cancel
 
                     </a>
 
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
 
                         Update Supplier
 
@@ -154,18 +154,18 @@
         </div>
 
         <!-- PRODUCTS SECTION -->
-        <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg p-4 md:p-6">
 
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
 
-                <h2 class="text-xl font-semibold">
+                <h2 class="text-lg md:text-xl font-semibold">
 
                     Supplier Products
 
                 </h2>
 
                 <button onclick="document.getElementById('addProductModal').classList.remove('hidden')"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center text-sm">
 
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
                         fill="currentColor">
@@ -184,13 +184,55 @@
 
             @if ($supplier->products->isEmpty())
 
-                <p class="text-gray-500">
+                <p class="text-gray-500 text-sm">
 
                     No products associated with this supplier.
 
                 </p>
             @else
-                <div class="overflow-x-auto">
+                <!-- MOBILE / TABLET : CARDS -->
+                <div class="lg:hidden space-y-3">
+
+                    @foreach ($supplier->products as $product)
+                        <div class="border rounded-lg p-3 flex justify-between items-start gap-2 text-sm">
+
+                            <div class="min-w-0">
+
+                                <p class="font-medium text-gray-900 break-words">
+
+                                    {{ $product->reference }} - {{ $product->name }}
+
+                                </p>
+
+                                <p class="text-gray-700 mt-1">
+
+                                    Buying Price: <span
+                                        class="font-medium">{{ number_format($product->pivot->buying_price, 2) }}¥</span>
+
+                                </p>
+
+                            </div>
+
+                            <a href="{{ route('products.edit', $product) }}"
+                                class="text-blue-500 hover:text-blue-700 shrink-0" title="Edit Product">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    fill="currentColor">
+
+                                    <path
+                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+
+                                </svg>
+
+                            </a>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <!-- DESKTOP : TABLE -->
+                <div class="hidden lg:block overflow-x-auto">
 
                     <table class="min-w-full divide-y divide-gray-200">
 
@@ -200,23 +242,17 @@
 
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
                                     Product
-
                                 </th>
 
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
                                     Buying Price
-
                                 </th>
 
                                 <th
                                     class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-
                                     Actions
-
                                 </th>
 
                             </tr>
@@ -228,26 +264,22 @@
                             @foreach ($supplier->products as $product)
                                 <tr class="hover:bg-gray-50">
 
-                                    <!-- PRODUCT -->
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         {{ $product->reference }} - {{ $product->name }}
 
                                     </td>
 
-                                    <!-- PRICE -->
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         {{ number_format($product->pivot->buying_price, 2) }}¥
 
                                     </td>
 
-                                    <!-- ACTIONS -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
                                         <div class="flex justify-end items-center space-x-2">
 
-                                            <!-- EDIT PRODUCT -->
                                             <a href="{{ route('products.edit', $product) }}"
                                                 class="text-blue-500 hover:text-blue-700" title="Edit Product">
 
@@ -260,34 +292,6 @@
                                                 </svg>
 
                                             </a>
-
-                                            <!-- REMOVE -->
-                                            {{-- <form action="{{ route('suppliers.detach-product', ['supplier' => $supplier, 'productId' => $product->id]) }}"
-                                                  method="POST"
-                                                  class="inline">
-
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit"
-                                                        class="text-red-500 hover:text-red-700"
-                                                        title="Remove Product"
-                                                        onclick="return confirm('Are you sure you want to remove this product?')">
-
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         class="h-5 w-5"
-                                                         viewBox="0 0 20 20"
-                                                         fill="currentColor">
-
-                                                        <path fill-rule="evenodd"
-                                                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                              clip-rule="evenodd" />
-
-                                                    </svg>
-
-                                                </button>
-
-                                            </form> --}}
 
                                         </div>
 
@@ -307,9 +311,10 @@
         </div>
 
         <!-- MODAL -->
-        <div id="addProductModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div id="addProductModal"
+            class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
 
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="relative top-10 md:top-20 mx-auto p-5 border w-[92%] max-w-md shadow-lg rounded-md bg-white">
 
                 <div class="flex justify-between items-center mb-4">
 
@@ -376,18 +381,18 @@
                     </div>
 
                     <!-- BUTTONS -->
-                    <div class="flex justify-end">
+                    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
 
                         <button type="button"
                             onclick="document.getElementById('addProductModal').classList.add('hidden')"
-                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
 
                             Cancel
 
                         </button>
 
                         <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto">
 
                             Add Product
 
