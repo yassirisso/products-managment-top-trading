@@ -51,13 +51,18 @@ class ShippingCompanyController extends Controller
 
     public function show(ShippingCompany $shippingCompany)
     {
-        $shippingCompany->load(['contacts', 'fees.commercialInvoice.client']);
+        $shippingCompany->load('contacts');
+
+        $fees = $shippingCompany->fees()
+            ->with('commercialInvoice.client')
+            ->latest('date')
+            ->paginate(10, ['*'], 'fees_page');
 
         $commercialInvoices = CommercialInvoice::with('client')
             ->latest()
             ->get();
 
-        return view('shipping-companies.show', compact('shippingCompany', 'commercialInvoices'));
+        return view('shipping-companies.show', compact('shippingCompany', 'fees', 'commercialInvoices'));
     }
 
     public function edit(ShippingCompany $shippingCompany)

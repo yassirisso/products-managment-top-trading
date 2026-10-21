@@ -24,12 +24,9 @@
             <div class="flex space-x-2">
 
                 <a href="{{ route('clients.edit', $client) }}"
-                   class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="h-5 w-5 mr-1"
-                         viewBox="0 0 20 20"
-                         fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
 
                         <path
                             d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -72,20 +69,21 @@
 
                         </p>
 
-                    </div>
+                        <p class="text-gray-600 mt-1">
 
-                    <!-- Right Side -->
-                    <div class="md:text-right">
-
-                        <p class="text-sm text-gray-600">
-
-                            Last updated: {{ $client->updated_at->diffForHumans() }}
+                            ✉️ {{ $client->email ?? 'No email added' }}
 
                         </p>
 
                         <p class="text-gray-600 mt-1">
 
-                            Registered: {{ $client->created_at->format('M d, Y') }}
+                            ICE: {{ $client->ice_number ?? '—' }}
+
+                        </p>
+
+                        <p class="text-gray-600 mt-1">
+
+                            Fax: {{ $client->fax ?? '—' }}
 
                         </p>
 
@@ -93,120 +91,132 @@
 
                 </div>
 
+                <!-- Right Side -->
+                <div class="md:text-right">
+
+                    <p class="text-sm text-gray-600">
+
+                        Last updated: {{ $client->updated_at->diffForHumans() }}
+
+                    </p>
+
+                    <p class="text-gray-600 mt-1">
+
+                        Registered: {{ $client->created_at->format('M d, Y') }}
+
+                    </p>
+
+                </div>
+
             </div>
 
         </div>
 
-        <!-- Invoices Section -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    </div>
 
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+    <!-- Invoices Section -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
 
-                <h3 class="text-lg font-medium text-gray-900">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
 
-                    History
+            <h3 class="text-lg font-medium text-gray-900">
 
-                </h3>
+                History
 
-                <a href="{{ route('invoices.create', $client) }}"
-                   class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center">
+            </h3>
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="h-4 w-4 mr-1"
-                         viewBox="0 0 20 20"
-                         fill="currentColor">
+            <a href="{{ route('invoices.create', $client) }}"
+                class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center">
 
-                        <path fill-rule="evenodd"
-                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                              clip-rule="evenodd" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
 
-                    </svg>
+                    <path fill-rule="evenodd"
+                        d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                        clip-rule="evenodd" />
 
-                    New Invoice
+                </svg>
 
-                </a>
+                New Invoice
 
-            </div>
+            </a>
 
-            @forelse($invoices as $invoice)
+        </div>
 
-                <div class="border-b border-gray-200 px-6 py-4 hover:bg-gray-50">
+        @forelse($invoices as $invoice)
 
-                    <div class="flex justify-between items-start mb-2">
+            <div class="border-b border-gray-200 px-6 py-4 hover:bg-gray-50">
 
-                        <div>
+                <div class="flex justify-between items-start mb-2">
 
-                            <h4 class="font-medium">
+                    <div>
 
-                                Invoice #{{ $invoice->id }}
+                        <h4 class="font-medium">
 
-                            </h4>
+                            Invoice #{{ $invoice->id }}
 
-                            <p class="text-sm text-gray-500">
+                        </h4>
 
-                                {{ $invoice->invoice_date->format('M d, Y') }}
+                        <p class="text-sm text-gray-500">
 
-                            </p>
+                            {{ $invoice->invoice_date->format('M d, Y') }}
+
+                        </p>
+
+                    </div>
+
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+
+                        ¥{{ number_format($invoice->total_amount, 2) }}
+
+                    </span>
+
+                </div>
+
+                <div class="mt-2 space-y-1">
+
+                    @foreach ($invoice->items as $item)
+                        <div class="flex justify-between text-sm">
+
+                            <span>
+
+                                {{ $item->product->reference }}
+
+                            </span>
+
+                            <span>
+
+                                ¥{{ number_format($item->unit_price, 2) }}
+                                ×
+                                {{ $item->quantity }}
+
+                            </span>
 
                         </div>
-
-                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-
-                            ¥{{ number_format($invoice->total_amount, 2) }}
-
-                        </span>
-
-                    </div>
-
-                    <div class="mt-2 space-y-1">
-
-                        @foreach ($invoice->items as $item)
-
-                            <div class="flex justify-between text-sm">
-
-                                <span>
-
-                                    {{ $item->product->reference }}
-
-                                </span>
-
-                                <span>
-
-                                    ¥{{ number_format($item->unit_price, 2) }}
-                                    ×
-                                    {{ $item->quantity }}
-
-                                </span>
-
-                            </div>
-
-                        @endforeach
-
-                    </div>
+                    @endforeach
 
                 </div>
 
-            @empty
+            </div>
 
-                <div class="px-6 py-4 text-center text-gray-500">
+        @empty
 
-                    No invoices found for this client.
+            <div class="px-6 py-4 text-center text-gray-500">
 
-                </div>
+                No invoices found for this client.
 
-            @endforelse
+            </div>
 
-            @if ($invoices->hasPages())
+        @endforelse
 
-                <div class="px-6 py-4 border-t border-gray-200">
+        @if ($invoices->hasPages())
+            <div class="px-6 py-4 border-t border-gray-200">
 
-                    {{ $invoices->links() }}
+                {{ $invoices->links() }}
 
-                </div>
+            </div>
+        @endif
 
-            @endif
-
-        </div>
+    </div>
 
     </div>
 
