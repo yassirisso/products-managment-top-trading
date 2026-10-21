@@ -21,17 +21,13 @@
 
             </h1>
 
-            <a href="{{ route('suppliers.index') }}"
-               class="text-gray-600 hover:text-gray-800 flex items-center">
+            <a href="{{ route('suppliers.index') }}" class="text-gray-600 hover:text-gray-800 flex items-center">
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="h-5 w-5 mr-1"
-                     viewBox="0 0 20 20"
-                     fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
 
                     <path fill-rule="evenodd"
-                          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                          clip-rule="evenodd" />
+                        d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                        clip-rule="evenodd" />
 
                 </svg>
 
@@ -44,13 +40,12 @@
         <!-- EDIT FORM -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
 
-            <form action="{{ route('suppliers.update', $supplier) }}"
-                  method="POST">
+            <form action="{{ route('suppliers.update', $supplier) }}" method="POST">
 
                 @csrf
                 @method('PUT')
 
-                
+
                 <div class="mb-6">
 
                     <label class="block text-gray-700 text-sm font-bold mb-2">
@@ -62,12 +57,8 @@
                         <!-- NAME -->
                         <div class="flex-1">
 
-                            <input type="text"
-                                name="name"
-                                id="name"
-                                value="{{ old('name', $supplier->name) }}"
-                                required
-                                autofocus
+                            <input type="text" name="name" id="name"
+                                value="{{ old('name', $supplier->name) }}" required autofocus
                                 placeholder="Supplier name"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
@@ -77,14 +68,44 @@
 
                         </div>
 
+                        <!-- TYPE -->
+                        <div class="flex-1">
+
+                            <select name="type" id="type" required onchange="toggleShopNumber()"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                <option value="factory"
+                                    {{ old('type', $supplier->type) === 'factory' ? 'selected' : '' }}>Factory
+                                </option>
+                                <option value="shop" {{ old('type', $supplier->type) === 'shop' ? 'selected' : '' }}>
+                                    Shop</option>
+
+                            </select>
+
+                            @error('type')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
+                        <!-- SHOP NUMBER -->
+                        <div class="flex-1" id="shop_number_wrapper">
+
+                            <input type="text" name="shop_number" id="shop_number"
+                                value="{{ old('shop_number', $supplier->shop_number) }}" placeholder="Shop number"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            @error('shop_number')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+
+                        </div>
+
                         <!-- EMAIL -->
                         <div class="flex-1">
 
-                            <input type="email"
-                                name="email"
-                                id="email"
-                                value="{{ old('email', $supplier->email) }}"
-                                placeholder="Supplier email"
+                            <input type="email" name="email" id="email"
+                                value="{{ old('email', $supplier->email) }}" placeholder="Supplier email"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                             @error('email')
@@ -96,11 +117,8 @@
                         <!-- PHONE -->
                         <div class="flex-1">
 
-                            <input type="text"
-                                name="phone"
-                                id="phone"
-                                value="{{ old('phone', $supplier->phone) }}"
-                                placeholder="Supplier phone"
+                            <input type="text" name="phone" id="phone"
+                                value="{{ old('phone', $supplier->phone) }}" placeholder="Supplier phone"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                             @error('phone')
@@ -116,14 +134,14 @@
                 <div class="flex justify-end space-x-2">
 
                     <a href="{{ route('suppliers.show', $supplier) }}"
-                       class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
 
                         Cancel
 
                     </a>
 
                     <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
 
                         Update Supplier
 
@@ -147,16 +165,14 @@
                 </h2>
 
                 <button onclick="document.getElementById('addProductModal').classList.remove('hidden')"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="h-5 w-5 mr-1"
-                         viewBox="0 0 20 20"
-                         fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
+                        fill="currentColor">
 
                         <path fill-rule="evenodd"
-                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                              clip-rule="evenodd" />
+                            d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                            clip-rule="evenodd" />
 
                     </svg>
 
@@ -166,16 +182,14 @@
 
             </div>
 
-            @if($supplier->products->isEmpty())
+            @if ($supplier->products->isEmpty())
 
                 <p class="text-gray-500">
 
                     No products associated with this supplier.
 
                 </p>
-
             @else
-
                 <div class="overflow-x-auto">
 
                     <table class="min-w-full divide-y divide-gray-200">
@@ -184,19 +198,22 @@
 
                             <tr>
 
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 
                                     Product
 
                                 </th>
 
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 
                                     Buying Price
 
                                 </th>
 
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th
+                                    class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
 
                                     Actions
 
@@ -208,8 +225,7 @@
 
                         <tbody class="bg-white divide-y divide-gray-200">
 
-                            @foreach($supplier->products as $product)
-
+                            @foreach ($supplier->products as $product)
                                 <tr class="hover:bg-gray-50">
 
                                     <!-- PRODUCT -->
@@ -233,15 +249,13 @@
 
                                             <!-- EDIT PRODUCT -->
                                             <a href="{{ route('products.edit', $product) }}"
-                                               class="text-blue-500 hover:text-blue-700"
-                                               title="Edit Product">
+                                                class="text-blue-500 hover:text-blue-700" title="Edit Product">
 
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     class="h-5 w-5"
-                                                     viewBox="0 0 20 20"
-                                                     fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                    viewBox="0 0 20 20" fill="currentColor">
 
-                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                                    <path
+                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
 
                                                 </svg>
 
@@ -280,7 +294,6 @@
                                     </td>
 
                                 </tr>
-
                             @endforeach
 
                         </tbody>
@@ -294,8 +307,7 @@
         </div>
 
         <!-- MODAL -->
-        <div id="addProductModal"
-             class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div id="addProductModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
 
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
 
@@ -308,7 +320,7 @@
                     </h3>
 
                     <button onclick="document.getElementById('addProductModal').classList.add('hidden')"
-                            class="text-gray-500 hover:text-gray-700">
+                        class="text-gray-500 hover:text-gray-700">
 
                         &times;
 
@@ -316,38 +328,32 @@
 
                 </div>
 
-                <form action="{{ route('suppliers.attach-product', $supplier) }}"
-                      method="POST">
+                <form action="{{ route('suppliers.attach-product', $supplier) }}" method="POST">
 
                     @csrf
 
                     <!-- PRODUCT -->
                     <div class="mb-4">
 
-                        <label for="product_id"
-                               class="block text-gray-700 text-sm font-bold mb-2">
+                        <label for="product_id" class="block text-gray-700 text-sm font-bold mb-2">
 
                             Product *
 
                         </label>
 
-                        <select name="product_id"
-                                id="product_id"
-                                required
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select name="product_id" id="product_id" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                             <option value="">
                                 Select Product
                             </option>
 
-                            @foreach($availableProducts as $product)
-
+                            @foreach ($availableProducts as $product)
                                 <option value="{{ $product->id }}">
 
                                     {{ $product->reference }} - {{ $product->name }}
 
                                 </option>
-
                             @endforeach
 
                         </select>
@@ -357,20 +363,15 @@
                     <!-- BUYING PRICE -->
                     <div class="mb-4">
 
-                        <label for="buying_price"
-                               class="block text-gray-700 text-sm font-bold mb-2">
+                        <label for="buying_price" class="block text-gray-700 text-sm font-bold mb-2">
 
                             Buying Price *
 
                         </label>
 
-                        <input type="number"
-                               step="0.01"
-                               min="0"
-                               name="buying_price"
-                               id="buying_price"
-                               required
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="number" step="0.01" min="0" name="buying_price" id="buying_price"
+                            required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
 
                     </div>
 
@@ -378,15 +379,15 @@
                     <div class="flex justify-end">
 
                         <button type="button"
-                                onclick="document.getElementById('addProductModal').classList.add('hidden')"
-                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                            onclick="document.getElementById('addProductModal').classList.add('hidden')"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
 
                             Cancel
 
                         </button>
 
                         <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 
                             Add Product
 
@@ -403,18 +404,38 @@
     </div>
 
     <script>
-
         // CLOSE MODAL OUTSIDE CLICK
-        window.onclick = function(event)
-        {
+        window.onclick = function(event) {
             const modal = document.getElementById('addProductModal');
 
-            if (event.target === modal)
-            {
+            if (event.target === modal) {
                 modal.classList.add('hidden');
             }
         }
+    </script>
 
+    <script>
+        function toggleShopNumber() {
+            const typeEl = document.getElementById('type');
+            const wrapper = document.getElementById('shop_number_wrapper');
+            const shopNumber = document.getElementById('shop_number');
+
+            if (!typeEl || !wrapper) return;
+
+            if (typeEl.value === 'shop') {
+
+                wrapper.classList.remove('hidden');
+
+            } else {
+
+                wrapper.classList.add('hidden');
+
+                if (shopNumber) shopNumber.value = '';
+
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', toggleShopNumber);
     </script>
 
 </x-app-layout>

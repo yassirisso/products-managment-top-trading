@@ -76,6 +76,10 @@
                         </th>
 
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Type
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 
                             Clients
 
@@ -105,6 +109,19 @@
                                     {{ $supplier->name }}
 
                                 </a>
+
+                            </td>
+
+                            <!-- TYPE -->
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700">
+
+                                {{ ucfirst($supplier->type) }}
+
+                                @if ($supplier->type === 'shop' && $supplier->shop_number)
+                                    <span class="text-gray-400 text-xs">
+                                        ({{ $supplier->shop_number }})
+                                    </span>
+                                @endif
 
                             </td>
 
@@ -189,7 +206,7 @@
 
                         <tr>
 
-                            <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">
 
                                 No suppliers found.
 
