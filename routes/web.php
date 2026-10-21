@@ -12,6 +12,7 @@ use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\CommercialInvoiceController;
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShippingCompanyController;
 
@@ -53,9 +54,7 @@ Route::middleware(['auth'])->group(function () {
     */
 
     Route::middleware(['auth', 'permission:view dashboard'])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
 
 
