@@ -23,8 +23,14 @@
 
     <div class="flex h-screen">
 
+        <!-- MOBILE BACKDROP -->
+        <div id="mobile-menu-backdrop" class="hidden md:hidden fixed inset-0 bg-black bg-opacity-40 z-30"></div>
+
         <!-- Sidebar -->
-        <div class="hidden md:flex md:flex-shrink-0">
+        <div id="mobile-menu"
+            class="hidden md:flex md:flex-shrink-0
+                    fixed md:static inset-y-0 left-0 z-40
+                    w-64 md:w-auto">
 
             <div class="flex flex-col w-64 bg-gray-800">
 
@@ -35,6 +41,19 @@
                         TOP TRADING
 
                     </span>
+
+                    <!-- CLOSE BUTTON (mobile only) -->
+                    <button type="button" id="mobile-menu-close" class="md:hidden text-gray-300 hover:text-white">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+
+                        </svg>
+
+                    </button>
 
                 </div>
 
@@ -135,19 +154,37 @@
         <div class="flex flex-col flex-1 overflow-hidden">
 
             <!-- Top Bar -->
-            <div class="bg-white shadow px-6 py-4 flex justify-between items-center">
+            <div class="bg-white shadow px-4 md:px-6 py-4 flex justify-between items-center">
 
-                <div>
+                <div class="flex items-center gap-3 min-w-0">
 
-                    @isset($header)
-                        {{ $header }}
-                    @endisset
+                    <!-- BURGER (mobile / tablet only) -->
+                    <button type="button" id="mobile-menu-button"
+                        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none shrink-0">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+
+                        </svg>
+
+                    </button>
+
+                    <div class="min-w-0">
+
+                        @isset($header)
+                            {{ $header }}
+                        @endisset
+
+                    </div>
 
                 </div>
 
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 md:space-x-4 shrink-0">
 
-                    <span class="text-gray-700">
+                    <span class="text-gray-700 hidden sm:inline">
 
                         {{ auth()->user()->name }}
 
@@ -157,7 +194,7 @@
 
                         @csrf
 
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
 
                             Logout
 
@@ -184,13 +221,42 @@
 
     <!-- Mobile menu script -->
     <script>
-        document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
+        (function() {
 
+            const button = document.getElementById('mobile-menu-button');
+            const closeBtn = document.getElementById('mobile-menu-close');
             const menu = document.getElementById('mobile-menu');
+            const backdrop = document.getElementById('mobile-menu-backdrop');
 
-            menu.classList.toggle('hidden');
+            if (!button || !menu || !backdrop) return;
 
-        });
+            function openMenu() {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+                backdrop.classList.remove('hidden');
+            }
+
+            function closeMenu() {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+                backdrop.classList.add('hidden');
+            }
+
+            button.addEventListener('click', openMenu);
+
+            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+            backdrop.addEventListener('click', closeMenu);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeMenu();
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) closeMenu();
+            });
+
+        })();
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
