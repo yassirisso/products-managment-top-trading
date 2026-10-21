@@ -6,6 +6,7 @@ use App\Models\Supplier;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\SupplierContact;
 
 class SupplierController extends Controller
 {
@@ -54,6 +55,8 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:suppliers',
+            'type' => 'required|in:shop,factory',
+            'shop_number' => 'nullable|string|max:255|unique:suppliers,shop_number',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
         ]);
@@ -65,7 +68,7 @@ class SupplierController extends Controller
 
     public function show(Supplier $supplier)
     {
-        $supplier->load('products');
+        $supplier->load(['products', 'contacts']);
         return view('suppliers.show', compact('supplier'));
     }
 
@@ -82,6 +85,8 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:suppliers,name,' . $supplier->id,
+            'type' => 'required|in:shop,factory',
+            'shop_number' => 'nullable|string|max:255|unique:suppliers,shop_number,' . $supplier->id,
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
         ]);
@@ -202,5 +207,26 @@ class SupplierController extends Controller
 
 
         return response()->json($supplier);
+    }
+
+    public function storeContact(Request $request, Supplier $supplier)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:255',
+            'position' => 'nullable|string|max:255',
+        ]);
+
+        $supplier->contacts()->create($validated);
+
+        return back()->with('success', 'Contact added successfully.');
+    }
+
+    public function destroyContact(Supplier $supplier, SupplierContact $contact)
+    {
+        $contact->delete();
+
+        return back()->with('success', 'Contact removed successfully.');
     }
 }

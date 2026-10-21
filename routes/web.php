@@ -13,6 +13,7 @@ use App\Http\Controllers\ProformaInvoiceController;
 use App\Http\Controllers\CommercialInvoiceController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ShippingCompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +143,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('suppliers/{supplier}/products', [SupplierController::class, 'attachProduct'])->name('suppliers.attach-product');
         Route::delete('suppliers/{supplier}/products/{productId}', [SupplierController::class, 'detachProduct'])->name('suppliers.detach-product');
+        Route::post('suppliers/{supplier}/contacts', [SupplierController::class, 'storeContact'])->name('suppliers.contacts.store');
+        Route::delete('suppliers/{supplier}/contacts/{contact}', [SupplierController::class, 'destroyContact'])->name('suppliers.contacts.destroy');
     });
 
     // Delete
@@ -477,6 +480,33 @@ Route::middleware(['auth'])->group(function () {
     )
         ->name('supplier-payments.store')
         ->middleware('permission:edit products');
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHIPPING COMPANIES
+    |--------------------------------------------------------------------------
+    */
+
+    // Static paths FIRST — must come before {shippingCompany} wildcard
+    Route::get('shipping-companies/create', [ShippingCompanyController::class, 'create'])->name('shipping-companies.create');
+    Route::post('shipping-companies', [ShippingCompanyController::class, 'store'])->name('shipping-companies.store');
+
+    Route::get('shipping-companies', [ShippingCompanyController::class, 'index'])->name('shipping-companies.index');
+    Route::get('shipping-companies/{shippingCompany}', [ShippingCompanyController::class, 'show'])->name('shipping-companies.show');
+
+    Route::get('shipping-companies/{shippingCompany}/edit', [ShippingCompanyController::class, 'edit'])->name('shipping-companies.edit');
+    Route::put('shipping-companies/{shippingCompany}', [ShippingCompanyController::class, 'update'])->name('shipping-companies.update');
+    Route::patch('shipping-companies/{shippingCompany}', [ShippingCompanyController::class, 'update']);
+
+    Route::delete('shipping-companies/{shippingCompany}', [ShippingCompanyController::class, 'destroy'])->name('shipping-companies.destroy');
+
+    // Contacts
+    Route::post('shipping-companies/{shippingCompany}/contacts', [ShippingCompanyController::class, 'storeContact'])->name('shipping-companies.contacts.store');
+    Route::delete('shipping-companies/{shippingCompany}/contacts/{contact}', [ShippingCompanyController::class, 'destroyContact'])->name('shipping-companies.contacts.destroy');
+
+    // Fees
+    Route::post('shipping-companies/{shippingCompany}/fees', [ShippingCompanyController::class, 'storeFee'])->name('shipping-companies.fees.store');
+    Route::delete('shipping-companies/{shippingCompany}/fees/{fee}', [ShippingCompanyController::class, 'destroyFee'])->name('shipping-companies.fees.destroy');
 });
 
 

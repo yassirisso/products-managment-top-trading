@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
@@ -12,6 +13,8 @@ class Supplier extends Model
 
     protected $fillable = [
         'name',
+        'type',
+        'shop_number',
         'email',
         'phone',
     ];
@@ -39,5 +42,10 @@ class Supplier extends Model
     public function purchases()
     {
         return $this->hasMany(SupplierPurchase::class);
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(SupplierContact::class);
     }
 }

@@ -46,6 +46,8 @@ class ClientController extends Controller
             'phone' => 'nullable|string|max:30',
             'email' => 'nullable|email|max:255|unique:clients,email',
             'address' => 'nullable|string',
+            'ice_number' => 'nullable|string|max:255',
+            'fax' => 'nullable|string|max:255',
         ]);
 
         Client::create($validatedData);
@@ -74,6 +76,8 @@ class ClientController extends Controller
             'phone' => 'nullable|string|max:30',
             'email' => 'nullable|email|max:255|unique:clients,email,' . $client->id,
             'address' => 'nullable|string',
+            'ice_number' => 'nullable|string|max:255',
+            'fax' => 'nullable|string|max:255',
         ]);
 
         $client->update($validatedData);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CommercialInvoice extends Model
 {
@@ -37,5 +38,10 @@ class CommercialInvoice extends Model
     public function bankAccount()
     {
         return $this->belongsTo(BankAccount::class);
+    }
+
+    public function shippingFees(): HasMany
+    {
+        return $this->hasMany(ShippingFee::class);
     }
 }
