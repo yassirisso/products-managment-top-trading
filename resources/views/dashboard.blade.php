@@ -2,7 +2,7 @@
 
     <x-slot name="header">
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
 
             Dashboard
 
@@ -15,9 +15,9 @@
         <!-- HEADER: RANGE FILTER + QUICK ACTIONS -->
         <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
 
-            <div>
+            <div class="min-w-0">
 
-                <h1 class="text-2xl font-bold text-gray-800">
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">
                     Dashboard
                 </h1>
 
@@ -27,17 +27,18 @@
 
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
+            <div
+                class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 w-full md:w-auto min-w-0">
 
-                <form action="{{ route('dashboard') }}" method="GET">
+                <form action="{{ route('dashboard') }}" method="GET" class="w-full sm:w-auto">
 
-                    <select name="range"
-                            onchange="this.form.submit()"
-                            class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    <select name="range" onchange="this.form.submit()"
+                        class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md text-sm">
 
                         <option value="this_month" {{ $range === 'this_month' ? 'selected' : '' }}>This Month</option>
                         <option value="last_month" {{ $range === 'last_month' ? 'selected' : '' }}>Last Month</option>
-                        <option value="last_3_months" {{ $range === 'last_3_months' ? 'selected' : '' }}>Last 3 Months</option>
+                        <option value="last_3_months" {{ $range === 'last_3_months' ? 'selected' : '' }}>Last 3 Months
+                        </option>
                         <option value="this_year" {{ $range === 'this_year' ? 'selected' : '' }}>This Year</option>
 
                     </select>
@@ -46,21 +47,21 @@
 
                 @can('create clients')
                     <a href="{{ route('clients.create') }}"
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm text-center whitespace-nowrap">
                         + Client
                     </a>
                 @endcan
 
                 @can('create suppliers')
                     <a href="{{ route('suppliers.create') }}"
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm text-center whitespace-nowrap">
                         + Supplier
                     </a>
                 @endcan
 
                 @can('create commercial invoices')
                     <a href="{{ route('commercial-invoices.create') }}"
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm">
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm text-center whitespace-nowrap">
                         + Commercial Invoice
                     </a>
                 @endcan
@@ -70,21 +71,21 @@
         </div>
 
         <!-- KPI ROW -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mb-6">
 
             <!-- CLIENTS -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Clients</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $totalClients }}</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalClients }}</p>
 
             </div>
 
             <!-- SUPPLIERS -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Suppliers</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $totalSuppliers }}</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalSuppliers }}</p>
                 <p class="text-xs text-gray-500 mt-1">
                     {{ $totalShops }} shops · {{ $totalFactories }} factories
                 </p>
@@ -92,18 +93,19 @@
             </div>
 
             <!-- PRODUCTS -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Products</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $totalProducts }}</p>
+                <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalProducts }}</p>
 
             </div>
 
             <!-- INVOICES (PERIOD) -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
-                <p class="text-xs uppercase tracking-wide text-gray-500">Invoices ({{ str_replace('_', ' ', $range) }})</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">{{ $invoicesThisMonth }}</p>
+                <p class="text-xs uppercase tracking-wide text-gray-500">Invoices ({{ str_replace('_', ' ', $range) }})
+                </p>
+                <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $invoicesThisMonth }}</p>
                 <p class="text-xs text-gray-500 mt-1">
                     Total: {{ number_format($invoicesThisMonthTotal, 2) }}
                 </p>
@@ -111,10 +113,10 @@
             </div>
 
             <!-- SHIPPING FEES (PERIOD) -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Shipping Fees</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">
+                <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">
                     {{ number_format($shippingFeesRmb, 2) }} <span class="text-sm">RMB</span>
                 </p>
                 <p class="text-xs text-gray-500 mt-1">
@@ -124,10 +126,10 @@
             </div>
 
             <!-- OUTSTANDING -->
-            <div class="bg-white shadow-sm rounded-lg p-4">
+            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Outstanding Payments</p>
-                <p class="text-2xl font-bold text-red-600 mt-1">
+                <p class="text-xl md:text-2xl font-bold text-red-600 mt-1">
                     {{ number_format($outstandingAmount, 2) }}
                 </p>
                 <p class="text-xs text-gray-500 mt-1">
@@ -144,9 +146,11 @@
             <!-- SALES TREND -->
             <div class="bg-white shadow-sm rounded-lg p-4 lg:col-span-2">
 
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Monthly Sales Trend (last 12 months)</h3>
-                <div style="position: relative; height: 280px;">
-                    <canvas id="salesChart" height="110"></canvas>
+                <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-3">Monthly Sales Trend (last 12 months)
+                </h3>
+
+                <div style="position: relative; height: 260px;">
+                    <canvas id="salesChart"></canvas>
                 </div>
 
             </div>
@@ -154,9 +158,10 @@
             <!-- SUPPLIER TYPE -->
             <div class="bg-white shadow-sm rounded-lg p-4">
 
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Supplier Type Split</h3>
-                <div style="position: relative; height: 280px;">
-                    <canvas id="supplierTypeChart" height="200"></canvas>
+                <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-3">Supplier Type Split</h3>
+
+                <div style="position: relative; height: 260px;">
+                    <canvas id="supplierTypeChart"></canvas>
                 </div>
 
             </div>
@@ -169,9 +174,10 @@
             <!-- TOP CLIENTS -->
             <div class="bg-white shadow-sm rounded-lg p-4">
 
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Top 5 Clients (by invoice value)</h3>
-                <div style="position: relative; height: 280px;">
-                    <canvas id="topClientsChart" height="180"></canvas>
+                <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-3">Top 5 Clients (by invoice value)</h3>
+
+                <div style="position: relative; height: 260px;">
+                    <canvas id="topClientsChart"></canvas>
                 </div>
 
             </div>
@@ -179,10 +185,11 @@
             <!-- TOP SUPPLIERS -->
             <div class="bg-white shadow-sm rounded-lg p-4">
 
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Top 5 Suppliers (by purchase value)</h3>
+                <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-3">Top 5 Suppliers (by purchase value)
+                </h3>
 
-                <div style="position: relative; height: 280px;">
-                    <canvas id="topSuppliersChart" height="180"></canvas>
+                <div style="position: relative; height: 260px;">
+                    <canvas id="topSuppliersChart"></canvas>
                 </div>
 
             </div>
@@ -197,10 +204,10 @@
 
                 <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
 
-                    <h3 class="text-lg font-semibold text-gray-800">Recent Invoices</h3>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800">Recent Invoices</h3>
 
                     <a href="{{ route('commercial-invoices.index') }}"
-                       class="text-blue-600 hover:underline text-sm">
+                        class="text-blue-600 hover:underline text-sm whitespace-nowrap">
 
                         View all
 
@@ -208,50 +215,93 @@
 
                 </div>
 
-                <table class="min-w-full divide-y divide-gray-200">
+                <!-- DESKTOP TABLE -->
+                <div class="hidden lg:block">
 
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
 
-                        @forelse($recentInvoices as $invoice)
+                        <tbody class="bg-white divide-y divide-gray-200">
 
-                            <tr class="hover:bg-gray-50">
+                            @forelse($recentInvoices as $invoice)
+                                <tr class="hover:bg-gray-50">
 
-                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <td class="px-4 py-3 whitespace-nowrap">
 
-                                    <a href="{{ route('commercial-invoices.show', $invoice) }}"
-                                       class="text-blue-600 hover:underline">
+                                        <a href="{{ route('commercial-invoices.show', $invoice) }}"
+                                            class="text-blue-600 hover:underline">
 
-                                        #{{ $invoice->invoice_no ?? $invoice->id }}
+                                            #{{ $invoice->invoice_no ?? $invoice->id }}
 
-                                    </a>
+                                        </a>
 
-                                </td>
+                                    </td>
 
-                                <td class="px-4 py-3 whitespace-nowrap text-gray-700">
-                                    {{ $invoice->client?->name ?? '—' }}
-                                </td>
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-700">
+                                        {{ $invoice->client?->name ?? '—' }}
+                                    </td>
 
-                                <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-sm text-right">
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-sm text-right">
+                                        {{ $invoice->date }}
+                                    </td>
+
+                                </tr>
+
+                            @empty
+
+                                <tr>
+
+                                    <td colspan="3" class="px-4 py-3 text-center text-gray-500">
+                                        No invoices yet.
+                                    </td>
+
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- MOBILE / TABLET LIST -->
+                <div class="lg:hidden divide-y divide-gray-200">
+
+                    @forelse($recentInvoices as $invoice)
+                        <div class="px-4 py-3 text-sm">
+
+                            <div class="flex justify-between items-start gap-2">
+
+                                <a href="{{ route('commercial-invoices.show', $invoice) }}"
+                                    class="text-blue-600 hover:underline font-medium">
+
+                                    #{{ $invoice->invoice_no ?? $invoice->id }}
+
+                                </a>
+
+                                <span class="text-gray-500 text-xs shrink-0">
+
                                     {{ $invoice->date }}
-                                </td>
 
-                            </tr>
+                                </span>
 
-                        @empty
+                            </div>
 
-                            <tr>
+                            <p class="text-gray-700 mt-1 break-words">
 
-                                <td colspan="3" class="px-4 py-3 text-center text-gray-500">
-                                    No invoices yet.
-                                </td>
+                                {{ $invoice->client?->name ?? '—' }}
 
-                            </tr>
+                            </p>
 
-                        @endforelse
+                        </div>
 
-                    </tbody>
+                    @empty
 
-                </table>
+                        <div class="px-4 py-3 text-center text-gray-500 text-sm">
+                            No invoices yet.
+                        </div>
+                    @endforelse
+
+                </div>
 
             </div>
 
@@ -260,10 +310,10 @@
 
                 <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
 
-                    <h3 class="text-lg font-semibold text-gray-800">Recent Shipping Fees</h3>
+                    <h3 class="text-base md:text-lg font-semibold text-gray-800">Recent Shipping Fees</h3>
 
                     <a href="{{ route('shipping-companies.index') }}"
-                       class="text-blue-600 hover:underline text-sm">
+                        class="text-blue-600 hover:underline text-sm whitespace-nowrap">
 
                         View companies
 
@@ -271,43 +321,85 @@
 
                 </div>
 
-                <table class="min-w-full divide-y divide-gray-200">
+                <!-- DESKTOP TABLE -->
+                <div class="hidden lg:block">
 
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
 
-                        @forelse($recentFees as $fee)
+                        <tbody class="bg-white divide-y divide-gray-200">
 
-                            <tr class="hover:bg-gray-50">
+                            @forelse($recentFees as $fee)
+                                <tr class="hover:bg-gray-50">
 
-                                <td class="px-4 py-3 whitespace-nowrap text-gray-700">
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-700">
+                                        {{ $fee->shippingCompany?->name ?? '—' }}
+                                    </td>
+
+                                    <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-sm">
+                                        {{ $fee->commercialInvoice ? '#' . $fee->commercialInvoice->invoice_no : '—' }}
+                                    </td>
+
+                                    <td class="px-4 py-3 whitespace-nowrap text-right font-medium">
+                                        {{ number_format($fee->amount, 2) }} {{ $fee->currency }}
+                                    </td>
+
+                                </tr>
+
+                            @empty
+
+                                <tr>
+
+                                    <td colspan="3" class="px-4 py-3 text-center text-gray-500">
+                                        No shipping fees yet.
+                                    </td>
+
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- MOBILE / TABLET LIST -->
+                <div class="lg:hidden divide-y divide-gray-200">
+
+                    @forelse($recentFees as $fee)
+                        <div class="px-4 py-3 text-sm">
+
+                            <div class="flex justify-between items-start gap-2">
+
+                                <p class="text-gray-900 font-medium break-words">
+
                                     {{ $fee->shippingCompany?->name ?? '—' }}
-                                </td>
 
-                                <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-sm">
-                                    {{ $fee->commercialInvoice ? '#'.$fee->commercialInvoice->invoice_no : '—' }}
-                                </td>
+                                </p>
 
-                                <td class="px-4 py-3 whitespace-nowrap text-right font-medium">
+                                <p class="font-semibold shrink-0">
+
                                     {{ number_format($fee->amount, 2) }} {{ $fee->currency }}
-                                </td>
 
-                            </tr>
+                                </p>
 
-                        @empty
+                            </div>
 
-                            <tr>
+                            <p class="text-gray-500 text-xs mt-1">
 
-                                <td colspan="3" class="px-4 py-3 text-center text-gray-500">
-                                    No shipping fees yet.
-                                </td>
+                                {{ $fee->commercialInvoice ? '#' . $fee->commercialInvoice->invoice_no : '—' }}
 
-                            </tr>
+                            </p>
 
-                        @endforelse
+                        </div>
 
-                    </tbody>
+                    @empty
 
-                </table>
+                        <div class="px-4 py-3 text-center text-gray-500 text-sm">
+                            No shipping fees yet.
+                        </div>
+                    @endforelse
+
+                </div>
 
             </div>
 
@@ -316,27 +408,24 @@
         <!-- ALERTS -->
         <div class="bg-white shadow-sm rounded-lg p-4">
 
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Alerts / Pending Items</h3>
+            <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-3">Alerts / Pending Items</h3>
 
-            @if(empty($alerts))
+            @if (empty($alerts))
 
-                <p class="text-gray-500">All clear — nothing pending.</p>
-
+                <p class="text-gray-500 text-sm">All clear — nothing pending.</p>
             @else
-
                 <ul class="space-y-2">
 
-                    @foreach($alerts as $alert)
+                    @foreach ($alerts as $alert)
+                        <li class="flex items-start gap-2 text-sm">
 
-                        <li class="flex items-start gap-2">
-
-                            <span class="inline-block w-2 h-2 rounded-full mt-2
+                            <span
+                                class="inline-block w-2 h-2 rounded-full mt-2 shrink-0
                                 {{ $alert['type'] === 'warning' ? 'bg-yellow-500' : 'bg-blue-500' }}"></span>
 
                             <span class="text-gray-700">{{ $alert['text'] }}</span>
 
                         </li>
-
                     @endforeach
 
                 </ul>
@@ -351,7 +440,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <script>
-
         const salesLabels = @json($salesLabels);
         const salesValues = @json($salesValues);
 
@@ -380,8 +468,16 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
         });
 
@@ -418,8 +514,16 @@
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { beginAtZero: true } }
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
             }
         });
 
@@ -440,11 +544,18 @@
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { beginAtZero: true } }
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
             }
         });
-
     </script>
 
 </x-app-layout>
