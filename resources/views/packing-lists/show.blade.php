@@ -2,7 +2,7 @@
 
     <x-slot name="header">
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
 
             Packing List Details
 
@@ -12,24 +12,31 @@
 
     <div class="container mx-auto px-4 py-6">
 
-        <div class="mb-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
 
             <a href="{{ route('packing-lists.download', $packingList->id) }}"
-               class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-center text-sm w-full sm:w-auto">
 
                 Download Excel
+
+            </a>
+
+            <a href="{{ route('packing-lists.index') }}"
+                class="text-gray-600 hover:text-gray-800 text-sm text-center sm:text-right">
+
+                &larr; Back to Packing Lists
 
             </a>
 
         </div>
 
         <!-- HEADER -->
-        <div class="bg-white shadow-lg rounded-lg p-8">
+        <div class="bg-white shadow-lg rounded-lg p-4 md:p-8">
 
             <!-- TOP -->
-            <div class="text-center mb-8">
+            <div class="text-center mb-6 md:mb-8">
 
-                <h1 class="text-3xl font-bold">
+                <h1 class="text-2xl md:text-3xl font-bold">
 
                     PACKING LIST
 
@@ -38,18 +45,18 @@
             </div>
 
             <!-- CLIENT + SHIPPING -->
-            <div class="grid grid-cols-2 gap-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8">
 
                 <!-- CLIENT -->
-                <div>
+                <div class="min-w-0 text-sm md:text-base">
 
-                    <h2 class="font-bold text-lg mb-4">
+                    <h2 class="font-bold text-base md:text-lg mb-3">
 
                         CLIENT INFO
 
                     </h2>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>TO:</strong>
 
@@ -57,7 +64,7 @@
 
                     </p>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>ADD:</strong>
 
@@ -65,7 +72,7 @@
 
                     </p>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>TEL:</strong>
 
@@ -76,15 +83,15 @@
                 </div>
 
                 <!-- SHIPPING -->
-                <div>
+                <div class="min-w-0 text-sm md:text-base">
 
-                    <h2 class="font-bold text-lg mb-4">
+                    <h2 class="font-bold text-base md:text-lg mb-3">
 
                         SHIPPING INFO
 
                     </h2>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>PORT OF LOADING:</strong>
 
@@ -92,7 +99,7 @@
 
                     </p>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>PORT OF DISCHARGE:</strong>
 
@@ -108,7 +115,7 @@
 
                     </p>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>CONTAINER NO:</strong>
 
@@ -116,7 +123,7 @@
 
                     </p>
 
-                    <p>
+                    <p class="break-words">
 
                         <strong>SEAL NO:</strong>
 
@@ -128,234 +135,230 @@
 
             </div>
 
-            <!-- PRODUCTS TABLE -->
-            <table class="w-full border border-gray-400">
+            @php
 
-                @php
+                $totalCtn = $packingList->products->sum(fn($p) => $p->pivot->ctn);
 
-                    $totalCtn = 0;
-                    $totalCbm = 0;
-                    $totalGw = 0;
-                    $totalNw = 0;
+                $totalCbm = $packingList->products->sum(fn($p) => $p->pivot->ctn * $p->unit_cbm);
 
-                @endphp
+                $totalGw = $packingList->products->sum(fn($p) => $p->pivot->ctn * $p->unit_gw);
 
-                <thead class="bg-gray-200">
+                $totalNw = $packingList->products->sum(fn($p) => $p->pivot->ctn * $p->unit_nw);
 
-                    <tr>
+            @endphp
 
-                        <th class="border p-2">
+            <!-- MOBILE / TABLET : PRODUCT CARDS -->
+            <div class="lg:hidden space-y-3">
 
-                            IMAGE
+                @foreach ($packingList->products as $product)
+                    @php
 
-                        </th>
+                        $rowQty = $product->pivot->ctn * $product->pcs_cts;
 
-                        <th class="border p-2">
+                        $rowCbm = $product->pivot->ctn * $product->unit_cbm;
 
-                            ITEM NO
+                        $rowGw = $product->pivot->ctn * $product->unit_gw;
 
-                        </th>
+                        $rowNw = $product->pivot->ctn * $product->unit_nw;
 
-                        <th class="border p-2">
+                        $totalCtn += $product->pivot->ctn;
 
-                            DESCRIPTION
+                        $totalCbm += $rowCbm;
 
-                        </th>
+                        $totalGw += $rowGw;
 
-                        <th class="border p-2">
+                        $totalNw += $rowNw;
 
-                            CTN
+                    @endphp
 
-                        </th>
+                    <div class="border rounded-lg p-3 text-sm">
 
-                        <th class="border p-2">
+                        <div class="flex gap-3">
 
-                            PCS/CTS
+                            @if ($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}"
+                                    class="w-16 h-16 object-cover rounded shrink-0">
+                            @endif
 
-                        </th>
+                            <div class="min-w-0 flex-1">
 
-                        <th class="border p-2">
+                                <p class="font-semibold text-gray-900 break-words">
 
-                            QTY
+                                    {{ $product->reference }}
 
-                        </th>
+                                </p>
 
-                        <th class="border p-2">
+                                <p class="text-gray-600 break-words">
 
-                            TOTAL CBM
+                                    {{ $product->description }}
 
-                        </th>
+                                </p>
 
-                        <th class="border p-2">
+                            </div>
 
-                            TOTAL GW
+                        </div>
 
-                        </th>
+                        <div class="grid grid-cols-2 gap-2 mt-3 text-gray-700">
 
-                        <th class="border p-2">
+                            <p><span class="text-gray-500">CTN:</span> {{ $product->pivot->ctn }}</p>
+                            <p><span class="text-gray-500">PCS/CTS:</span> {{ $product->pcs_cts }}</p>
+                            <p><span class="text-gray-500">QTY:</span> {{ $rowQty }}</p>
+                            <p><span class="text-gray-500">CBM:</span> {{ number_format($rowCbm, 3) }}</p>
+                            <p><span class="text-gray-500">GW:</span> {{ number_format($rowGw, 2) }}</p>
+                            <p><span class="text-gray-500">NW:</span> {{ number_format($rowNw, 2) }}</p>
 
-                            TOTAL NW
+                        </div>
 
-                        </th>
+                    </div>
+                @endforeach
 
-                    </tr>
+                <!-- TOTALS CARD -->
+                <div class="bg-gray-100 rounded-lg p-3 text-sm font-semibold text-gray-800">
 
-                </thead>
+                    <p class="mb-2">TOTALS</p>
 
-                <tbody>
+                    <div class="grid grid-cols-2 gap-2">
 
-                    @foreach($packingList->products as $product)
+                        <p><span class="text-gray-500 font-normal">CTN:</span> {{ $totalCtn }}</p>
+                        <p><span class="text-gray-500 font-normal">CBM:</span> {{ number_format($totalCbm, 3) }}</p>
+                        <p><span class="text-gray-500 font-normal">GW:</span> {{ number_format($totalGw, 2) }}</p>
+                        <p><span class="text-gray-500 font-normal">NW:</span> {{ number_format($totalNw, 2) }}</p>
 
-                        @php
+                    </div>
 
-                            $rowQty = $product->pivot->ctn * $product->pcs_cts;
+                </div>
 
-                            $rowCbm = $product->pivot->ctn * $product->unit_cbm;
+            </div>
 
-                            $rowGw = $product->pivot->ctn * $product->unit_gw;
+            <!-- DESKTOP : TABLE -->
+            <div class="hidden lg:block overflow-x-auto">
 
-                            $rowNw = $product->pivot->ctn * $product->unit_nw;
+                <table class="w-full border border-gray-400">
 
-                            $totalCtn += $product->pivot->ctn;
-
-                            $totalCbm += $rowCbm;
-
-                            $totalGw += $rowGw;
-
-                            $totalNw += $rowNw;
-
-                        @endphp
+                    <thead class="bg-gray-200">
 
                         <tr>
 
-                            <!-- IMAGE -->
-                            <td class="border p-2">
+                            <th class="border p-2">IMAGE</th>
+                            <th class="border p-2">ITEM NO</th>
+                            <th class="border p-2">DESCRIPTION</th>
+                            <th class="border p-2">CTN</th>
+                            <th class="border p-2">PCS/CTS</th>
+                            <th class="border p-2">QTY</th>
+                            <th class="border p-2">TOTAL CBM</th>
+                            <th class="border p-2">TOTAL GW</th>
+                            <th class="border p-2">TOTAL NW</th>
 
-                                @if($product->image)
+                        </tr>
 
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                         class="w-20 h-20 object-cover mx-auto">
+                    </thead>
 
-                                @endif
+                    <tbody>
 
+                        @foreach ($packingList->products as $product)
+                            @php
+
+                                $rowQty = $product->pivot->ctn * $product->pcs_cts;
+
+                                $rowCbm = $product->pivot->ctn * $product->unit_cbm;
+
+                                $rowGw = $product->pivot->ctn * $product->unit_gw;
+
+                                $rowNw = $product->pivot->ctn * $product->unit_nw;
+
+                                $totalCtn += $product->pivot->ctn;
+
+                                $totalCbm += $rowCbm;
+
+                                $totalGw += $rowGw;
+
+                                $totalNw += $rowNw;
+
+                            @endphp
+
+                            <tr>
+
+                                <td class="border p-2">
+
+                                    @if ($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}"
+                                            class="w-20 h-20 object-cover mx-auto">
+                                    @endif
+
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ $product->reference }}
+                                </td>
+
+                                <td class="border p-2">
+                                    {{ $product->description }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ $product->pivot->ctn }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ $product->pcs_cts }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ $rowQty }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ number_format($rowCbm, 3) }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ number_format($rowGw, 2) }}
+                                </td>
+
+                                <td class="border p-2 text-center">
+                                    {{ number_format($rowNw, 2) }}
+                                </td>
+
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+
+                    <tfoot class="bg-gray-100 font-bold">
+
+                        <tr>
+
+                            <td colspan="3" class="border p-2 text-right">
+                                TOTAL
                             </td>
 
-                            <!-- ITEM -->
                             <td class="border p-2 text-center">
-
-                                {{ $product->reference }}
-
+                                {{ $totalCtn }}
                             </td>
 
-                            <!-- DESCRIPTION -->
-                            <td class="border p-2">
+                            <td class="border p-2"></td>
 
-                                {{ $product->description }}
+                            <td class="border p-2"></td>
 
-                            </td>
-
-                            <!-- CTN -->
                             <td class="border p-2 text-center">
-
-                                {{ $product->pivot->ctn }}
-
+                                {{ number_format($totalCbm, 3) }}
                             </td>
 
-                            <!-- PCS -->
                             <td class="border p-2 text-center">
-
-                                {{ $product->pcs_cts }}
-
+                                {{ number_format($totalGw, 2) }}
                             </td>
 
-                            <!-- QTY -->
                             <td class="border p-2 text-center">
-
-                                {{ $rowQty }}
-
-                            </td>
-
-                            <!-- TOTAL CBM -->
-                            <td class="border p-2 text-center">
-
-                                {{ number_format($rowCbm, 3) }}
-
-                            </td>
-
-                            <!-- TOTAL GW -->
-                            <td class="border p-2 text-center">
-
-                                {{ number_format($rowGw, 2) }}
-
-                            </td>
-
-                            <!-- TOTAL NW -->
-                            <td class="border p-2 text-center">
-
-                                {{ number_format($rowNw, 2) }}
-
+                                {{ number_format($totalNw, 2) }}
                             </td>
 
                         </tr>
 
-                    @endforeach
+                    </tfoot>
 
-                </tbody>
+                </table>
 
-                <tfoot class="bg-gray-100 font-bold">
-
-                    <tr>
-
-                        <td colspan="3"
-                            class="border p-2 text-right">
-
-                            TOTAL
-
-                        </td>
-
-                        <!-- TOTAL CTN -->
-                        <td class="border p-2 text-center">
-
-                            {{ $totalCtn }}
-
-                        </td>
-
-                        <!-- PCS -->
-                        <td class="border p-2">
-
-                        </td>
-
-                        <!-- QTY -->
-                        <td class="border p-2">
-
-                        </td>
-
-                        <!-- TOTAL CBM -->
-                        <td class="border p-2 text-center">
-
-                            {{ number_format($totalCbm, 3) }}
-
-                        </td>
-
-                        <!-- TOTAL GW -->
-                        <td class="border p-2 text-center">
-
-                            {{ number_format($totalGw, 2) }}
-
-                        </td>
-
-                        <!-- TOTAL NW -->
-                        <td class="border p-2 text-center">
-
-                            {{ number_format($totalNw, 2) }}
-
-                        </td>
-
-                    </tr>
-
-                </tfoot>
-
-            </table>
+            </div>
 
         </div>
 
