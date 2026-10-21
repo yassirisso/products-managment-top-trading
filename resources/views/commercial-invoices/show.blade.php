@@ -2,7 +2,7 @@
 
     <x-slot name="header">
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
 
             Commercial Invoice Details
 
@@ -19,17 +19,17 @@
     <div class="container mx-auto px-4 py-6">
 
         <!-- TOP -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
 
-            <div>
+            <div class="min-w-0">
 
-                <h1 class="text-2xl font-bold text-gray-800">
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800 break-words">
 
                     Commercial Invoice #{{ $commercialInvoice->invoice_no }}
 
                 </h1>
 
-                <p class="text-gray-600">
+                <p class="text-gray-600 text-sm break-words">
 
                     Client:
                     {{ $commercialInvoice->client->name }}
@@ -38,11 +38,11 @@
 
             </div>
 
-            <div class="flex space-x-2">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0">
 
                 <!-- EXCEL -->
                 <a href="{{ route('commercial-invoices.download', $commercialInvoice) }}"
-                   class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded">
+                    class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded text-sm text-center whitespace-nowrap">
 
                     Download Excel
 
@@ -50,7 +50,7 @@
 
                 <!-- BACK -->
                 <a href="{{ route('commercial-invoices.index') }}"
-                   class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded">
+                    class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm text-center whitespace-nowrap">
 
                     Back
 
@@ -61,12 +61,12 @@
         </div>
 
         <!-- MAIN CARD -->
-        <div class="bg-white shadow-lg rounded-lg p-8">
+        <div class="bg-white shadow-lg rounded-lg p-4 md:p-8">
 
             <!-- TITLE -->
-            <div class="text-center mb-8">
+            <div class="text-center mb-6 md:mb-8">
 
-                <h1 class="text-3xl font-bold">
+                <h1 class="text-2xl md:text-3xl font-bold">
 
                     COMMERCIAL INVOICE
 
@@ -75,12 +75,12 @@
             </div>
 
             <!-- INFO -->
-            <div class="grid grid-cols-2 gap-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 text-sm md:text-base">
 
                 <!-- LEFT -->
-                <div>
+                <div class="min-w-0">
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>TO:</strong>
 
@@ -88,7 +88,7 @@
 
                     </p>
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>ADD:</strong>
 
@@ -96,7 +96,7 @@
 
                     </p>
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>TEL:</strong>
 
@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- RIGHT -->
-                <div>
+                <div class="min-w-0">
 
                     <p class="mb-2">
 
@@ -117,7 +117,7 @@
 
                     </p>
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>Invoice No:</strong>
 
@@ -125,7 +125,7 @@
 
                     </p>
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>Mode Of Delivery:</strong>
 
@@ -133,7 +133,7 @@
 
                     </p>
 
-                    <p class="mb-2">
+                    <p class="mb-2 break-words">
 
                         <strong>Country Of Origin:</strong>
 
@@ -146,9 +146,9 @@
             </div>
 
             <!-- PORTS -->
-            <div class="grid grid-cols-2 gap-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-8 text-sm md:text-base">
 
-                <div>
+                <div class="min-w-0 break-words">
 
                     <strong>PORT OF LOADING:</strong>
 
@@ -156,7 +156,7 @@
 
                 </div>
 
-                <div>
+                <div class="min-w-0 break-words">
 
                     <strong>PORT OF DISCHARGE:</strong>
 
@@ -166,8 +166,62 @@
 
             </div>
 
-            <!-- TABLE -->
-            <div class="overflow-x-auto">
+            <!-- ============ MOBILE / TABLET : PRODUCT CARDS ============ -->
+            <div class="lg:hidden space-y-3">
+
+                @foreach ($commercialInvoice->products as $product)
+                    @php
+
+                        $qty = $product->pivot->ctn * $product->pcs_cts;
+
+                        $amount = $qty * $product->pivot->unit_price;
+
+                        $total += $amount;
+
+                    @endphp
+
+                    <div class="border rounded-lg p-3 text-sm">
+
+                        <p class="font-semibold text-gray-900 break-words">
+
+                            {{ $product->reference }}
+
+                        </p>
+
+                        <p class="text-gray-600 break-words mb-2">
+
+                            {{ strtoupper($product->description) }}
+
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-2 text-gray-700">
+
+                            <p><span class="text-gray-500">CTN:</span> {{ $product->pivot->ctn }}</p>
+                            <p><span class="text-gray-500">PCS/CTS:</span> {{ $product->pcs_cts }}</p>
+                            <p><span class="text-gray-500">QTY:</span> {{ $qty }}</p>
+                            <p><span class="text-gray-500">Unit:</span>
+                                {{ number_format($product->pivot->unit_price, 2) }} {{ $commercialInvoice->currency }}
+                            </p>
+                            <p class="col-span-2 font-semibold"><span class="text-gray-500 font-normal">Amount:</span>
+                                {{ number_format($amount, 2) }} {{ $commercialInvoice->currency }}</p>
+
+                        </div>
+
+                    </div>
+                @endforeach
+
+                <!-- TOTAL CARD -->
+                <div class="bg-gray-100 rounded-lg p-3 flex justify-between items-center text-sm font-bold">
+
+                    <span>TOTAL AMOUNT FOB BY {{ $commercialInvoice->currency }}</span>
+                    <span>{{ number_format($total, 2) }} {{ $commercialInvoice->currency }}</span>
+
+                </div>
+
+            </div>
+
+            <!-- ============ DESKTOP : TABLE ============ -->
+            <div class="hidden lg:block overflow-x-auto">
 
                 <table class="w-full border border-gray-400">
 
@@ -175,47 +229,13 @@
 
                         <tr>
 
-                            <th class="border p-2">
-
-                                ITEM NO
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                DESCRIPTION
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                CTN
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                PCS/CTS
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                QTY
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                U.PRICE {{ $commercialInvoice->currency }}
-
-                            </th>
-
-                            <th class="border p-2">
-
-                                AMOUNT {{ $commercialInvoice->currency }}
-
-                            </th>
+                            <th class="border p-2">ITEM NO</th>
+                            <th class="border p-2">DESCRIPTION</th>
+                            <th class="border p-2">CTN</th>
+                            <th class="border p-2">PCS/CTS</th>
+                            <th class="border p-2">QTY</th>
+                            <th class="border p-2">U.PRICE {{ $commercialInvoice->currency }}</th>
+                            <th class="border p-2">AMOUNT {{ $commercialInvoice->currency }}</th>
 
                         </tr>
 
@@ -223,17 +243,14 @@
 
                     <tbody>
 
-                        @foreach($commercialInvoice->products as $product)
+                        @php $total = 0; @endphp
 
+                        @foreach ($commercialInvoice->products as $product)
                             @php
 
-                                $qty =
-                                    $product->pivot->ctn *
-                                    $product->pcs_cts;
+                                $qty = $product->pivot->ctn * $product->pcs_cts;
 
-                                $amount =
-                                    $qty *
-                                    $product->pivot->unit_price;
+                                $amount = $qty * $product->pivot->unit_price;
 
                                 $total += $amount;
 
@@ -241,68 +258,29 @@
 
                             <tr>
 
-                                <!-- ITEM -->
+                                <td class="border p-2 text-center">{{ $product->reference }}</td>
+                                <td class="border p-2 text-center">{{ strtoupper($product->description) }}</td>
+                                <td class="border p-2 text-center">{{ $product->pivot->ctn }}</td>
+                                <td class="border p-2 text-center">{{ $product->pcs_cts }}</td>
+                                <td class="border p-2 text-center">{{ $qty }}</td>
                                 <td class="border p-2 text-center">
-
-                                    {{ $product->reference }}
-
+                                    {{ number_format($product->pivot->unit_price, 2) }}
+                                    {{ $commercialInvoice->currency }}
                                 </td>
-
-                                <!-- DESCRIPTION -->
-                                <td class="border p-2 text-center">
-
-                                    {{ strtoupper($product->description) }}
-
-                                </td>
-
-                                <!-- CTN -->
-                                <td class="border p-2 text-center">
-
-                                    {{ $product->pivot->ctn }}
-
-                                </td>
-
-                                <!-- PCS -->
-                                <td class="border p-2 text-center">
-
-                                    {{ $product->pcs_cts }}
-
-                                </td>
-
-                                <!-- QTY -->
-                                <td class="border p-2 text-center">
-
-                                    {{ $qty }}
-
-                                </td>
-
-                                <!-- PRICE -->
-                                <td class="border p-2 text-center">
-
-                                    {{ number_format($product->pivot->unit_price, 2) }} {{ $commercialInvoice->currency }}
-
-                                </td>
-
-                                <!-- AMOUNT -->
                                 <td class="border p-2 text-center font-bold">
-
                                     {{ number_format($amount, 2) }} {{ $commercialInvoice->currency }}
-
                                 </td>
 
                             </tr>
-
                         @endforeach
 
                     </tbody>
 
-                    <!-- TOTAL -->
                     <tfoot>
 
                         <tr class="bg-gray-100 font-bold">
 
-                            <td colspan="6"
-                                class="border p-3 text-center">
+                            <td colspan="6" class="border p-3 text-center">
 
                                 TOTAL AMOUNT FOB BY {{ $commercialInvoice->currency }}
 
@@ -323,48 +301,36 @@
             </div>
 
             <!-- BANK INFO -->
-            <div class="mt-8 space-y-2 font-semibold">
+            <div class="mt-8 space-y-2 font-semibold text-sm md:text-base break-words">
 
                 <p>
-
                     TERM OF PAYMENT :
                     TRANSFER AFTER RECEIVE GOODS
-
                 </p>
 
                 <p>
-
                     BENEFICIARY NAME :
                     {{ $commercialInvoice->bankAccount?->beneficiary_name }}
-
                 </p>
 
                 <p>
-
                     A/C NO :
                     {{ $commercialInvoice->bankAccount?->account_number }}
-
                 </p>
 
                 <p>
-
                     SWIFT :
                     {{ $commercialInvoice->bankAccount?->swift }}
-
                 </p>
 
                 <p>
-
                     BENEFICIARY BANK :
                     {{ $commercialInvoice->bankAccount?->bank_name }}
-
                 </p>
 
                 <p>
-
                     BANK ADDRESS :
                     {{ $commercialInvoice->bankAccount?->bank_address }}
-
                 </p>
 
             </div>
