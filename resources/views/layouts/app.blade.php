@@ -184,11 +184,11 @@
 
                 <div class="flex items-center space-x-2 md:space-x-4 shrink-0">
 
-                    <span class="text-gray-700 hidden sm:inline">
+                    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-gray-700 hidden sm:inline" title="My Profile">
 
                         {{ auth()->user()->name }}
 
-                    </span>
+                    </a>
 
                     <form method="POST" action="{{ route('logout') }}">
 
