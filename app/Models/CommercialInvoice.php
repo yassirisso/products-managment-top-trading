@@ -18,6 +18,8 @@ class CommercialInvoice extends Model
         'country_of_origin',
         'bank_account_id',
         'currency',
+        'proforma_invoice_id',
+
     ];
 
     public function client()
@@ -44,4 +46,10 @@ class CommercialInvoice extends Model
     {
         return $this->hasMany(ShippingFee::class);
     }
+
+        public function proformaInvoice()
+    {
+        return $this->belongsTo(ProformaInvoice::class);
+    }
+    
 }

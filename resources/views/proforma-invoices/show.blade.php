@@ -47,6 +47,26 @@
 
                 </a>
 
+                <!-- CONVERT / VIEW CONVERTED -->
+                @if ($proformaInvoice->commercialInvoice)
+                    <a href="{{ route('commercial-invoices.show', $proformaInvoice->commercialInvoice) }}"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-sm text-center whitespace-nowrap">
+
+                        View Commercial Invoice
+                        #{{ $proformaInvoice->commercialInvoice->invoice_no ?? $proformaInvoice->commercialInvoice->id }}
+
+                    </a>
+                @else
+                    @can('create commercial invoices')
+                        <a href="{{ route('commercial-invoices.create', ['from_proforma' => $proformaInvoice->id]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm text-center whitespace-nowrap">
+
+                            Convert to Commercial Invoice
+
+                        </a>
+                    @endcan
+                @endif
+
                 <!-- BACK -->
                 <a href="{{ route('proforma-invoices.index') }}"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm text-center whitespace-nowrap">

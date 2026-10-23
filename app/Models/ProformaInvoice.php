@@ -38,4 +38,10 @@ class ProformaInvoice extends Model
         ->withPivot('ctn', 'unit_price')
         ->withTimestamps();
     }
+
+        public function commercialInvoice()
+    {
+        return $this->hasOne(CommercialInvoice::class);
+    }
+    
 }

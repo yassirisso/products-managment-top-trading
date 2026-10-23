@@ -47,21 +47,37 @@ class CommercialInvoiceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $clients = Client::all();
 
         $products = Product::all();
 
-        $bankAccounts =
-            auth()->user()->bankAccounts;
+        $bankAccounts = auth()->user()->bankAccounts;
+
+        // Prefill from a proforma invoice if requested
+        $proformaInvoice = null;
+
+        if ($request->filled('from_proforma')) {
+
+            $proformaInvoice = \App\Models\ProformaInvoice::with('products')
+                ->findOrFail($request->from_proforma);
+
+            // If already converted, redirect to the existing commercial invoice
+            if ($commercial = $proformaInvoice->commercialInvoice) {
+                return redirect()
+                    ->route('commercial-invoices.show', $commercial)
+                    ->with('success', 'This proforma invoice has already been converted.');
+            }
+        }
 
         return view(
             'commercial-invoices.create',
             compact(
                 'clients',
                 'products',
-                'bankAccounts'
+                'bankAccounts',
+                'proformaInvoice'
             )
         );
     }
@@ -75,9 +91,11 @@ class CommercialInvoiceController extends Controller
 
             'client_id' => 'required|exists:clients,id',
 
+            'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
+
             'date' => 'nullable|date',
 
-            'invoice_no' => 'nullable|string',
+            'invoice_no' => 'required|string|max:255',
 
             'port_of_loading' => 'nullable|string',
 
@@ -93,9 +111,29 @@ class CommercialInvoiceController extends Controller
             'currency' => 'required|in:RMB,USD',
         ]);
 
+        // Prevent double conversion
+        if ($request->filled('proforma_invoice_id')) {
+
+            $alreadyConverted = CommercialInvoice::where(
+                'proforma_invoice_id',
+                $request->proforma_invoice_id
+            )->exists();
+
+            if ($alreadyConverted) {
+
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'proforma_invoice_id' => 'This proforma invoice has already been converted.'
+                    ]);
+            }
+        }
+
         $commercialInvoice = CommercialInvoice::create([
 
             'client_id' => $request->client_id,
+
+            'proforma_invoice_id' => $request->proforma_invoice_id,
 
             'date' => $request->date,
 
@@ -133,7 +171,7 @@ class CommercialInvoiceController extends Controller
         }
 
         return redirect()
-            ->route('commercial-invoices.index')
+            ->route('commercial-invoices.show', $commercialInvoice)
             ->with('success', 'Commercial Invoice Created Successfully');
     }
 

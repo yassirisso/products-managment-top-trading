@@ -9,26 +9,23 @@ class BankAccountController extends Controller
 {
     public function index(Request $request)
     {
-        $query = auth()->user()
-            ->bankAccounts();
-
+        $query = BankAccount::query();
 
         if ($request->search) {
 
             $query->where(function ($q) use ($request) {
 
                 $q->where('bank_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('account_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('account_number', 'like', '%' . $request->search . '%');
+                    ->orWhere('beneficiary_name', 'like', '%' . $request->search . '%')
+                    ->orWhere('account_number', 'like', '%' . $request->search . '%')
+                    ->orWhere('swift', 'like', '%' . $request->search . '%');
             });
         }
-
 
         $bankAccounts = $query
             ->latest()
             ->paginate(10)
             ->withQueryString();
-
 
         return view(
             'bank-accounts.index',
