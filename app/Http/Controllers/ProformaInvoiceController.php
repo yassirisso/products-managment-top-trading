@@ -185,6 +185,7 @@ class ProformaInvoiceController extends Controller
             'local_charge' => 'nullable|numeric',
 
             'products' => 'nullable|array',
+            'currency' => 'required|in:RMB,USD',
 
         ]);
 
@@ -202,6 +203,7 @@ class ProformaInvoiceController extends Controller
             'seal_no' => $request->seal_no,
 
             'local_charge' => $request->local_charge ?? 0,
+            'currency' => $request->currency,
 
         ]);
 

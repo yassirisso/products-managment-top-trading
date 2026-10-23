@@ -119,6 +119,21 @@
 
                                 </a>
 
+                                @can('edit proforma invoices')
+                                    <a href="{{ route('proforma-invoices.edit', $invoice->id) }}"
+                                        class="text-indigo-600 hover:text-indigo-900" title="Edit">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                            fill="currentColor">
+
+                                            <path
+                                                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+
+                                        </svg>
+
+                                    </a>
+                                @endcan
+
                             </div>
 
                         </div>
@@ -236,8 +251,8 @@
                                             <a href="{{ route('proforma-invoices.download', $invoice->id) }}"
                                                 class="text-green-600 hover:text-green-900" title="Download">
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
 
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                         stroke-width="2"
@@ -246,6 +261,21 @@
                                                 </svg>
 
                                             </a>
+
+                                            @can('edit proforma invoices')
+                                                <a href="{{ route('proforma-invoices.edit', $invoice->id) }}"
+                                                    class="text-indigo-600 hover:text-indigo-900" title="Edit">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+
+                                                        <path
+                                                            d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+
+                                                    </svg>
+
+                                                </a>
+                                            @endcan
 
                                         </div>
 

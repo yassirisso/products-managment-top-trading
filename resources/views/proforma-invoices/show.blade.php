@@ -47,6 +47,16 @@
 
                 </a>
 
+                <!-- EDIT -->
+                @can('edit proforma invoices')
+                    <a href="{{ route('proforma-invoices.edit', $proformaInvoice->id) }}"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-sm text-center whitespace-nowrap">
+
+                        Edit
+
+                    </a>
+                @endcan
+
                 <!-- CONVERT / VIEW CONVERTED -->
                 @if ($proformaInvoice->commercialInvoice)
                     <a href="{{ route('commercial-invoices.show', $proformaInvoice->commercialInvoice) }}"
