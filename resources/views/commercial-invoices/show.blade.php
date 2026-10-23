@@ -48,6 +48,16 @@
 
                 </a>
 
+                <!-- EDIT -->
+                @can('edit commercial invoices')
+                    <a href="{{ route('commercial-invoices.edit', $commercialInvoice) }}"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-sm text-center whitespace-nowrap">
+
+                        Edit
+
+                    </a>
+                @endcan
+
                 <!-- BACK -->
                 <a href="{{ route('commercial-invoices.index') }}"
                     class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm text-center whitespace-nowrap">
