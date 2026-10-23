@@ -71,18 +71,21 @@
         </div>
 
         <!-- KPI ROW -->
+        <!-- KPI ROW -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mb-6">
 
             <!-- CLIENTS -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('clients.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-blue-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Clients</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalClients }}</p>
 
-            </div>
+            </a>
 
             <!-- SUPPLIERS -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('suppliers.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-blue-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Suppliers</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalSuppliers }}</p>
@@ -90,18 +93,20 @@
                     {{ $totalShops }} shops · {{ $totalFactories }} factories
                 </p>
 
-            </div>
+            </a>
 
             <!-- PRODUCTS -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('products.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-blue-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Products</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">{{ $totalProducts }}</p>
 
-            </div>
+            </a>
 
             <!-- INVOICES (PERIOD) -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('commercial-invoices.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-blue-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Invoices ({{ str_replace('_', ' ', $range) }})
                 </p>
@@ -110,10 +115,11 @@
                     Total: {{ number_format($invoicesThisMonthTotal, 2) }}
                 </p>
 
-            </div>
+            </a>
 
             <!-- SHIPPING FEES (PERIOD) -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('shipping-companies.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-blue-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Shipping Fees</p>
                 <p class="text-xl md:text-2xl font-bold text-gray-800 mt-1">
@@ -123,10 +129,11 @@
                     {{ number_format($shippingFeesUsd, 2) }} USD
                 </p>
 
-            </div>
+            </a>
 
             <!-- OUTSTANDING -->
-            <div class="bg-white shadow-sm rounded-lg p-3 md:p-4">
+            <a href="{{ route('products.index') }}"
+                class="bg-white shadow-sm rounded-lg p-3 md:p-4 hover:shadow-md hover:ring-2 hover:ring-red-200 transition">
 
                 <p class="text-xs uppercase tracking-wide text-gray-500">Outstanding Payments</p>
                 <p class="text-xl md:text-2xl font-bold text-red-600 mt-1">
@@ -136,7 +143,7 @@
                     Unpaid + partial purchases
                 </p>
 
-            </div>
+            </a>
 
         </div>
 
