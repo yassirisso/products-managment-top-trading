@@ -108,21 +108,29 @@
                         Permissions
                     </label>
 
-
                     @php $rolePermissions = $user->getPermissionsViaRoles()->pluck('name'); @endphp
 
-                    @foreach ($permissions as $permission)
-                        <label class="block">
-                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                {{ $rolePermissions->contains($permission->name) ? 'checked' : '' }}>
-                            {{ $permission->name }}
-                        </label>
-                    @endforeach
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
 
-                    <p class="text-sm text-red-600">
+                        @foreach ($permissions as $permission)
+                            <label class="flex items-start gap-2 text-sm">
+
+                                <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                    class="mt-1 permission-checkbox"
+                                    {{ $rolePermissions->contains($permission->name) ? 'checked' : '' }}>
+
+                                <span class="break-words">{{ $permission->name }}</span>
+
+                            </label>
+                        @endforeach
+
+                    </div>
+
+                    <p class="text-sm text-red-600 mt-3">
                         ⚠️ Changing these affects <strong>all users</strong> with the role
                         "{{ request()->old('role', $user->roles->first()?->name) }}"
                     </p>
+
                 </div>
 
 
