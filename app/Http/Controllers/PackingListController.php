@@ -124,17 +124,60 @@ class PackingListController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(PackingList $packingList)
     {
-        //
+        $clients = \App\Models\Client::all();
+
+        $products = \App\Models\Product::all();
+
+        $packingList->load('products');
+
+        return view(
+            'packing-lists.edit',
+            compact('packingList', 'clients', 'products')
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, PackingList $packingList)
     {
-        //
+        $validated = $request->validate([
+            'client_id'         => 'required|exists:clients,id',
+            'port_of_loading'   => 'nullable|string|max:255',
+            'port_of_discharge' => 'nullable|string|max:255',
+            'date'              => 'nullable|date',
+            'container_no'      => 'nullable|string|max:255',
+            'seal_no'           => 'nullable|string|max:255',
+            'products'          => 'nullable|array',
+        ]);
+
+        $packingList->update([
+            'client_id'         => $validated['client_id'],
+            'port_of_loading'   => $validated['port_of_loading'] ?? null,
+            'port_of_discharge' => $validated['port_of_discharge'] ?? null,
+            'date'              => $validated['date'] ?? null,
+            'container_no'      => $validated['container_no'] ?? null,
+            'seal_no'           => $validated['seal_no'] ?? null,
+        ]);
+
+        // Sync products (detach removed, attach new with ctn)
+        $sync = [];
+
+        if (!empty($validated['products'])) {
+            foreach ($validated['products'] as $row) {
+                if (!empty($row['id'])) {
+                    $sync[$row['id']] = ['ctn' => $row['ctn'] ?? 0];
+                }
+            }
+        }
+
+        $packingList->products()->sync($sync);
+
+        return redirect()
+            ->route('packing-lists.show', $packingList)
+            ->with('success', 'Packing list updated successfully.');
     }
 
     /**

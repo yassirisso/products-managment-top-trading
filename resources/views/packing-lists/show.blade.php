@@ -153,21 +153,13 @@
                 @foreach ($packingList->products as $product)
                     @php
 
-                        $rowQty = $product->pivot->ctn * $product->pcs_cts;
+                        $rowQty = ($product->pivot->ctn ?? 0) * ($product->pcs_cts ?? 0);
 
-                        $rowCbm = $product->pivot->ctn * $product->unit_cbm;
+                        $rowCbm = ($product->pivot->ctn ?? 0) * ($product->unit_cbm ?? 0);
 
-                        $rowGw = $product->pivot->ctn * $product->unit_gw;
+                        $rowGw = ($product->pivot->ctn ?? 0) * ($product->unit_gw ?? 0);
 
-                        $rowNw = $product->pivot->ctn * $product->unit_nw;
-
-                        $totalCtn += $product->pivot->ctn;
-
-                        $totalCbm += $rowCbm;
-
-                        $totalGw += $rowGw;
-
-                        $totalNw += $rowNw;
+                        $rowNw = ($product->pivot->ctn ?? 0) * ($product->unit_nw ?? 0);
 
                     @endphp
 
@@ -258,21 +250,13 @@
                         @foreach ($packingList->products as $product)
                             @php
 
-                                $rowQty = $product->pivot->ctn * $product->pcs_cts;
+                                $rowQty = ($product->pivot->ctn ?? 0) * ($product->pcs_cts ?? 0);
 
-                                $rowCbm = $product->pivot->ctn * $product->unit_cbm;
+                                $rowCbm = ($product->pivot->ctn ?? 0) * ($product->unit_cbm ?? 0);
 
-                                $rowGw = $product->pivot->ctn * $product->unit_gw;
+                                $rowGw = ($product->pivot->ctn ?? 0) * ($product->unit_gw ?? 0);
 
-                                $rowNw = $product->pivot->ctn * $product->unit_nw;
-
-                                $totalCtn += $product->pivot->ctn;
-
-                                $totalCbm += $rowCbm;
-
-                                $totalGw += $rowGw;
-
-                                $totalNw += $rowNw;
+                                $rowNw = ($product->pivot->ctn ?? 0) * ($product->unit_nw ?? 0);
 
                             @endphp
 
