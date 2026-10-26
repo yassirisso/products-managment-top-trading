@@ -20,7 +20,8 @@ class ProformaInvoiceExport implements FromView
         return view(
             'proforma-invoices.excel',
             [
-                'proformaInvoice' => $this->proformaInvoice
+                'proformaInvoice' => $this->proformaInvoice,
+                'isAdmin' => auth()->check() && auth()->user()->hasRole('Admin')
             ]
         );
     }

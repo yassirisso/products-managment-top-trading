@@ -14,6 +14,8 @@
 
         $total = 0;
 
+        $isAdmin = auth()->user()->hasRole('Admin');
+
     @endphp
 
     <div class="container mx-auto px-4 py-6">
@@ -267,6 +269,7 @@
 
                     </div>
 
+                    @if($isAdmin)
                     <div class="flex justify-between py-1">
 
                         <span class="text-gray-600">COMMISSION (3%)</span>
@@ -274,6 +277,7 @@
                             {{ $proformaInvoice->currency }}</span>
 
                     </div>
+                    @endif
 
                     <div class="flex justify-between py-1">
 
@@ -287,9 +291,12 @@
                         class="flex justify-between py-2 mt-2 border-t border-gray-300 bg-yellow-100 -mx-3 px-3 rounded-b-lg">
 
                         <span class="font-bold">FOB TOTAL</span>
-                        <span
-                            class="font-bold">{{ number_format($total + $total * 0.03 + $proformaInvoice->local_charge, 2) }}
-                            {{ $proformaInvoice->currency }}</span>
+                        <span class="font-bold">
+                            @php
+                                $mobileFobTotal = $total + $proformaInvoice->local_charge + ($isAdmin ? ($total * 0.03) : 0);
+                            @endphp
+                            {{ number_format($mobileFobTotal, 2) }} {{ $proformaInvoice->currency }}
+                        </span>
 
                     </div>
 
@@ -379,6 +386,7 @@
 
                         </tr>
 
+                        @if($isAdmin)
                         <tr>
 
                             <td colspan="7" class="border p-2 text-right">COMMISSION (3%)</td>
@@ -386,6 +394,7 @@
                                 {{ $proformaInvoice->currency }}</td>
 
                         </tr>
+                        @endif
 
                         <tr>
 
@@ -399,8 +408,10 @@
 
                             <td colspan="7" class="border p-3 text-right text-lg">FOB TOTAL</td>
                             <td class="border p-3 text-center text-lg">
-                                {{ number_format($total + $total * 0.03 + $proformaInvoice->local_charge, 2) }}
-                                {{ $proformaInvoice->currency }}
+                                @php
+                                    $desktopFobTotal = $total + $proformaInvoice->local_charge + ($isAdmin ? ($total * 0.03) : 0);
+                                @endphp
+                                {{ number_format($desktopFobTotal, 2) }} {{ $proformaInvoice->currency }}
                             </td>
 
                         </tr>
