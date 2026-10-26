@@ -79,8 +79,7 @@
                             Date
                         </label>
 
-                        <input type="date" name="date"
-                            value="{{ old('date', $proformaInvoice->date) }}"
+                        <input type="date" name="date" value="{{ old('date', $proformaInvoice->date) }}"
                             class="w-full border rounded-lg px-3 py-2">
 
                     </div>
@@ -105,8 +104,7 @@
                             Seal No
                         </label>
 
-                        <input type="text" name="seal_no"
-                            value="{{ old('seal_no', $proformaInvoice->seal_no) }}"
+                        <input type="text" name="seal_no" value="{{ old('seal_no', $proformaInvoice->seal_no) }}"
                             class="w-full border rounded-lg px-3 py-2">
 
                     </div>
@@ -139,15 +137,39 @@
 
                     <!-- LOCAL CHARGE -->
                     <div class="min-w-0">
+                        @php
+                            // Calculate the total first
+                            $totalWarehouseFees = $proformaInvoice->warehouseFees->sum('montant_rmb');
+
+                            // Use the warehouse fees total if it exists, otherwise fallback to the saved local_charge
+                            $displayLocalCharge =
+                                $totalWarehouseFees > 0 ? $totalWarehouseFees : $proformaInvoice->local_charge ?? 0;
+                        @endphp
 
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Local Charge
                         </label>
-
                         <input type="number" step="0.01" name="local_charge"
-                            value="{{ old('local_charge', $proformaInvoice->local_charge ?? 0) }}"
-                            class="w-full border rounded-lg px-3 py-2">
+                            value="{{ old('local_charge', $displayLocalCharge) }}" readonly
+                            class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed">
 
+                        {{-- SHOW WAREHOUSE FEES IF EXIST --}}
+                        @if ($totalWarehouseFees > 0)
+                            <div class="mt-2 bg-blue-50 border border-blue-200 text-blue-800 text-xs rounded p-2">
+                                <p class="font-semibold mb-1">Warehouse Fees for this Invoice:</p>
+                                <ul class="list-disc list-inside mb-2">
+                                    @foreach ($proformaInvoice->warehouseFees as $fee)
+                                        <li>
+                                            {{ $fee->date->format('Y-m-d') }} ({{ $fee->container_no }}):
+                                            <strong>{{ number_format($fee->montant_rmb, 2) }} ¥</strong>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <p class="font-bold border-t border-blue-200 pt-1">
+                                    Total Warehouse Fees: {{ number_format($totalWarehouseFees, 2) }} ¥
+                                </p>
+                            </div>
+                        @endif
                     </div>
 
                 </div>
@@ -318,7 +340,7 @@
     {{-- PREFILL EXISTING PRODUCTS --}}
     @if ($proformaInvoice->products->count())
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
 
                 @foreach ($proformaInvoice->products as $product)
                     addProductRow({
@@ -332,7 +354,7 @@
         </script>
     @else
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 addProductRow();
             });
         </script>

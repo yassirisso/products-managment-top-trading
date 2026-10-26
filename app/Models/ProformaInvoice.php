@@ -35,13 +35,17 @@ class ProformaInvoice extends Model
             Product::class,
             'proforma_invoice_product'
         )
-        ->withPivot('ctn', 'unit_price')
-        ->withTimestamps();
+            ->withPivot('ctn', 'unit_price')
+            ->withTimestamps();
     }
 
-        public function commercialInvoice()
+    public function commercialInvoice()
     {
         return $this->hasOne(CommercialInvoice::class);
     }
-    
+
+    public function warehouseFees()
+    {
+        return $this->hasMany(WarehouseFee::class);
+    }
 }

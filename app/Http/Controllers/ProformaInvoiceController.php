@@ -153,7 +153,8 @@ class ProformaInvoiceController extends Controller
 
         $products = Product::all();
 
-        $proformaInvoice->load('products');
+        // Load products AND warehouse fees
+        $proformaInvoice->load(['products', 'warehouseFees']);
 
         return view(
             'proforma-invoices.edit',
