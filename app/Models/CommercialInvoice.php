@@ -19,6 +19,7 @@ class CommercialInvoice extends Model
         'bank_account_id',
         'currency',
         'proforma_invoice_id',
+        'discount_percent',
 
     ];
 

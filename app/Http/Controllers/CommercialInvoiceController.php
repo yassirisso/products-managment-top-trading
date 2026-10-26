@@ -109,6 +109,7 @@ class CommercialInvoiceController extends Controller
 
             'products' => 'nullable|array',
             'currency' => 'required|in:RMB,USD',
+            'discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Prevent double conversion
@@ -150,6 +151,7 @@ class CommercialInvoiceController extends Controller
             'bank_account_id' => $request->bank_account_id,
 
             'currency' => $request->currency,
+            'discount_percent' => $request->discount_percent ?? 0,
         ]);
 
         if ($request->has('products')) {
@@ -240,6 +242,7 @@ class CommercialInvoiceController extends Controller
 
             'products' => 'nullable|array',
             'currency' => 'required|in:RMB,USD',
+            'discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $commercialInvoice->update([
@@ -261,6 +264,7 @@ class CommercialInvoiceController extends Controller
             'bank_account_id' => $request->bank_account_id,
 
             'currency' => $request->currency,
+            'discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Reset products

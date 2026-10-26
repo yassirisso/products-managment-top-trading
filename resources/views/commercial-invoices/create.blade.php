@@ -76,7 +76,7 @@
                             Currency
                         </label>
 
-                        <select name="currency" class="w-full border rounded-lg px-3 py-2" required>
+                        <select name="currency" id="currency" class="w-full border rounded-lg px-3 py-2" required>
 
                             <option value="RMB"
                                 {{ old('currency', $proformaInvoice->currency ?? 'RMB') == 'RMB' ? 'selected' : '' }}>
@@ -84,11 +84,24 @@
                             </option>
 
                             <option value="USD"
-                                {{ old('currency', $proformaInvoice->currency ?? 'RMB') == 'USD' ? 'selected' : '' }}>
+                                {{ old('currency', $proformaInvoice->currency ?? 'USD') == 'USD' ? 'selected' : '' }}>
                                 USD ($)
                             </option>
 
                         </select>
+
+                    </div>
+
+                    <!-- EXCHANGE RATE -->
+                    <div class="min-w-0">
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Exchange Rate (RMB to USD)
+                        </label>
+
+                        <input type="number" step="0.0001" min="0" name="exchange_rate" id="exchange_rate"
+                            value="{{ old('exchange_rate', 0.14) }}" class="w-full border rounded-lg px-3 py-2"
+                            title="e.g. 0.14 means 1 RMB = 0.14 USD">
 
                     </div>
 
@@ -175,7 +188,7 @@
                     </div>
 
                     <!-- BANK -->
-                    <div class="min-w-0 sm:col-span-2">
+                    <div class="min-w-0">
 
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             Bank Account
@@ -195,6 +208,20 @@
                             @endforeach
 
                         </select>
+
+                    </div>
+
+                    <!-- DISCOUNT -->
+                    <div class="min-w-0">
+
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Discount (%)
+                        </label>
+
+                        <input type="number" step="0.01" min="0" max="100" name="discount_percent"
+                            id="discount_percent"
+                            value="{{ old('discount_percent', $commercialInvoice->discount_percent ?? 0) }}"
+                            class="w-full border rounded-lg px-3 py-2">
 
                     </div>
 
@@ -248,27 +275,21 @@
 
             const row = document.createElement('div');
 
-            row.className =
-                'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border p-4 rounded-lg bg-gray-50';
+            row.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border p-4 rounded-lg bg-gray-50';
 
             row.innerHTML = `
-
                 <!-- PRODUCT -->
                 <div class="min-w-0 sm:col-span-2 lg:col-span-1">
-
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Product
                     </label>
-
                     <select
                         name="products[${productIndex}][id]"
                         required
-                        onchange="updatePrice(this)"
+                        onchange="calculateFinalPrice(this.closest('.grid'))"
                         class="w-full border rounded-lg px-3 py-2 product-select"
                     >
-
                         <option value="">Select Product</option>
-
                         @foreach ($products as $product)
                             <option
                                 value="{{ $product->id }}"
@@ -277,18 +298,14 @@
                                 {{ $product->reference }}
                             </option>
                         @endforeach
-
                     </select>
-
                 </div>
 
                 <!-- CTN -->
                 <div class="min-w-0">
-
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         CTN
                     </label>
-
                     <input
                         type="number"
                         name="products[${productIndex}][ctn]"
@@ -296,16 +313,14 @@
                         min="0"
                         class="w-full border rounded-lg px-3 py-2 ctn-input"
                     >
-
                 </div>
 
-                <!-- PRICE -->
+                <!-- UNIT PRICE -->
                 <div class="min-w-0">
-
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Unit Price
+                        <span class="text-xs text-gray-400 original-price-label"></span>
                     </label>
-
                     <input
                         type="number"
                         step="0.01"
@@ -314,12 +329,10 @@
                         min="0"
                         class="w-full border rounded-lg px-3 py-2 unit-price"
                     >
-
                 </div>
 
                 <!-- REMOVE -->
                 <div class="flex items-end">
-
                     <button
                         type="button"
                         onclick="this.closest('.grid').remove()"
@@ -327,7 +340,6 @@
                     >
                         Remove
                     </button>
-
                 </div>
             `;
 
@@ -335,33 +347,83 @@
 
             // PRE-FILL (from proforma)
             if (prefill) {
-
                 const select = row.querySelector('.product-select');
                 select.value = prefill.id;
 
                 row.querySelector('.ctn-input').value = prefill.ctn;
-                row.querySelector('.unit-price').value = prefill.unit_price;
+
+                // Note: We don't set unit_price directly here. 
+                // The calculateFinalPrice() function will handle it based on base price.
+                calculateFinalPrice(row);
             }
 
             productIndex++;
         }
-    </script>
 
-    <script>
-        function updatePrice(selectElement) {
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            const price = selectedOption.getAttribute('data-price');
-            const row = selectElement.closest('.grid');
+        // --- CENTRAL CALCULATION LOGIC ---
+        function calculateFinalPrice(row) {
+            let select = row.querySelector('.product-select');
+            if (!select || !select.value) return;
 
-            row.querySelector('.unit-price').value = price;
+            // 1. Get Base Price (RMB)
+            let selectedOption = select.options[select.selectedIndex];
+            let basePriceRmb = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+
+            // 2. Apply Discount
+            let discountInput = document.getElementById('discount_percent');
+            let discount = discountInput ? (parseFloat(discountInput.value) || 0) : 0;
+            let discountedRmb = basePriceRmb - (basePriceRmb * (discount / 100));
+
+            // 3. Apply Exchange Rate (if USD)
+            let currencySelect = document.getElementById('currency');
+            let currency = currencySelect ? currencySelect.value : 'RMB';
+
+            let exchangeInput = document.getElementById('exchange_rate');
+            let exchangeRate = exchangeInput ? (parseFloat(exchangeInput.value) || 1) : 1;
+
+            let finalPrice = discountedRmb;
+
+            if (currency === 'USD') {
+                finalPrice = discountedRmb * exchangeRate;
+            }
+
+            // 4. Update Input and Label
+            row.querySelector('.unit-price').value = finalPrice.toFixed(2);
+
+            let label = row.querySelector('.original-price-label');
+            if (label) {
+                label.innerText = `(Base: ${basePriceRmb} RMB)`;
+            }
         }
-    </script>
 
-    {{-- PREFILL PRODUCTS FROM PROFORMA --}}
-    @if ($proformaInvoice && $proformaInvoice->products->count())
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+        // --- GLOBAL EVENT LISTENERS ---
 
+        // Listen to Discount input
+        document.getElementById('discount_percent')?.addEventListener('input', function() {
+            document.querySelectorAll('.product-select').forEach(function(select) {
+                if (select.value) calculateFinalPrice(select.closest('.grid'));
+            });
+        });
+
+        // Listen to Exchange Rate input
+        document.getElementById('exchange_rate')?.addEventListener('input', function() {
+            document.querySelectorAll('.product-select').forEach(function(select) {
+                if (select.value) calculateFinalPrice(select.closest('.grid'));
+            });
+        });
+
+        // Listen to Currency change
+        document.getElementById('currency')?.addEventListener('change', function() {
+            document.querySelectorAll('.product-select').forEach(function(select) {
+                if (select.value) calculateFinalPrice(select.closest('.grid'));
+            });
+        });
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Prefill from Proforma if exists
+            @if ($proformaInvoice && $proformaInvoice->products->count())
                 @foreach ($proformaInvoice->products as $product)
                     addProductRow({
                         id: {{ $product->id }},
@@ -369,15 +431,12 @@
                         unit_price: {{ $product->pivot->unit_price }},
                     });
                 @endforeach
-
-            });
-        </script>
-    @else
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            @else
+                // Otherwise add one empty row
                 addProductRow();
-            });
-        </script>
-    @endif
+            @endif
+
+        });
+    </script>
 
 </x-app-layout>
