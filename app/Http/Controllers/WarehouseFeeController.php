@@ -23,20 +23,15 @@ class WarehouseFeeController extends Controller
         $clients = Client::all();
         $shippingMarks = ShippingMark::all();
 
-        // Fetch unique container numbers from BOTH Proformas and Warehouse Fees
-        $proformaContainers = \App\Models\ProformaInvoice::whereNotNull('container_no')
-            ->where('container_no', '!=', '')
-            ->distinct()
-            ->pluck('container_no');
-
-        $feeContainers = WarehouseFee::whereNotNull('container_no')
-            ->where('container_no', '!=', '')
-            ->distinct()
-            ->pluck('container_no');
-
+        // Fetch unique containers from Proformas AND Warehouse Fees
+        $proformaContainers = \App\Models\ProformaInvoice::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
+        $feeContainers = WarehouseFee::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
         $containers = $proformaContainers->merge($feeContainers)->unique()->sort()->values();
 
-        return view('warehouse-fees.create', compact('clients', 'shippingMarks', 'containers'));
+        // Pass the proforma invoices so we can find the ID
+        $proformaInvoices = \App\Models\ProformaInvoice::whereNotNull('container_no')->get();
+
+        return view('warehouse-fees.create', compact('clients', 'shippingMarks', 'containers', 'proformaInvoices'));
     }
 
     public function store(Request $request)
@@ -47,6 +42,7 @@ class WarehouseFeeController extends Controller
             'client_id' => 'required|exists:clients,id',
             'shipping_mark_id' => 'nullable|exists:shipping_marks,id',
             'montant_rmb' => 'required|numeric|min:0',
+            'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
         ]);
 
         WarehouseFee::create($validated);
@@ -60,20 +56,13 @@ class WarehouseFeeController extends Controller
         $clients = Client::all();
         $shippingMarks = ShippingMark::all();
 
-        // Fetch unique container numbers from BOTH Proformas and Warehouse Fees
-        $proformaContainers = \App\Models\ProformaInvoice::whereNotNull('container_no')
-            ->where('container_no', '!=', '')
-            ->distinct()
-            ->pluck('container_no');
-
-        $feeContainers = WarehouseFee::whereNotNull('container_no')
-            ->where('container_no', '!=', '')
-            ->distinct()
-            ->pluck('container_no');
-
+        $proformaContainers = \App\Models\ProformaInvoice::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
+        $feeContainers = WarehouseFee::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
         $containers = $proformaContainers->merge($feeContainers)->unique()->sort()->values();
 
-        return view('warehouse-fees.edit', compact('warehouseFee', 'clients', 'shippingMarks', 'containers'));
+        $proformaInvoices = \App\Models\ProformaInvoice::whereNotNull('container_no')->get();
+
+        return view('warehouse-fees.edit', compact('warehouseFee', 'clients', 'shippingMarks', 'containers', 'proformaInvoices'));
     }
 
     public function update(Request $request, WarehouseFee $warehouseFee)
@@ -84,6 +73,7 @@ class WarehouseFeeController extends Controller
             'client_id' => 'required|exists:clients,id',
             'shipping_mark_id' => 'nullable|exists:shipping_marks,id',
             'montant_rmb' => 'required|numeric|min:0',
+            'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
         ]);
 
         $warehouseFee->update($validated);

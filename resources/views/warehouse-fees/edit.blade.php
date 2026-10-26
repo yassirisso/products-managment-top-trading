@@ -12,14 +12,16 @@
                 @csrf
                 @method('PUT')
 
+                <!-- HIDDEN PROFORMA INVOICE ID -->
+                <input type="hidden" name="proforma_invoice_id" id="proforma_invoice_id" value="{{ old('proforma_invoice_id', $warehouseFee->proforma_invoice_id) }}">
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <!-- DATE -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             日期 (Date) *
                         </label>
-                        <input type="date" name="date"
-                            value="{{ old('date', $warehouseFee->date->format('Y-m-d')) }}" required
+                        <input type="date" name="date" value="{{ old('date', $warehouseFee->date->format('Y-m-d')) }}" required
                             class="w-full border rounded-lg px-3 py-2">
                         @error('date')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -35,7 +37,12 @@
                             class="w-full border rounded-lg px-3 py-2 select2-container-select">
                             <option value="">搜索、选择或输入新柜号...</option>
                             @foreach ($containers as $container)
+                                @php
+                                    // Find the matching proforma invoice ID
+                                    $invId = $proformaInvoices->firstWhere('container_no', $container)?->id;
+                                @endphp
                                 <option value="{{ $container }}"
+                                    data-id="{{ $invId }}"
                                     {{ old('container_no', $warehouseFee->container_no) == $container ? 'selected' : '' }}>
                                     {{ $container }}
                                 </option>
@@ -90,8 +97,8 @@
                             金额 (Montant RMB) *
                         </label>
                         <input type="number" step="0.01" min="0" name="montant_rmb"
-                            value="{{ old('montant_rmb', $warehouseFee->montant_rmb) }}" required
-                            class="w-full border rounded-lg px-3 py-2">
+                            value="{{ old('montant_rmb', $warehouseFee->montant_rmb) }}" required class="w-full border rounded-lg px-3 py-2"
+                            placeholder="0.00">
                         @error('montant_rmb')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -109,11 +116,11 @@
             </form>
         </div>
     </div>
-
+    
     <script>
         window.addEventListener('load', function() {
-            // Check if jQuery and Select2 are actually loaded
             if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
+                
                 $('.select2-container-select').select2({
                     placeholder: "搜索、选择或输入新柜号...",
                     allowClear: true,
@@ -125,6 +132,15 @@
                         }
                     }
                 });
+
+                $('.select2-container-select').on('change', function() {
+                    let selectedValue = $(this).val();
+                    let selectedOption = $(this).find('option:selected');
+                    let invId = selectedOption.data('id') || '';
+                    $('#proforma_invoice_id').val(invId);
+                });
+
+                $('.select2-container-select').trigger('change');
             }
         });
     </script>

@@ -11,6 +11,9 @@
             <form action="{{ route('warehouse-fees.store') }}" method="POST">
                 @csrf
 
+                <!-- HIDDEN PROFORMA INVOICE ID -->
+                <input type="hidden" name="proforma_invoice_id" id="proforma_invoice_id" value="{{ old('proforma_invoice_id') }}">
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <!-- DATE -->
                     <div>
@@ -33,7 +36,12 @@
                             class="w-full border rounded-lg px-3 py-2 select2-container-select">
                             <option value="">搜索、选择或输入新柜号...</option>
                             @foreach ($containers as $container)
+                                @php
+                                    // Find the matching proforma invoice ID
+                                    $invId = $proformaInvoices->firstWhere('container_no', $container)?->id;
+                                @endphp
                                 <option value="{{ $container }}"
+                                    data-id="{{ $invId }}"
                                     {{ old('container_no') == $container ? 'selected' : '' }}>
                                     {{ $container }}
                                 </option>
@@ -107,10 +115,13 @@
             </form>
         </div>
     </div>
+    
     <script>
         window.addEventListener('load', function() {
             // Check if jQuery and Select2 are actually loaded
             if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
+                
+                // 1. Initialize Select2
                 $('.select2-container-select').select2({
                     placeholder: "搜索、选择或输入新柜号...",
                     allowClear: true,
@@ -122,6 +133,17 @@
                         }
                     }
                 });
+
+                // 2. Add event listener for when the container changes
+                $('.select2-container-select').on('change', function() {
+                    let selectedValue = $(this).val();
+                    let selectedOption = $(this).find('option:selected');
+                    let invId = selectedOption.data('id') || '';
+                    $('#proforma_invoice_id').val(invId);
+                });
+
+                // 3. Trigger on page load (to handle old() values if validation fails)
+                $('.select2-container-select').trigger('change');
             }
         });
     </script>

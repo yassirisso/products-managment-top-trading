@@ -10,6 +10,7 @@ class WarehouseFee extends Model
         'container_no',
         'date',
         'client_id',
+        'proforma_invoice_id',
         'shipping_mark_id',
         'montant_rmb',
     ];
@@ -27,5 +28,10 @@ class WarehouseFee extends Model
     public function shippingMark()
     {
         return $this->belongsTo(ShippingMark::class);
+    }
+
+        public function proformaInvoice()
+    {
+        return $this->belongsTo(ProformaInvoice::class);
     }
 }
