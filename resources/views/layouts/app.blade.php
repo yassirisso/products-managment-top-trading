@@ -133,6 +133,18 @@
                             </a>
                         @endcan
 
+                        <!-- Warehouse Fees (仓库费用) -->
+                        <a href="{{ route('warehouse-fees.index') }}"
+                            class="@if (request()->routeIs('warehouse-fees*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            仓库费用 (Warehouse Fees)
+                        </a>
+
+                        <!-- Shipping Marks (唛头管理) -->
+                        <a href="{{ route('shipping-marks.index') }}"
+                            class="@if (request()->routeIs('shipping-marks*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            唛头管理 (Shipping Marks)
+                        </a>
+
                         <!-- Users -->
                         @can('view users')
                             <a href="{{ route('users.index') }}"
@@ -184,7 +196,8 @@
 
                 <div class="flex items-center space-x-2 md:space-x-4 shrink-0">
 
-                    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-gray-700 hidden sm:inline" title="My Profile">
+                    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-gray-700 hidden sm:inline"
+                        title="My Profile">
 
                         {{ auth()->user()->name }}
 

@@ -15,6 +15,8 @@ use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShippingCompanyController;
+use App\Http\Controllers\ShippingMarkController;
+use App\Http\Controllers\WarehouseFeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -514,6 +516,40 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('permission:delete shipping companies')->group(function () {
         Route::delete('shipping-companies/{shippingCompany}', [ShippingCompanyController::class, 'destroy'])->name('shipping-companies.destroy');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHIPPING MARKS (唛头管理)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('shipping-marks/create', [ShippingMarkController::class, 'create'])->name('shipping-marks.create');
+    Route::post('shipping-marks', [ShippingMarkController::class, 'store'])->name('shipping-marks.store');
+
+    Route::get('shipping-marks', [ShippingMarkController::class, 'index'])->name('shipping-marks.index');
+
+    Route::get('shipping-marks/{shippingMark}/edit', [ShippingMarkController::class, 'edit'])->name('shipping-marks.edit');
+    Route::put('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update'])->name('shipping-marks.update');
+    Route::patch('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update']);
+
+    Route::delete('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'destroy'])->name('shipping-marks.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | WAREHOUSE FEES (仓库费用)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('warehouse-fees/create', [WarehouseFeeController::class, 'create'])->name('warehouse-fees.create');
+    Route::post('warehouse-fees', [WarehouseFeeController::class, 'store'])->name('warehouse-fees.store');
+
+    Route::get('warehouse-fees', [WarehouseFeeController::class, 'index'])->name('warehouse-fees.index');
+
+    Route::get('warehouse-fees/{warehouseFee}/edit', [WarehouseFeeController::class, 'edit'])->name('warehouse-fees.edit');
+    Route::put('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update'])->name('warehouse-fees.update');
+    Route::patch('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update']);
+
+    Route::delete('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'destroy'])->name('warehouse-fees.destroy');
 });
 
 
