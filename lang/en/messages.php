@@ -302,4 +302,23 @@ return [
     'create shipping companies' => 'Create Shipping Companies',
     'edit shipping companies' => 'Edit Shipping Companies',
     'delete shipping companies' => 'Delete Shipping Companies',
+
+    // Profile
+    'account' => 'Account',
+    'update_profile_info' => 'Profile Information',
+    'update_profile_text' => 'Update your name and email address.',
+    'update_password' => 'Update Password',
+    'update_password_text' => 'Use a long, random password for security.',
+    'update_password_secure_text' => 'Ensure your account is using a long, random password to stay secure.',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'confirm_password' => 'Confirm Password',
+    'company_name' => 'Company Name',
+    'company_address' => 'Company Address',
+    'company_phone' => 'Company Phone',
+    'company_fax' => 'Company Fax',
+    'your_email_unverified' => 'Your email address is unverified.',
+    'click_resend_verification' => 'Click here to re-send the verification email.',
+    'verification_link_sent' => 'A new verification link has been sent to your email address.',
+    'saved' => 'Saved.',
 ];

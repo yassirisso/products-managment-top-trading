@@ -302,4 +302,23 @@ return [
     'create shipping companies' => '创建船公司',
     'edit shipping companies' => '编辑船公司',
     'delete shipping companies' => '删除船公司',
+
+    // Profile
+    'account' => '账户',
+    'update_profile_info' => '个人资料',
+    'update_profile_text' => '更新您的姓名和邮箱地址。',
+    'update_password' => '修改密码',
+    'update_password_text' => '请使用较长的随机密码以确保安全。',
+    'update_password_secure_text' => '确保您的账户使用较长且随机的密码以确保安全。',
+    'current_password' => '当前密码',
+    'new_password' => '新密码',
+    'confirm_password' => '确认密码',
+    'company_name' => '公司名称',
+    'company_address' => '公司地址',
+    'company_phone' => '公司电话',
+    'company_fax' => '公司传真',
+    'your_email_unverified' => '您的邮箱尚未验证。',
+    'click_resend_verification' => '点击此处重新发送验证邮件。',
+    'verification_link_sent' => '新的验证链接已发送至您的邮箱。',
+    'saved' => '已保存。',
 ];
