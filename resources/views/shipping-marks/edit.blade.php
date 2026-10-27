@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
-            编辑唛头
+            {{ __('messages.edit_shipping_mark') }}
         </h2>
     </x-slot>
 
@@ -14,7 +14,7 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        唛头名称 (Shipping Mark) *
+                        {{ __('messages.shipping_mark_name') }} *
                     </label>
                     <input type="text" name="name" value="{{ old('name', $shippingMark->name) }}" required
                         class="w-full border rounded-lg px-3 py-2">
@@ -25,10 +25,10 @@
 
                 <div class="flex justify-end gap-2">
                     <a href="{{ route('shipping-marks.index') }}" class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                        取消
+                        {{ __('messages.cancel') }}
                     </a>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded">
-                        更新
+                        {{ __('messages.update') }}
                     </button>
                 </div>
             </form>

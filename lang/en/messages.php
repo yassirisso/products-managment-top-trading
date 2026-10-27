@@ -241,4 +241,13 @@ return [
     'edit_warehouse_fee' => 'Edit Warehouse Fee',
     'search_placeholder_container' => 'Search, select or type new container...',
     'press_enter_to_add' => 'Press Enter to add new container',
+
+    // Shipping Marks
+    'shipping_marks_management' => 'Shipping Marks',
+    'new_shipping_mark' => 'New Shipping Mark',
+    'no_shipping_marks_found' => 'No shipping marks found.',
+    'shipping_mark_name' => 'Shipping Mark Name',
+    'add_new_shipping_mark' => 'Add New Shipping Mark',
+    'edit_shipping_mark' => 'Edit Shipping Mark',
+    'delete_confirm_mark' => 'Are you sure you want to delete this shipping mark?',
 ];

@@ -241,4 +241,13 @@ return [
     'edit_warehouse_fee' => '编辑仓库费用',
     'search_placeholder_container' => '搜索、选择或输入新柜号...',
     'press_enter_to_add' => '按回车键添加新柜号',
+
+    // Shipping Marks
+    'shipping_marks_management' => '唛头管理',
+    'new_shipping_mark' => '新增唛头',
+    'no_shipping_marks_found' => '暂无唛头数据',
+    'shipping_mark_name' => '唛头名称',
+    'add_new_shipping_mark' => '新增唛头',
+    'edit_shipping_mark' => '编辑唛头',
+    'delete_confirm_mark' => '确定要删除这个唛头吗？',
 ];
