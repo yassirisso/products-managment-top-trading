@@ -231,4 +231,14 @@ return [
     'note' => '备注',
     'add_contact' => '添加联系人',
     'no_contacts_associated' => '此船公司暂无联系人。',
+
+    // Warehouse Fees
+    'warehouse_fees_management' => '仓库费用',
+    'new_warehouse_fee' => '新增费用',
+    'no_warehouse_fees_found' => '暂无仓库费用记录',
+    'montant_rmb' => '金额 (RMB)',
+    'add_new_warehouse_fee' => '新增仓库费用',
+    'edit_warehouse_fee' => '编辑仓库费用',
+    'search_placeholder_container' => '搜索、选择或输入新柜号...',
+    'press_enter_to_add' => '按回车键添加新柜号',
 ];

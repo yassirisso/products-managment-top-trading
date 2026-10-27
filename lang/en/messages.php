@@ -231,4 +231,14 @@ return [
     'note' => 'Note',
     'add_contact' => 'Add Contact',
     'no_contacts_associated' => 'No contacts associated with this shipping company.',
+
+    // Warehouse Fees
+    'warehouse_fees_management' => 'Warehouse Fees',
+    'new_warehouse_fee' => 'New Warehouse Fee',
+    'no_warehouse_fees_found' => 'No Warehouse Fees Found',
+    'montant_rmb' => 'Amount (RMB)',
+    'add_new_warehouse_fee' => 'Add New Warehouse Fee',
+    'edit_warehouse_fee' => 'Edit Warehouse Fee',
+    'search_placeholder_container' => 'Search, select or type new container...',
+    'press_enter_to_add' => 'Press Enter to add new container',
 ];
