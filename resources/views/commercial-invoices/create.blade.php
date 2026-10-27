@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
-            Create Commercial Invoice
+            {{ __('messages.create_commercial_invoice') }}
         </h2>
     </x-slot>
 
@@ -14,16 +14,14 @@
             @if (isset($proformaInvoice) && $proformaInvoice)
                 <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 mb-6 rounded text-sm">
                     <p class="font-semibold">
-                        Prefilled from Proforma Invoice #{{ $proformaInvoice->id }} ({{ $proformaInvoice->date }})
+                        {{ __('messages.prefilled_from_proforma') }} #{{ $proformaInvoice->id }}
+                        ({{ $proformaInvoice->date }})
                     </p>
-                    <p class="mt-1">
-                        Review the data, choose a bank account, set the invoice number, and save when ready.
-                    </p>
+                    <p class="mt-1">{{ __('messages.review_data_banner') }}</p>
                 </div>
             @endif
 
             <form action="{{ route('commercial-invoices.store') }}" method="POST">
-
                 @csrf
 
                 {{-- PREFILL SOURCE --}}
@@ -39,9 +37,9 @@
 
                     <!-- CLIENT -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Client</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.client') }}</label>
                         <select name="client_id" required class="w-full border rounded-lg px-3 py-2">
-                            <option value="">Select Client</option>
+                            <option value="">{{ __('messages.client') }}</option>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}"
                                     {{ old('client_id', $proformaInvoice->client_id ?? '') == $client->id ? 'selected' : '' }}>
@@ -57,21 +55,18 @@
                     <!-- EXCHANGE RATE (Only shown when converting from Proforma) -->
                     @if (isset($proformaInvoice) && $proformaInvoice)
                         <div class="min-w-0">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Exchange Rate (RMB to USD)
-                            </label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.exchange_rate') }}</label>
                             <input type="number" step="0.0001" min="0" name="exchange_rate" id="exchange_rate"
-                                value="{{ old('exchange_rate', 0.14) }}" class="w-full border rounded-lg px-3 py-2"
-                                title="e.g. 0.14 means 1 RMB = 0.14 USD">
+                                value="{{ old('exchange_rate', 0.14) }}" class="w-full border rounded-lg px-3 py-2">
                         </div>
                     @else
-                        <!-- Hidden exchange rate if not converting (defaults to 1) -->
                         <input type="hidden" name="exchange_rate" id="exchange_rate" value="1">
                     @endif
 
                     <!-- DATE -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.date') }}</label>
                         <input type="date" name="date" value="{{ old('date', now()->format('Y-m-d')) }}"
                             class="w-full border rounded-lg px-3 py-2">
                         @error('date')
@@ -81,7 +76,8 @@
 
                     <!-- INVOICE -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Invoice No *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.invoice_no') }}
+                            *</label>
                         <input type="text" name="invoice_no" value="{{ old('invoice_no') }}" required
                             class="w-full border rounded-lg px-3 py-2">
                         @error('invoice_no')
@@ -91,14 +87,16 @@
 
                     <!-- MODE -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mode Of Delivery</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.mode_of_delivery') }}</label>
                         <input type="text" name="mode_of_delivery" value="{{ old('mode_of_delivery', 'FOB') }}"
                             class="w-full border rounded-lg px-3 py-2">
                     </div>
 
                     <!-- PORT LOADING -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Port Of Loading</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.port_of_loading') }}</label>
                         <input type="text" name="port_of_loading"
                             value="{{ old('port_of_loading', $proformaInvoice->port_of_loading ?? '') }}"
                             class="w-full border rounded-lg px-3 py-2">
@@ -106,7 +104,8 @@
 
                     <!-- PORT DISCHARGE -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Port Of Discharge</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.port_of_discharge') }}</label>
                         <input type="text" name="port_of_discharge"
                             value="{{ old('port_of_discharge', $proformaInvoice->port_of_discharge ?? '') }}"
                             class="w-full border rounded-lg px-3 py-2">
@@ -114,14 +113,16 @@
 
                     <!-- COUNTRY -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Country Of Origin</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.country_of_origin') }}</label>
                         <input type="text" name="country_of_origin" value="{{ old('country_of_origin', 'China') }}"
                             class="w-full border rounded-lg px-3 py-2">
                     </div>
 
                     <!-- DISCOUNT -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.discount_percent') }}</label>
                         <input type="number" step="0.01" min="0" max="100" name="discount_percent"
                             id="discount_percent"
                             value="{{ old('discount_percent', $commercialInvoice->discount_percent ?? 0) }}"
@@ -130,9 +131,10 @@
 
                     <!-- BANK -->
                     <div class="min-w-0">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Bank Account</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.bank_account') }}</label>
                         <select name="bank_account_id" class="w-full border rounded-lg px-3 py-2">
-                            <option value="">Select Bank Account</option>
+                            <option value="">{{ __('messages.bank_account') }}</option>
                             @foreach ($bankAccounts as $bank)
                                 <option value="{{ $bank->id }}"
                                     {{ old('bank_account_id') == $bank->id ? 'selected' : '' }}>
@@ -141,16 +143,15 @@
                             @endforeach
                         </select>
                     </div>
-
                 </div>
 
                 <!-- PRODUCTS -->
                 <div class="mb-6">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-                        <h3 class="text-lg font-bold">Products</h3>
+                        <h3 class="text-lg font-bold">{{ __('messages.products') }}</h3>
                         <button type="button" onclick="addProductRow()"
                             class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded text-sm text-center w-full sm:w-auto">
-                            Add Product
+                            {{ __('messages.add_product') }}
                         </button>
                     </div>
                     <div id="products-container" class="space-y-4"></div>
@@ -160,21 +161,17 @@
                 <div class="flex justify-end">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded w-full sm:w-auto">
-                        Create Commercial Invoice
+                        {{ __('messages.create_commercial_invoice') }}
                     </button>
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
     <script>
         let productIndex = 0;
         let allProductOptions = [];
 
-        // 1. Cache all products on load
         function cacheProductOptions() {
             allProductOptions = [];
             @foreach ($products as $product)
@@ -186,17 +183,15 @@
             @endforeach
         }
 
-        // 2. Rebuild dropdowns to prevent duplicates
         function updateProductDropdowns() {
             let selectedIds = [];
-
             document.querySelectorAll('.product-select').forEach(function(select) {
                 if (select.value) selectedIds.push(select.value);
             });
 
             document.querySelectorAll('.product-select').forEach(function(currentSelect) {
                 let currentValue = currentSelect.value;
-                currentSelect.innerHTML = '<option value="">Select Product</option>';
+                currentSelect.innerHTML = '<option value="">{{ __('messages.product') }}</option>';
 
                 allProductOptions.forEach(function(opt) {
                     if (!selectedIds.includes(opt.value) || opt.value === currentValue) {
@@ -204,16 +199,13 @@
                         newOption.value = opt.value;
                         newOption.text = opt.text;
                         newOption.setAttribute('data-price', opt.price);
-                        if (opt.value === currentValue) {
-                            newOption.selected = true;
-                        }
+                        if (opt.value === currentValue) newOption.selected = true;
                         currentSelect.appendChild(newOption);
                     }
                 });
             });
         }
 
-        // 3. Add row
         function addProductRow(prefill = null) {
             const container = document.getElementById('products-container');
             const row = document.createElement('div');
@@ -226,20 +218,20 @@
 
             row.innerHTML = `
                 <div class="min-w-0 sm:col-span-2 lg:col-span-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.product') }}</label>
                     <select name="${selectName}" class="w-full border rounded-lg px-3 py-2 product-select" required onchange="calculateFinalPrice(this.closest('.grid')); updateProductDropdowns();">
-                        <option value="">Select Product</option>
+                        <option value="">{{ __('messages.product') }}</option>
                     </select>
                 </div>
 
                 <div class="min-w-0">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">CTN</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.ctn') }}</label>
                     <input type="number" name="${ctnName}" value="0" min="0" class="w-full border rounded-lg px-3 py-2 ctn-input">
                 </div>
 
                 <div class="min-w-0">
                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Unit Price (USD)
+                        {{ __('messages.unit_price') }} (USD)
                         <span class="text-xs text-gray-400 original-price-label"></span>
                     </label>
                     <input type="number" step="0.01" name="${priceName}" value="0" min="0" class="w-full border rounded-lg px-3 py-2 unit-price">
@@ -247,13 +239,13 @@
 
                 <div class="flex items-end">
                     <button type="button" onclick="this.closest('.grid').remove(); updateProductDropdowns();" class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded w-full lg:w-auto">
-                        Remove
+                        {{ __('messages.remove') }}
                     </button>
                 </div>
             `;
 
             container.appendChild(row);
-            updateProductDropdowns(); // Populate new row
+            updateProductDropdowns();
 
             if (prefill) {
                 const select = row.querySelector('.product-select');
@@ -266,7 +258,6 @@
             productIndex++;
         }
 
-        // 4. Calculate Price
         function calculateFinalPrice(row) {
             let select = row.querySelector('.product-select');
             if (!select || !select.value) return;
@@ -307,7 +298,6 @@
             });
         });
 
-        // 5. Initialize
         document.addEventListener('DOMContentLoaded', function() {
             cacheProductOptions();
 
@@ -324,5 +314,4 @@
             @endif
         });
     </script>
-
 </x-app-layout>
