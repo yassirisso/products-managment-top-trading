@@ -65,7 +65,7 @@
                         @can('view dashboard')
                             <a href="{{ route('dashboard') }}"
                                 class="@if (request()->routeIs('dashboard')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Dashboard
+                                {{ __('messages.dashboard') }}
                             </a>
                         @endcan
 
@@ -73,7 +73,7 @@
                         @can('view products')
                             <a href="{{ route('products.index') }}"
                                 class="@if (request()->routeIs('products*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Products
+                                {{ __('messages.products') }}
                             </a>
                         @endcan
 
@@ -81,7 +81,7 @@
                         @can('view clients')
                             <a href="{{ route('clients.index') }}"
                                 class="@if (request()->routeIs('clients*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Clients
+                                {{ __('messages.clients') }}
                             </a>
                         @endcan
 
@@ -89,7 +89,7 @@
                         @can('view suppliers')
                             <a href="{{ route('suppliers.index') }}"
                                 class="@if (request()->routeIs('suppliers*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Suppliers
+                                {{ __('messages.suppliers') }}
                             </a>
                         @endcan
 
@@ -97,7 +97,7 @@
                         @can('view packing lists')
                             <a href="{{ route('packing-lists.index') }}"
                                 class="@if (request()->routeIs('packing-lists*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Packing Lists
+                                {{ __('messages.packing_lists') }}
                             </a>
                         @endcan
 
@@ -105,7 +105,7 @@
                         @can('view proforma invoices')
                             <a href="{{ route('proforma-invoices.index') }}"
                                 class="@if (request()->routeIs('proforma-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Proforma Invoices
+                                {{ __('messages.proforma_invoices') }}
                             </a>
                         @endcan
 
@@ -113,7 +113,7 @@
                         @can('view commercial invoices')
                             <a href="{{ route('commercial-invoices.index') }}"
                                 class="@if (request()->routeIs('commercial-invoices*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Commercial Invoices
+                                {{ __('messages.commercial_invoices') }}
                             </a>
                         @endcan
 
@@ -121,7 +121,7 @@
                         @can('view bank accounts')
                             <a href="{{ route('bank-accounts.index') }}"
                                 class="@if (request()->routeIs('bank-accounts*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Bank Accounts
+                                {{ __('messages.bank_accounts') }}
                             </a>
                         @endcan
 
@@ -129,27 +129,27 @@
                         @can('view shipping companies')
                             <a href="{{ route('shipping-companies.index') }}"
                                 class="@if (request()->routeIs('shipping-companies*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Shipping Companies
+                                {{ __('messages.shipping_companies') }}
                             </a>
                         @endcan
 
-                        <!-- Warehouse Fees (仓库费用) -->
+                        <!-- Warehouse Fees -->
                         <a href="{{ route('warehouse-fees.index') }}"
                             class="@if (request()->routeIs('warehouse-fees*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            仓库费用 (Warehouse Fees)
+                            {{ __('messages.warehouse_fees') }}
                         </a>
 
-                        <!-- Shipping Marks (唛头管理) -->
+                        <!-- Shipping Marks -->
                         <a href="{{ route('shipping-marks.index') }}"
                             class="@if (request()->routeIs('shipping-marks*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            唛头管理 (Shipping Marks)
+                            {{ __('messages.shipping_marks') }}
                         </a>
 
                         <!-- Users -->
                         @can('view users')
                             <a href="{{ route('users.index') }}"
                                 class="@if (request()->routeIs('users*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                                Users
+                                {{ __('messages.users') }}
                             </a>
                         @endcan
 
@@ -196,6 +196,18 @@
 
                 <div class="flex items-center space-x-2 md:space-x-4 shrink-0">
 
+                    <!-- LANGUAGE SWITCHER -->
+                    <div class="flex items-center bg-gray-100 rounded-lg p-1 text-xs font-semibold">
+                        <a href="{{ route('lang.switch', 'en') }}"
+                            class="px-2 py-1 rounded {{ app()->getLocale() == 'en' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-800' }}">
+                            EN
+                        </a>
+                        <a href="{{ route('lang.switch', 'zh_CN') }}"
+                            class="px-2 py-1 rounded {{ app()->getLocale() == 'zh_CN' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-800' }}">
+                            中文
+                        </a>
+                    </div>
+
                     <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-gray-700 hidden sm:inline"
                         title="My Profile">
 
@@ -209,7 +221,7 @@
 
                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
 
-                            Logout
+                            {{ __('messages.logout') }}
 
                         </button>
 

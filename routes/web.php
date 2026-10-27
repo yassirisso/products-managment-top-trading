@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShippingCompanyController;
 use App\Http\Controllers\ShippingMarkController;
 use App\Http\Controllers\WarehouseFeeController;
+use App\Http\Controllers\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,9 @@ Route::middleware(['auth'])->group(function () {
             'view_clients' => auth()->user()->can('view clients'),
         ];
     });
+
+    // Language Switcher
+    Route::get('lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
 
 
     /*
