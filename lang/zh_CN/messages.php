@@ -159,4 +159,25 @@ return [
     'shipping_info' => '运输信息',
     'description' => '描述',
     'qty' => '总数量',
+
+    // Proforma Invoices
+    'proforma_invoices_management' => '形式发票',
+    'search_proforma_invoice' => '搜索发票或客户...',
+    'create_proforma_invoice' => '创建形式发票',
+    'no_proforma_invoices_found' => '未找到形式发票。',
+    'edit_proforma_invoice' => '编辑形式发票',
+    'update_proforma_invoice' => '更新发票',
+    'local_charge' => '本地费用',
+    'warehouse_fees_for_invoice' => '此发票的仓库费用:',
+    'total_warehouse_fees' => '仓库费用总计:',
+    'add_product' => '添加产品',
+    'remove' => '移除',
+    'unit_price' => '单价',
+    'proforma_invoice_details' => '形式发票详情',
+    'view_commercial_invoice' => '查看商业发票',
+    'convert_to_commercial' => '转换为商业发票',
+    'total_exw' => '出厂价总计 (EXW)',
+    'commission_3' => '佣金 (3%)',
+    'fob_total' => '离岸价总计 (FOB)',
+    'back' => '返回'
 ];

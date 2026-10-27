@@ -159,4 +159,25 @@ return [
     'shipping_info' => 'SHIPPING INFO',
     'description' => 'DESCRIPTION',
     'qty' => 'QTY',
+
+    // Proforma Invoices
+    'proforma_invoices_management' => 'Proforma Invoices',
+    'search_proforma_invoice' => 'Search invoice or client...',
+    'create_proforma_invoice' => 'Create Proforma Invoice',
+    'no_proforma_invoices_found' => 'No proforma invoices found.',
+    'edit_proforma_invoice' => 'Edit Proforma Invoice',
+    'update_proforma_invoice' => 'Update Invoice',
+    'local_charge' => 'Local Charge',
+    'warehouse_fees_for_invoice' => 'Warehouse Fees for this Invoice:',
+    'total_warehouse_fees' => 'Total Warehouse Fees:',
+    'add_product' => 'Add Product',
+    'remove' => 'Remove',
+    'unit_price' => 'Unit Price',
+    'proforma_invoice_details' => 'Proforma Invoice Details',
+    'view_commercial_invoice' => 'View Commercial Invoice',
+    'convert_to_commercial' => 'Convert to Commercial Invoice',
+    'total_exw' => 'TOTAL EXW',
+    'commission_3' => 'COMMISSION (3%)',
+    'fob_total' => 'FOB TOTAL',
+    'back' => 'Back'
 ];
