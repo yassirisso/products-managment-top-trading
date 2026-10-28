@@ -89,7 +89,7 @@ class ProductController extends Controller
 
 
         return redirect()->route('products.index')
-            ->with('success', 'Product created successfully');
+            ->with('success', __('Product created successfully'));
     }
 
     /**
@@ -179,7 +179,7 @@ class ProductController extends Controller
         ]);
 
         return redirect()->route('products.index')
-            ->with('success', 'Product updated successfully');
+            ->with('success', __('Product updated successfully'));
     }
 
     /**
@@ -189,7 +189,7 @@ class ProductController extends Controller
     {
         $product->delete();
         return redirect()->route('products.index', $product)
-            ->with('success', 'Product deleted successfully');
+            ->with('success', __('Product deleted successfully'));
     }
 
     public function import(Request $request)
@@ -228,7 +228,7 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'Products imported successfully!');
+            return redirect()->back()->with('success', __('Products imported successfully'));
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error("Import failed: " . $e->getMessage());
@@ -414,7 +414,7 @@ class ProductController extends Controller
 
             ->route('products.show', $product->id)
 
-            ->with('success', 'Supplier added successfully');
+            ->with('success', __('Supplier added successfully'));
     }
 
     public function createPurchase(Product $product)
@@ -475,7 +475,7 @@ class ProductController extends Controller
 
             ->route('products.show', $product->id)
 
-            ->with('success', 'Purchase added successfully');
+            ->with('success', __('Purchase added successfully'));
     }
 
     public function createPayment(SupplierPurchase $purchase)
@@ -544,7 +544,7 @@ class ProductController extends Controller
 
             ->route('products.show', $purchase->product_id)
 
-            ->with('success', 'Payment added successfully');
+            ->with('success', __('Payment added successfully'));
     }
 
     public function supplierHistory(Product $product, Supplier $supplier)

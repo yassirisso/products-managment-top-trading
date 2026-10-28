@@ -12,9 +12,7 @@ class BankAccountController extends Controller
         $query = BankAccount::query();
 
         if ($request->search) {
-
             $query->where(function ($q) use ($request) {
-
                 $q->where('bank_name', 'like', '%' . $request->search . '%')
                     ->orWhere('beneficiary_name', 'like', '%' . $request->search . '%')
                     ->orWhere('account_number', 'like', '%' . $request->search . '%')
@@ -22,15 +20,9 @@ class BankAccountController extends Controller
             });
         }
 
-        $bankAccounts = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        $bankAccounts = $query->latest()->paginate(10)->withQueryString();
 
-        return view(
-            'bank-accounts.index',
-            compact('bankAccounts')
-        );
+        return view('bank-accounts.index', compact('bankAccounts'));
     }
 
     public function create()
@@ -41,39 +33,25 @@ class BankAccountController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-
             'beneficiary_name' => 'required|string',
-
             'account_number' => 'required|string',
-
             'swift' => 'required|string',
-
             'bank_name' => 'required|string',
-
             'bank_address' => 'required|string',
         ]);
 
         BankAccount::create([
-
             'user_id' => auth()->id(),
-
             'beneficiary_name' => $request->beneficiary_name,
-
             'account_number' => $request->account_number,
-
             'swift' => $request->swift,
-
             'bank_name' => $request->bank_name,
-
             'bank_address' => $request->bank_address,
         ]);
 
         return redirect()
             ->route('bank-accounts.index')
-            ->with(
-                'success',
-                'Bank Account Added Successfully'
-            );
+            ->with('success', __('Bank Account Added Successfully'));
     }
 
     public function edit(BankAccount $bankAccount)
@@ -95,6 +73,6 @@ class BankAccountController extends Controller
 
         return redirect()
             ->route('bank-accounts.index')
-            ->with('success', 'Bank Account Updated Successfully');
+            ->with('success', __('Bank Account Updated Successfully'));
     }
 }

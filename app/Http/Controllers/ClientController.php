@@ -13,23 +13,15 @@ class ClientController extends Controller
     {
         $query = Client::query();
 
-
         if ($request->search) {
-
             $query->where(function ($q) use ($request) {
-
                 $q->where('name', 'like', '%' . $request->search . '%')
                     ->orWhere('email', 'like', '%' . $request->search . '%')
                     ->orWhere('phone', 'like', '%' . $request->search . '%');
             });
         }
 
-
-        $clients = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
-
+        $clients = $query->latest()->paginate(10)->withQueryString();
 
         return view('clients.index', compact('clients'));
     }
@@ -53,14 +45,14 @@ class ClientController extends Controller
         Client::create($validatedData);
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client created successfully');
+            ->with('success', __('Client created successfully'));
     }
 
     public function show(Client $client)
     {
         return view('clients.show', [
             'client' => $client,
-            'invoices' => $client->invoices()->with('items.product')->latest()->paginate(5) // Load invoices with items
+            'invoices' => $client->invoices()->with('items.product')->latest()->paginate(5)
         ]);
     }
 
@@ -83,23 +75,15 @@ class ClientController extends Controller
         $client->update($validatedData);
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client updated successfully');
+            ->with('success', __('Client updated successfully'));
     }
-
-    // public function destroy(Client $client)
-    // {
-    //     $client->delete();
-
-    //     return redirect()->route('clients.index')
-    //         ->with('success', 'Client moved to trash.');
-    // }
 
     public function restore($id)
     {
         Client::withTrashed()->findOrFail($id)->restore();
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client restored successfully.');
+            ->with('success', __('Client restored successfully.'));
     }
 
     public function forceDelete($id)
@@ -107,6 +91,6 @@ class ClientController extends Controller
         Client::withTrashed()->findOrFail($id)->forceDelete();
 
         return redirect()->route('clients.index')
-            ->with('success', 'Client permanently deleted.');
+            ->with('success', __('Client permanently deleted.'));
     }
 }

@@ -22,10 +22,7 @@ class ShippingCompanyController extends Controller
             });
         }
 
-        $shippingCompanies = $query
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+        $shippingCompanies = $query->latest()->paginate(10)->withQueryString();
 
         return view('shipping-companies.index', compact('shippingCompanies'));
     }
@@ -46,7 +43,7 @@ class ShippingCompanyController extends Controller
         ShippingCompany::create($validated);
 
         return redirect()->route('shipping-companies.index')
-            ->with('success', 'Shipping company created successfully.');
+            ->with('success', __('Shipping company created successfully.'));
     }
 
     public function show(ShippingCompany $shippingCompany)
@@ -58,9 +55,7 @@ class ShippingCompanyController extends Controller
             ->latest('date')
             ->paginate(10, ['*'], 'fees_page');
 
-        $commercialInvoices = CommercialInvoice::with('client')
-            ->latest()
-            ->get();
+        $commercialInvoices = CommercialInvoice::with('client')->latest()->get();
 
         return view('shipping-companies.show', compact('shippingCompany', 'fees', 'commercialInvoices'));
     }
@@ -81,7 +76,7 @@ class ShippingCompanyController extends Controller
         $shippingCompany->update($validated);
 
         return redirect()->route('shipping-companies.index')
-            ->with('success', 'Shipping company updated successfully.');
+            ->with('success', __('Shipping company updated successfully.'));
     }
 
     public function destroy(ShippingCompany $shippingCompany)
@@ -89,7 +84,7 @@ class ShippingCompanyController extends Controller
         $shippingCompany->delete();
 
         return redirect()->route('shipping-companies.index')
-            ->with('success', 'Shipping company deleted successfully.');
+            ->with('success', __('Shipping company deleted successfully.'));
     }
 
     public function storeContact(Request $request, ShippingCompany $shippingCompany)
@@ -103,14 +98,14 @@ class ShippingCompanyController extends Controller
 
         $shippingCompany->contacts()->create($validated);
 
-        return back()->with('success', 'Contact added successfully.');
+        return back()->with('success', __('Contact added successfully.'));
     }
 
     public function destroyContact(ShippingCompany $shippingCompany, ShippingCompanyContact $contact)
     {
         $contact->delete();
 
-        return back()->with('success', 'Contact removed successfully.');
+        return back()->with('success', __('Contact removed successfully.'));
     }
 
     public function storeFee(Request $request, ShippingCompany $shippingCompany)
@@ -125,13 +120,13 @@ class ShippingCompanyController extends Controller
 
         $shippingCompany->fees()->create($validated);
 
-        return back()->with('success', 'Shipping fee added successfully.');
+        return back()->with('success', __('Shipping fee added successfully.'));
     }
 
     public function destroyFee(ShippingCompany $shippingCompany, ShippingFee $fee)
     {
         $fee->delete();
 
-        return back()->with('success', 'Shipping fee removed successfully.');
+        return back()->with('success', __('Shipping fee removed successfully.'));
     }
 }

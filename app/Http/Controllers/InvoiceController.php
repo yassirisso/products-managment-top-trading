@@ -11,28 +11,19 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Client $client)
     {
         return view('invoices.create', [
             'client' => $client,
-            'products' => Product::all(), // Or Product::select('id', 'reference')->get()
+            'products' => Product::all(),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, Client $client)
     {
         $validated = $request->validate([
@@ -44,14 +35,13 @@ class InvoiceController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        // Calculate total using validated data
         $total = collect($validated['items'])->sum(fn($item) => $item['quantity'] * $item['unit_price']);
 
         DB::transaction(function () use ($client, $validated, $total) {
             $invoice = $client->invoices()->create([
                 'invoice_date' => $validated['invoice_date'],
                 'total_amount' => $total,
-                'notes' => $validated['notes'] ?? null // Using null coalesce for nullable field
+                'notes' => $validated['notes'] ?? null
             ]);
 
             foreach ($validated['items'] as $item) {
@@ -65,36 +55,24 @@ class InvoiceController extends Controller
         });
 
         return redirect()->route('clients.show', $client)
-            ->with('success', 'Invoice created successfully');
+            ->with('success', __('Invoice created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Invoice $invoice)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Invoice $invoice)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Invoice $invoice)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Invoice $invoice)
     {
         //

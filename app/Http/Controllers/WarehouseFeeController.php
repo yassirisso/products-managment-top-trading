@@ -23,12 +23,10 @@ class WarehouseFeeController extends Controller
         $clients = Client::all();
         $shippingMarks = ShippingMark::all();
 
-        // Fetch unique containers from Proformas AND Warehouse Fees
         $proformaContainers = \App\Models\ProformaInvoice::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
         $feeContainers = WarehouseFee::whereNotNull('container_no')->where('container_no', '!=', '')->distinct()->pluck('container_no');
         $containers = $proformaContainers->merge($feeContainers)->unique()->sort()->values();
 
-        // Pass the proforma invoices so we can find the ID
         $proformaInvoices = \App\Models\ProformaInvoice::whereNotNull('container_no')->get();
 
         return view('warehouse-fees.create', compact('clients', 'shippingMarks', 'containers', 'proformaInvoices'));
@@ -48,7 +46,7 @@ class WarehouseFeeController extends Controller
         WarehouseFee::create($validated);
 
         return redirect()->route('warehouse-fees.index')
-            ->with('success', '仓库费用添加成功');
+            ->with('success', __('仓库费用添加成功'));
     }
 
     public function edit(WarehouseFee $warehouseFee)
@@ -79,7 +77,7 @@ class WarehouseFeeController extends Controller
         $warehouseFee->update($validated);
 
         return redirect()->route('warehouse-fees.index')
-            ->with('success', '仓库费用更新成功');
+            ->with('success', __('仓库费用更新成功'));
     }
 
     public function destroy(WarehouseFee $warehouseFee)
@@ -87,6 +85,6 @@ class WarehouseFeeController extends Controller
         $warehouseFee->delete();
 
         return redirect()->route('warehouse-fees.index')
-            ->with('success', '仓库费用删除成功');
+            ->with('success', __('仓库费用删除成功'));
     }
 }

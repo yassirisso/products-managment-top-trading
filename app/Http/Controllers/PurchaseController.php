@@ -22,7 +22,7 @@ class PurchaseController extends Controller
         $client->purchases()->create($validated);
 
         return redirect()->route('clients.show', $client)
-            ->with('success', 'Purchase recorded successfully');
+            ->with('success', __('Purchase recorded successfully'));
     }
     /**
      * Display a listing of the resource.
@@ -63,7 +63,7 @@ class PurchaseController extends Controller
         ]);
 
         return redirect()->route('clients.show', $client)
-            ->with('success', 'Purchase recorded successfully');
+            ->with('success', __('Purchase recorded successfully'));
     }
 
     /**
@@ -99,7 +99,7 @@ class PurchaseController extends Controller
         $purchase->update($validated);
 
         return redirect()->route('clients.show', $client)
-            ->with('success', 'Purchase updated successfully');
+            ->with('success', __('Purchase updated successfully'));
     }
 
     /**
@@ -109,6 +109,6 @@ class PurchaseController extends Controller
     // {
     //     $purchase->delete();
     //     return redirect()->route('clients.show', $client)
-    //         ->with('success', 'Purchase deleted successfully');
+    //         ->with('success', __('Purchase deleted successfully');
     // }
 }

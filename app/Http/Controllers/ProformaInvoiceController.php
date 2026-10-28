@@ -125,7 +125,7 @@ class ProformaInvoiceController extends Controller
 
         return redirect()
             ->route('proforma-invoices.index')
-            ->with('success', 'Proforma Invoice Created Successfully');
+            ->with('success', __('Proforma Invoice Created Successfully'));
     }
 
     /**
@@ -232,7 +232,7 @@ class ProformaInvoiceController extends Controller
 
         return redirect()
             ->route('proforma-invoices.index')
-            ->with('success', 'Proforma Invoice Updated Successfully');
+            ->with('success', __('Proforma Invoice Updated Successfully'));
     }
 
     /**
@@ -244,7 +244,7 @@ class ProformaInvoiceController extends Controller
 
     //     return redirect()
     //         ->route('proforma-invoices.index')
-    //         ->with('success', 'Proforma Invoice Deleted Successfully');
+    //         ->with('success', __('Proforma Invoice Deleted Successfully');
     // }
 
     public function downloadExcel(ProformaInvoice $proformaInvoice)

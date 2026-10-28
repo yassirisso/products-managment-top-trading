@@ -63,7 +63,7 @@ class SupplierController extends Controller
 
         Supplier::create($validated);
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
+        return redirect()->route('suppliers.index')->with('success', __('Supplier created successfully.'));
     }
 
     public function show(Supplier $supplier)
@@ -94,13 +94,13 @@ class SupplierController extends Controller
         $supplier->update($validated);
 
         return redirect()->route('suppliers.index')
-            ->with('success', 'Supplier updated successfully.');
+            ->with('success', __('Supplier updated successfully.'));
     }
 
     // public function destroy(Supplier $supplier)
     // {
     //     $supplier->delete();
-    //     return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
+    //     return redirect()->route('suppliers.index')->with('success', __('Supplier deleted successfully.');
     // }
 
     public function attachProduct(Request $request, Supplier $supplier)
@@ -114,13 +114,13 @@ class SupplierController extends Controller
             $validated['product_id'] => ['buying_price' => $validated['buying_price']]
         ]);
 
-        return back()->with('success', 'Product added to supplier successfully.');
+        return back()->with('success', __('Product added to supplier successfully.'));
     }
 
     public function detachProduct(Supplier $supplier, $productId)
     {
         $supplier->products()->detach($productId);
-        return back()->with('success', 'Product removed from supplier successfully.');
+        return back()->with('success', __('Product removed from supplier successfully.'));
     }
 
     public function clients(Supplier $supplier)
@@ -220,13 +220,13 @@ class SupplierController extends Controller
 
         $supplier->contacts()->create($validated);
 
-        return back()->with('success', 'Contact added successfully.');
+        return back()->with('success', __('Contact added successfully.'));
     }
 
     public function destroyContact(Supplier $supplier, SupplierContact $contact)
     {
         $contact->delete();
 
-        return back()->with('success', 'Contact removed successfully.');
+        return back()->with('success', __('Contact removed successfully.'));
     }
 }

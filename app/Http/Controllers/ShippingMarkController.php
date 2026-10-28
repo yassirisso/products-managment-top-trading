@@ -27,7 +27,7 @@ class ShippingMarkController extends Controller
         ShippingMark::create($validated);
 
         return redirect()->route('shipping-marks.index')
-            ->with('success', '唛头添加成功');
+            ->with('success', __('唛头添加成功'));
     }
 
     public function edit(ShippingMark $shippingMark)
@@ -44,7 +44,7 @@ class ShippingMarkController extends Controller
         $shippingMark->update($validated);
 
         return redirect()->route('shipping-marks.index')
-            ->with('success', '唛头更新成功');
+            ->with('success', __('唛头更新成功'));
     }
 
     public function destroy(ShippingMark $shippingMark)
@@ -52,6 +52,6 @@ class ShippingMarkController extends Controller
         $shippingMark->delete();
 
         return redirect()->route('shipping-marks.index')
-            ->with('success', '唛头删除成功');
+            ->with('success', __('唛头删除成功'));
     }
 }
