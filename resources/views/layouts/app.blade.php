@@ -101,6 +101,14 @@
                             </a>
                         @endcan
 
+                        <!-- Receiving Notes (Bon de Réception) -->
+                        @can('view receiving notes')
+                            <a href="{{ route('receiving-notes.index') }}"
+                                class="@if (request()->routeIs('receiving-notes*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                {{ __('messages.receiving_notes') }}
+                            </a>
+                        @endcan
+
                         <!-- Proforma Invoices -->
                         @can('view proforma invoices')
                             <a href="{{ route('proforma-invoices.index') }}"

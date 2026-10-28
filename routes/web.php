@@ -18,6 +18,7 @@ use App\Http\Controllers\ShippingCompanyController;
 use App\Http\Controllers\ShippingMarkController;
 use App\Http\Controllers\WarehouseFeeController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ReceivingNoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -554,6 +555,34 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update']);
 
     Route::delete('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'destroy'])->name('warehouse-fees.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | RECEIVING NOTES (BON DE RECEPTION)
+    |--------------------------------------------------------------------------
+    */
+
+    // Static paths FIRST — must come before {receivingNote} wildcard
+    Route::middleware('permission:create receiving notes')->group(function () {
+        Route::get('receiving-notes/create', [ReceivingNoteController::class, 'create'])->name('receiving-notes.create');
+        Route::post('receiving-notes', [ReceivingNoteController::class, 'store'])->name('receiving-notes.store');
+    });
+
+    Route::middleware('permission:view receiving notes')->group(function () {
+        Route::get('receiving-notes', [ReceivingNoteController::class, 'index'])->name('receiving-notes.index');
+        Route::get('receiving-notes/{receivingNote}', [ReceivingNoteController::class, 'show'])->name('receiving-notes.show');
+        Route::get('receiving-notes/{receivingNote}/download', [ReceivingNoteController::class, 'downloadExcel'])->name('receiving-notes.download');
+    });
+
+    Route::middleware('permission:edit receiving notes')->group(function () {
+        Route::get('receiving-notes/{receivingNote}/edit', [ReceivingNoteController::class, 'edit'])->name('receiving-notes.edit');
+        Route::put('receiving-notes/{receivingNote}', [ReceivingNoteController::class, 'update'])->name('receiving-notes.update');
+        Route::patch('receiving-notes/{receivingNote}', [ReceivingNoteController::class, 'update']);
+    });
+
+    Route::middleware('permission:delete receiving notes')->group(function () {
+        Route::delete('receiving-notes/{receivingNote}', [ReceivingNoteController::class, 'destroy'])->name('receiving-notes.destroy');
+    });
 });
 
 

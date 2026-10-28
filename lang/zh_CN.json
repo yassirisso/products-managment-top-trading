@@ -44,5 +44,8 @@
     "User updated successfully": "用户更新成功",
     "Invoice created successfully": "发票创建成功",
     "Purchase recorded successfully": "采购记录成功",
-    "Purchase updated successfully": "采购更新成功"
+    "Purchase updated successfully": "采购更新成功",
+    "Receiving Note Created Successfully": "收货单创建成功",
+    "Receiving Note Updated Successfully": "收货单更新成功",
+    "Receiving Note Deleted Successfully": "收货单删除成功"
 }

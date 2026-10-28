@@ -385,4 +385,13 @@ return [
     'save_bank' => 'Save Bank',
     'edit_bank_account' => 'Edit Bank Account',
     'update_bank' => 'Update Bank',
+
+        // Receiving Notes
+    'receiving_notes' => 'Receiving Notes',
+    'create_receiving_note' => 'Create Receiving Note',
+    'edit_receiving_note' => 'Edit Receiving Note',
+    'receiving_note_details' => 'Receiving Note Details',
+    'back_to_receiving_notes' => 'Back to Receiving Notes',
+    'no_receiving_notes_found' => 'No Receiving Notes Found',
+    'container_info' => 'Container Information',
 ];

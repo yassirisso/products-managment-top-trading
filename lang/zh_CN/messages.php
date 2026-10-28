@@ -385,4 +385,13 @@ return [
     'save_bank' => '保存银行',
     'edit_bank_account' => '编辑银行账户',
     'update_bank' => '更新银行',
+
+    // Receiving Notes
+    'receiving_notes' => '收货单',
+    'create_receiving_note' => '创建收货单',
+    'edit_receiving_note' => '编辑收货单',
+    'receiving_note_details' => '收货单详情',
+    'back_to_receiving_notes' => '返回收货单',
+    'no_receiving_notes_found' => '未找到收货单。',
+    'container_info' => '柜号信息',
 ];

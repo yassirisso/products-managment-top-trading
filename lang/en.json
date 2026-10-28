@@ -32,5 +32,8 @@
     "仓库费用更新成功": "Warehouse fee updated successfully.",
     "仓库费用删除成功": "Warehouse fee deleted successfully.",
     "This proforma invoice has already been converted.": "This proforma invoice has already been converted.",
-    "This proforma invoice has already been converted": "This proforma invoice has already been converted"
+    "This proforma invoice has already been converted": "This proforma invoice has already been converted",
+    "Receiving Note Created Successfully": "Receiving Note Created Successfully",
+    "Receiving Note Updated Successfully": "Receiving Note Updated Successfully",
+    "Receiving Note Deleted Successfully": "Receiving Note Deleted Successfully"
 }
