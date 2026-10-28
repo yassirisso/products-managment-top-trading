@@ -214,6 +214,10 @@
                             class="px-2 py-1 rounded {{ app()->getLocale() == 'zh_CN' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-800' }}">
                             中文
                         </a>
+                        <a href="{{ route('lang.switch', 'fr') }}"
+                            class="px-2 py-1 rounded {{ app()->getLocale() == 'fr' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-800' }}">
+                            FR
+                        </a>
                     </div>
 
                     <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-gray-700 hidden sm:inline"
