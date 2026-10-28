@@ -135,7 +135,11 @@ class ReceivingNoteController extends Controller
 
     public function downloadExcel(ReceivingNote $receivingNote)
     {
-        // Excel export will be added later as requested
-        return redirect()->back()->with('error', 'Excel export not implemented yet.');
+        $receivingNote->load(['proformaInvoice', 'products.suppliers']);
+
+        return Excel::download(
+            new ReceivingNoteExport($receivingNote),
+            'receiving-note-' . $receivingNote->id . '.xlsx'
+        );
     }
 }
