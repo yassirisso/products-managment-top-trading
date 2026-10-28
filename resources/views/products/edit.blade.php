@@ -1,251 +1,142 @@
 <x-app-layout>
 
     <x-slot name="header">
-
         <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
-
-            Edit Product: {{ $product->reference }}
-
+            {{ __('messages.edit') }}: {{ $product->reference }}
         </h2>
-
     </x-slot>
 
     <div class="container mx-auto px-4 py-6">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-
             <h1 class="text-xl md:text-2xl font-bold text-gray-800 break-words">
-
-                Edit Product: {{ $product->reference }}
-
+                {{ __('messages.edit') }}: {{ $product->reference }}
             </h1>
-
-            <a href="{{ route('products.index') }}"
-                class="text-gray-600 hover:text-gray-800 flex items-center text-sm whitespace-nowrap">
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-
-                    <path fill-rule="evenodd"
-                        d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                        clip-rule="evenodd" />
-
-                </svg>
-
-                Back to Products
-
+            <a href="{{ route('products.index') }}" class="text-gray-600 hover:text-gray-800 text-sm whitespace-nowrap">
+                &larr; {{ __('messages.products_management') }}
             </a>
-
         </div>
 
         <div class="bg-white shadow-md rounded-lg p-4 md:p-6">
-
             <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-
                 @csrf
                 @method('PUT')
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
                     <!-- Product Image -->
                     <div class="min-w-0">
-
-                        <label for="image" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            Product Image
-
-                        </label>
-
+                        <label for="image"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.product_picture') }}</label>
                         <input type="file" name="image" id="image" accept="image/*"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-
                         @error('image')
-                            <p class="text-red-500 text-xs italic mt-1">
-                                {{ $message }}
-                            </p>
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
-
                         @if ($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image"
                                 class="mt-3 w-24 h-24 object-cover rounded border">
                         @endif
-
                     </div>
 
                     <!-- Product Reference -->
                     <div class="min-w-0">
-
-                        <label for="reference" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            Product Reference *
-
-                        </label>
-
+                        <label for="reference"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.product_reference') }}
+                            *</label>
                         <input type="text" name="reference" id="reference"
                             value="{{ old('reference', $product->reference) }}" required placeholder="PRD-001"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                         @error('reference')
-                            <p class="text-red-500 text-xs italic mt-1">
-                                {{ $message }}
-                            </p>
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
-
                     </div>
 
                     <!-- Product Price -->
                     <div class="min-w-0">
-
-                        <label for="price" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            Price *
-
-                        </label>
-
+                        <label for="price"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.product_price') }}
+                            *</label>
                         <input type="number" step="0.01" name="price" id="price"
                             value="{{ old('price', $product->price) }}" required placeholder="0.00"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                         @error('price')
-                            <p class="text-red-500 text-xs italic mt-1">
-                                {{ $message }}
-                            </p>
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
-
                     </div>
 
                     <!-- PCS/CTS -->
                     <div class="min-w-0">
-
-                        <label for="pcs_cts" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            PCS/CTS
-
-                        </label>
-
+                        <label for="pcs_cts"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.pcs_cts') }}</label>
                         <input type="number" name="pcs_cts" id="pcs_cts"
                             value="{{ old('pcs_cts', $product->pcs_cts) }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                     </div>
 
                     <!-- UNIT CBM -->
                     <div class="min-w-0">
-
-                        <label for="unit_cbm" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            UNIT CBM
-
-                        </label>
-
+                        <label for="unit_cbm"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.unit_cbm') }}</label>
                         <input type="number" step="0.001" name="unit_cbm" id="unit_cbm"
                             value="{{ old('unit_cbm', $product->unit_cbm) }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                     </div>
 
                     <!-- UNIT GW -->
                     <div class="min-w-0">
-
-                        <label for="unit_gw" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            UNIT GW
-
-                        </label>
-
+                        <label for="unit_gw"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.unit_gw') }}</label>
                         <input type="number" step="0.01" name="unit_gw" id="unit_gw"
                             value="{{ old('unit_gw', $product->unit_gw) }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                     </div>
 
                     <!-- UNIT NW -->
                     <div class="min-w-0">
-
-                        <label for="unit_nw" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            UNIT NW
-
-                        </label>
-
+                        <label for="unit_nw"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.unit_nw') }}</label>
                         <input type="number" step="0.01" name="unit_nw" id="unit_nw"
                             value="{{ old('unit_nw', $product->unit_nw) }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-
                     </div>
 
                     <!-- Supplier Field -->
                     <div class="min-w-0">
-
-                        <label for="supplier_id" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            Supplier *
-
-                        </label>
-
+                        <label for="supplier_id"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.supplier') }} *</label>
                         <select name="supplier_id" id="supplier_id" required
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-                            <option value="">
-                                Select Supplier
-                            </option>
-
+                            <option value="">{{ __('messages.select_supplier') }}</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}"
-                                    {{ old('supplier_id', isset($product) ? $product->suppliers->first()?->id : '') == $supplier->id ? 'selected' : '' }}>
-
+                                    {{ old('supplier_id', $product->suppliers->first()?->id) == $supplier->id ? 'selected' : '' }}>
                                     {{ $supplier->name }}
-
                                 </option>
                             @endforeach
-
                         </select>
-
                         @error('supplier_id')
-                            <p class="text-red-500 text-xs italic mt-1">
-                                {{ $message }}
-                            </p>
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
-
                     </div>
 
                     <!-- Description (full width) -->
                     <div class="sm:col-span-2 lg:col-span-4 min-w-0">
-
-                        <label for="description" class="block text-gray-700 text-sm font-bold mb-2">
-
-                            Description
-
-                        </label>
-
+                        <label for="description"
+                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.description') }}</label>
                         <textarea name="description" id="description" rows="3"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description', $product->description) }}</textarea>
-
                     </div>
-
                 </div>
 
                 <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-4 mt-6">
-
                     <a href="{{ route('products.index') }}"
-                        class="text-gray-600 hover:text-gray-800 flex items-center justify-center sm:justify-start py-2">
-
-                        Cancel
-
-                    </a>
-
+                        class="text-gray-600 hover:text-gray-800 text-center sm:text-left py-2">{{ __('messages.cancel') }}</a>
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center w-full sm:w-auto">
-
-                        Update Product
-
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 w-full sm:w-auto">
+                        {{ __('messages.update') }}
                     </button>
-
                 </div>
-
             </form>
-
         </div>
-
     </div>
-
 </x-app-layout>
