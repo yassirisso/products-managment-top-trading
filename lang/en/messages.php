@@ -371,4 +371,18 @@ return [
     'client_name' => 'Client Name',
     'update_client' => 'Update Client',
     'create_client' => 'Create Client',
+
+    // Bank Accounts
+    'bank_accounts_management' => 'Bank Accounts',
+    'search_bank_account' => 'Search bank account...',
+    'add_bank_account' => 'Add Bank Account',
+    'no_bank_accounts_found' => 'No Bank Accounts Found',
+    'bank_name' => 'Bank Name',
+    'account_number' => 'Account Number',
+    'swift' => 'Swift',
+    'beneficiary_name' => 'Beneficiary Name',
+    'bank_address' => 'Bank Address',
+    'save_bank' => 'Save Bank',
+    'edit_bank_account' => 'Edit Bank Account',
+    'update_bank' => 'Update Bank',
 ];

@@ -371,4 +371,18 @@ return [
     'client_name' => '客户名称',
     'update_client' => '更新客户',
     'create_client' => '创建客户',
+
+    // Bank Accounts
+    'bank_accounts_management' => '银行账户',
+    'search_bank_account' => '搜索银行账户...',
+    'add_bank_account' => '添加银行账户',
+    'no_bank_accounts_found' => '未找到银行账户。',
+    'bank_name' => '银行名称',
+    'account_number' => '账号',
+    'swift' => 'SWIFT代码',
+    'beneficiary_name' => '收款人名称',
+    'bank_address' => '银行地址',
+    'save_bank' => '保存银行',
+    'edit_bank_account' => '编辑银行账户',
+    'update_bank' => '更新银行',
 ];

@@ -75,4 +75,26 @@ class BankAccountController extends Controller
                 'Bank Account Added Successfully'
             );
     }
+
+    public function edit(BankAccount $bankAccount)
+    {
+        return view('bank-accounts.edit', compact('bankAccount'));
+    }
+
+    public function update(Request $request, BankAccount $bankAccount)
+    {
+        $validated = $request->validate([
+            'beneficiary_name' => 'required|string',
+            'account_number' => 'required|string',
+            'swift' => 'required|string',
+            'bank_name' => 'required|string',
+            'bank_address' => 'required|string',
+        ]);
+
+        $bankAccount->update($validated);
+
+        return redirect()
+            ->route('bank-accounts.index')
+            ->with('success', 'Bank Account Updated Successfully');
+    }
 }
