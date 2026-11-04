@@ -57,8 +57,9 @@
                         <div class="min-w-0">
                             <label
                                 class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.exchange_rate') }}</label>
-                            <input type="number" step="0.0001" min="0" name="exchange_rate" id="exchange_rate"
-                                value="{{ old('exchange_rate', 0.14) }}" class="w-full border rounded-lg px-3 py-2">
+                            <input type="number" step="0.0001" min="0.0001" name="exchange_rate" id="exchange_rate"
+                                value="{{ old('exchange_rate', 6.6) }}" class="w-full border rounded-lg px-3 py-2"
+                                title="e.g. 6.60 means 1 USD = 6.60 RMB">
                         </div>
                     @else
                         <input type="hidden" name="exchange_rate" id="exchange_rate" value="1">
@@ -271,8 +272,10 @@
 
             let exchangeInput = document.getElementById('exchange_rate');
             let exchangeRate = exchangeInput ? (parseFloat(exchangeInput.value) || 1) : 1;
+            if (exchangeRate <= 0) exchangeRate = 1; // safety guard
 
-            let finalPrice = discountedRmb * exchangeRate;
+            // Convert RMB to USD by DIVIDING by the exchange rate
+            let finalPrice = discountedRmb / exchangeRate;
 
             row.querySelector('.unit-price').value = finalPrice.toFixed(2);
 
