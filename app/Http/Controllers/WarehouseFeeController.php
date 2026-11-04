@@ -29,7 +29,15 @@ class WarehouseFeeController extends Controller
 
         $proformaInvoices = \App\Models\ProformaInvoice::whereNotNull('container_no')->get();
 
-        return view('warehouse-fees.create', compact('clients', 'shippingMarks', 'containers', 'proformaInvoices'));
+        // Map container_no => list of client ids (to auto-fill client)
+        $containerClients = \App\Models\ProformaInvoice::whereNotNull('container_no')
+            ->where('container_no', '!=', '')
+            ->select('container_no', 'client_id')
+            ->get()
+            ->groupBy('container_no')
+            ->map(fn($group) => $group->pluck('client_id')->unique()->values()->all());
+
+        return view('warehouse-fees.create', compact('clients', 'shippingMarks', 'containers', 'proformaInvoices', 'containerClients'));
     }
 
     public function store(Request $request)
@@ -44,6 +52,8 @@ class WarehouseFeeController extends Controller
         ]);
 
         WarehouseFee::create($validated);
+
+        $this->updateProformaLocalCharge($request->proforma_invoice_id);
 
         return redirect()->route('warehouse-fees.index')
             ->with('success', __('仓库费用添加成功'));
@@ -60,7 +70,15 @@ class WarehouseFeeController extends Controller
 
         $proformaInvoices = \App\Models\ProformaInvoice::whereNotNull('container_no')->get();
 
-        return view('warehouse-fees.edit', compact('warehouseFee', 'clients', 'shippingMarks', 'containers', 'proformaInvoices'));
+        // Map container_no => list of client ids (to auto-fill client)
+        $containerClients = \App\Models\ProformaInvoice::whereNotNull('container_no')
+            ->where('container_no', '!=', '')
+            ->select('container_no', 'client_id')
+            ->get()
+            ->groupBy('container_no')
+            ->map(fn($group) => $group->pluck('client_id')->unique()->values()->all());
+
+        return view('warehouse-fees.edit', compact('warehouseFee', 'clients', 'shippingMarks', 'containers', 'proformaInvoices', 'containerClients'));
     }
 
     public function update(Request $request, WarehouseFee $warehouseFee)
@@ -74,7 +92,16 @@ class WarehouseFeeController extends Controller
             'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
         ]);
 
+        $oldProformaId = $warehouseFee->proforma_invoice_id;
         $warehouseFee->update($validated);
+
+        // Update the new invoice
+        $this->updateProformaLocalCharge($request->proforma_invoice_id);
+
+        // If the fee was moved to a different invoice, update the old one too
+        if ($oldProformaId && $oldProformaId != $request->proforma_invoice_id) {
+            $this->updateProformaLocalCharge($oldProformaId);
+        }
 
         return redirect()->route('warehouse-fees.index')
             ->with('success', __('仓库费用更新成功'));
@@ -82,9 +109,26 @@ class WarehouseFeeController extends Controller
 
     public function destroy(WarehouseFee $warehouseFee)
     {
+        $proformaId = $warehouseFee->proforma_invoice_id;
         $warehouseFee->delete();
+
+        $this->updateProformaLocalCharge($proformaId);
 
         return redirect()->route('warehouse-fees.index')
             ->with('success', __('仓库费用删除成功'));
+    }
+
+    private function updateProformaLocalCharge($proformaInvoiceId)
+    {
+        if ($proformaInvoiceId) {
+            $proformaInvoice = \App\Models\ProformaInvoice::find($proformaInvoiceId);
+            if ($proformaInvoice) {
+                // Calculate the total of all warehouse fees for this invoice
+                $totalFees = \App\Models\WarehouseFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('montant_rmb');
+
+                // Update the local_charge
+                $proformaInvoice->update(['local_charge' => $totalFees]);
+            }
+        }
     }
 }

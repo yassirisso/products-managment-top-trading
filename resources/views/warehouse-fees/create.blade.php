@@ -51,7 +51,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.client') }}
                             *</label>
-                        <select name="client_id" required class="w-full border rounded-lg px-3 py-2">
+                        <select id="client_id_display" disabled
+                            class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700 cursor-not-allowed">
                             <option value="">{{ __('messages.client') }}</option>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}"
@@ -60,6 +61,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id') }}" required>
                         @error('client_id')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
@@ -108,6 +110,7 @@
 
     <script>
         window.addEventListener('load', function() {
+            const containerClients = @json($containerClients);
             if (typeof jQuery !== 'undefined' && typeof jQuery.fn.select2 !== 'undefined') {
 
                 $('.select2-container-select').select2({
@@ -126,9 +129,33 @@
                     let selectedOption = $(this).find('option:selected');
                     let invId = selectedOption.data('id') || '';
                     $('#proforma_invoice_id').val(invId);
+
+                    let containerNo = $(this).val();
+
+                    if (containerNo && containerClients[containerNo] && containerClients[containerNo]
+                        .length > 0) {
+                        let clientId = containerClients[containerNo][0];
+                        $('#client_id').val(clientId);
+                        $('#client_id_display').val(clientId);
+                    } else {
+                        $('#client_id').val('');
+                        $('#client_id_display').val('');
+                    }
                 });
 
                 $('.select2-container-select').trigger('change');
+
+                (function() {
+                    let containerNo = $('#container_no').val();
+                    if (containerNo && containerClients[containerNo] && containerClients[containerNo].length >
+                        0) {
+                        let currentClient = $('#client_id').val();
+                        if (!currentClient) {
+                            $('#client_id').val(containerClients[containerNo][0]);
+                            $('#client_id_display').val(containerClients[containerNo][0]);
+                        }
+                    }
+                })();
             }
         });
     </script>
