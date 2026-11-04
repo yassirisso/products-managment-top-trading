@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\ShippingMark;
 
 class ClientController extends Controller
 {
@@ -40,9 +41,15 @@ class ClientController extends Controller
             'address' => 'nullable|string',
             'ice_number' => 'nullable|string|max:255',
             'fax' => 'nullable|string|max:255',
+            'shipping_mark' => 'nullable|string|max:255',
         ]);
 
         Client::create($validatedData);
+
+        // If a shipping mark was set, create it in the shipping_marks table if it doesn't exist
+        if (!empty($validatedData['shipping_mark'])) {
+            ShippingMark::firstOrCreate(['name' => $validatedData['shipping_mark']]);
+        }
 
         return redirect()->route('clients.index')
             ->with('success', __('Client created successfully'));
@@ -70,9 +77,15 @@ class ClientController extends Controller
             'address' => 'nullable|string',
             'ice_number' => 'nullable|string|max:255',
             'fax' => 'nullable|string|max:255',
+            'shipping_mark' => 'nullable|string|max:255',
         ]);
 
         $client->update($validatedData);
+
+        // If a shipping mark was set, create it in the shipping_marks table if it doesn't exist
+        if (!empty($validatedData['shipping_mark'])) {
+            ShippingMark::firstOrCreate(['name' => $validatedData['shipping_mark']]);
+        }
 
         return redirect()->route('clients.index')
             ->with('success', __('Client updated successfully'));

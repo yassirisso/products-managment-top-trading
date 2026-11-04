@@ -35,6 +35,9 @@
                         <p class="text-gray-600 mt-1">✉️ {{ $client->email ?? __('messages.no_email') }}</p>
                         <p class="text-gray-600 mt-1">ICE: {{ $client->ice_number ?? '—' }}</p>
                         <p class="text-gray-600 mt-1">{{ __('messages.fax') }}: {{ $client->fax ?? '—' }}</p>
+                        <p class="text-gray-600 mt-1">{{ __('messages.shipping_marks') }}: {{ $client->shipping_mark ?? '—' }}
+
+                        </p>
                     </div>
                 </div>
                 <!-- Right Side -->

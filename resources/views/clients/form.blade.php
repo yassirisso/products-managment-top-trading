@@ -91,6 +91,20 @@
                         @enderror
                     </div>
 
+                    <!-- Shipping Mark -->
+                    <div>
+                        <label for="shipping_mark" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ __('messages.shipping_marks') }}
+                        </label>
+                        <input type="text" name="shipping_mark" id="shipping_mark"
+                            value="{{ old('shipping_mark', $client->shipping_mark ?? '') }}"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="{{ __('messages.shipping_marks') }}...">
+                        @error('shipping_mark')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Address (full width) -->
                     <div class="md:col-span-2 min-w-0">
                         <label for="address"
