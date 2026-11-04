@@ -9,7 +9,7 @@ class ShippingFee extends Model
 {
     protected $fillable = [
         'shipping_company_id',
-        'commercial_invoice_id',
+        'proforma_invoice_id',
         'amount',
         'currency',
         'date',
@@ -26,8 +26,8 @@ class ShippingFee extends Model
         return $this->belongsTo(ShippingCompany::class);
     }
 
-    public function commercialInvoice(): BelongsTo
+    public function proformaInvoice(): BelongsTo
     {
-        return $this->belongsTo(CommercialInvoice::class);
+        return $this->belongsTo(ProformaInvoice::class);
     }
 }

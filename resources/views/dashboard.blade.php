@@ -241,7 +241,7 @@
                                     <td class="px-4 py-3 whitespace-nowrap text-gray-700">
                                         {{ $fee->shippingCompany?->name ?? '—' }}</td>
                                     <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-sm">
-                                        {{ $fee->commercialInvoice ? '#' . $fee->commercialInvoice->invoice_no : '—' }}
+                                        {{ $fee->proformaInvoice ? '#' . $fee->proformaInvoice->id : '—' }}
                                     </td>
                                     <td class="px-4 py-3 whitespace-nowrap text-right font-medium">
                                         {{ number_format($fee->amount, 2) }} {{ $fee->currency }}</td>
@@ -266,7 +266,7 @@
                                     {{ $fee->currency }}</p>
                             </div>
                             <p class="text-gray-500 text-xs mt-1">
-                                {{ $fee->commercialInvoice ? '#' . $fee->commercialInvoice->invoice_no : '—' }}</p>
+                                {{ $fee->proformaInvoice ? '#' . $fee->proformaInvoice->id : '—' }}</p>
                         </div>
                     @empty
                         <div class="px-4 py-3 text-center text-gray-500 text-sm">

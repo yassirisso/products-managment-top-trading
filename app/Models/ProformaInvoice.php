@@ -48,4 +48,9 @@ class ProformaInvoice extends Model
     {
         return $this->hasMany(WarehouseFee::class);
     }
+
+    public function shippingFees()
+    {
+        return $this->hasMany(ShippingFee::class);
+    }
 }

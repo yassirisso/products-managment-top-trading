@@ -94,7 +94,7 @@ class DashboardController extends Controller
             ->get();
 
         $topClientLabels = $topClients->pluck('client_name')->all();
-        $topClientValues = $topClients->pluck('total')->map(fn ($v) => round((float) $v, 2))->all();
+        $topClientValues = $topClients->pluck('total')->map(fn($v) => round((float) $v, 2))->all();
 
         // -------------------------------------------------
         // CHART: TOP 5 SUPPLIERS BY PURCHASE VALUE
@@ -108,8 +108,8 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $topSupplierLabels = $topSuppliers->map(fn ($r) => $r->supplier?->name ?? '—')->all();
-        $topSupplierValues = $topSuppliers->map(fn ($r) => round((float) $r->total, 2))->all();
+        $topSupplierLabels = $topSuppliers->map(fn($r) => $r->supplier?->name ?? '—')->all();
+        $topSupplierValues = $topSuppliers->map(fn($r) => round((float) $r->total, 2))->all();
 
         // -------------------------------------------------
         // RECENT LISTS
@@ -120,7 +120,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $recentFees = ShippingFee::with(['shippingCompany', 'commercialInvoice'])
+        $recentFees = ShippingFee::with(['shippingCompany', 'proformaInvoice'])
             ->latest('date')
             ->limit(5)
             ->get();

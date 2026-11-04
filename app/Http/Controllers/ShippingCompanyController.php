@@ -51,13 +51,15 @@ class ShippingCompanyController extends Controller
         $shippingCompany->load('contacts');
 
         $fees = $shippingCompany->fees()
-            ->with('commercialInvoice.client')
+            ->with('proformaInvoice.client')
             ->latest('date')
             ->paginate(10, ['*'], 'fees_page');
 
-        $commercialInvoices = CommercialInvoice::with('client')->latest()->get();
+        $proformaInvoices = \App\Models\ProformaInvoice::with('client')
+            ->latest()
+            ->get();
 
-        return view('shipping-companies.show', compact('shippingCompany', 'fees', 'commercialInvoices'));
+        return view('shipping-companies.show', compact('shippingCompany', 'fees', 'proformaInvoices'));
     }
 
     public function edit(ShippingCompany $shippingCompany)
@@ -111,7 +113,7 @@ class ShippingCompanyController extends Controller
     public function storeFee(Request $request, ShippingCompany $shippingCompany)
     {
         $validated = $request->validate([
-            'commercial_invoice_id' => 'required|exists:commercial_invoices,id',
+            'proforma_invoice_id' => 'required|exists:proforma_invoices,id',
             'amount' => 'required|numeric|min:0',
             'currency' => 'required|in:RMB,USD',
             'date' => 'required|date',

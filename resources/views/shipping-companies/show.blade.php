@@ -216,17 +216,19 @@
                             </div>
                             <div class="space-y-1 text-gray-700">
                                 <p class="break-words">
-                                    <span class="text-gray-500">{{ __('messages.commercial_invoice') }}:</span>
-                                    @if ($fee->commercialInvoice)
-                                        <a href="{{ route('commercial-invoices.show', $fee->commercialInvoice) }}"
-                                            class="text-blue-600 hover:underline">#{{ $fee->commercialInvoice->invoice_no ?? $fee->commercialInvoice->id }}</a>
+                                    <span class="text-gray-500">{{ __('messages.proforma_invoices') }}:</span>
+                                    @if ($fee->proformaInvoice)
+                                        <a href="{{ route('proforma-invoices.show', $fee->proformaInvoice) }}"
+                                            class="text-blue-600 hover:underline">
+                                            #{{ $fee->proformaInvoice->id }}
+                                        </a>
                                     @else
                                         —
                                     @endif
                                 </p>
                                 <p class="break-words"><span
                                         class="text-gray-500">{{ __('messages.client') }}:</span>
-                                    {{ $fee->commercialInvoice?->client?->name ?? '—' }}</p>
+                                    {{ $fee->proformaInvoice?->client?->name ?? '—' }}</p>
                                 @if ($fee->note)
                                     <p class="break-words"><span
                                             class="text-gray-500">{{ __('messages.note') }}:</span>
@@ -246,7 +248,7 @@
                                     {{ __('messages.date') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('messages.commercial_invoice') }}</th>
+                                    {{ __('messages.proforma_invoices') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {{ __('messages.client') }}</th>
@@ -266,15 +268,17 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $fee->date->format('Y-m-d') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if ($fee->commercialInvoice)
-                                            <a href="{{ route('commercial-invoices.show', $fee->commercialInvoice) }}"
-                                                class="text-blue-600 hover:underline">#{{ $fee->commercialInvoice->invoice_no ?? $fee->commercialInvoice->id }}</a>
+                                        @if ($fee->proformaInvoice)
+                                            <a href="{{ route('proforma-invoices.show', $fee->proformaInvoice) }}"
+                                                class="text-blue-600 hover:underline">
+                                                #{{ $fee->proformaInvoice->id }}
+                                            </a>
                                         @else
                                             —
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $fee->commercialInvoice?->client?->name ?? '—' }}</td>
+                                        {{ $fee->proformaInvoice?->client?->name ?? '—' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap font-medium">
                                         {{ number_format($fee->amount, 2) }} {{ $fee->currency }}</td>
                                     <td class="px-6 py-4">{{ $fee->note ?? '—' }}</td>
@@ -362,15 +366,18 @@
                 <form action="{{ route('shipping-companies.fees.store', $shippingCompany) }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label for="commercial_invoice_id"
-                            class="block text-gray-700 text-sm font-bold mb-2">{{ __('messages.commercial_invoice') }}
-                            *</label>
-                        <select name="commercial_invoice_id" id="commercial_invoice_id" required
+                        <label for="proforma_invoice_id" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ __('messages.proforma_invoices') }} *
+                        </label>
+                        <select name="proforma_invoice_id" id="proforma_invoice_id" required
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">{{ __('messages.commercial_invoice') }}</option>
-                            @foreach ($commercialInvoices as $invoice)
-                                <option value="{{ $invoice->id }}">#{{ $invoice->invoice_no ?? $invoice->id }} —
-                                    {{ $invoice->client?->name }} ({{ $invoice->date }})</option>
+                            <option value="">
+                                {{ __('messages.proforma_invoices') }}
+                            </option>
+                            @foreach ($proformaInvoices as $invoice)
+                                <option value="{{ $invoice->id }}">
+                                    #{{ $invoice->id }} — {{ $invoice->client?->name }} ({{ $invoice->date }})
+                                </option>
                             @endforeach
                         </select>
                     </div>

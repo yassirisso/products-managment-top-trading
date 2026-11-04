@@ -43,11 +43,6 @@ class CommercialInvoice extends Model
         return $this->belongsTo(BankAccount::class);
     }
 
-    public function shippingFees(): HasMany
-    {
-        return $this->hasMany(ShippingFee::class);
-    }
-
         public function proformaInvoice()
     {
         return $this->belongsTo(ProformaInvoice::class);
