@@ -354,4 +354,12 @@ return [
     'create receiving notes' => 'Créer des bons de réception',
     'edit receiving notes' => 'Modifier les bons de réception',
     'delete receiving notes' => 'Supprimer les bons de réception',
+
+    // Payments
+    'client_payments' => 'Paiements clients',
+    'new_client_payment' => 'Nouveau paiement client',
+    'no_client_payments_found' => 'Aucun paiement client trouvé.',
+    'supplier_receiving_payments' => 'Paiements fournisseurs',
+    'new_supplier_payment' => 'Nouveau paiement fournisseur',
+    'no_supplier_payments_found' => 'Aucun paiement fournisseur trouvé.',
 ];

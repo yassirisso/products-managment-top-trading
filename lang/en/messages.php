@@ -386,7 +386,7 @@ return [
     'edit_bank_account' => 'Edit Bank Account',
     'update_bank' => 'Update Bank',
 
-        // Receiving Notes
+    // Receiving Notes
     'receiving_notes' => 'Receiving Notes',
     'create_receiving_note' => 'Create Receiving Note',
     'edit_receiving_note' => 'Edit Receiving Note',
@@ -394,4 +394,12 @@ return [
     'back_to_receiving_notes' => 'Back to Receiving Notes',
     'no_receiving_notes_found' => 'No Receiving Notes Found',
     'container_info' => 'Container Information',
+
+    // Payments
+    'client_payments' => 'Client Payments',
+    'new_client_payment' => 'New Client Payment',
+    'no_client_payments_found' => 'No client payments found.',
+    'supplier_receiving_payments' => 'Supplier Payments',
+    'new_supplier_payment' => 'New Supplier Payment',
+    'no_supplier_payments_found' => 'No supplier payments found.',
 ];

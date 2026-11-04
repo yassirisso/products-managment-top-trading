@@ -85,6 +85,14 @@
                             </a>
                         @endcan
 
+                        <!-- Client Payments -->
+                        @can('view client payments')
+                            <a href="{{ route('client-payments.index') }}"
+                                class="@if (request()->routeIs('client-payments*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                {{ __('messages.client_payments') }}
+                            </a>
+                        @endcan
+
                         <!-- Suppliers -->
                         @can('view suppliers')
                             <a href="{{ route('suppliers.index') }}"
@@ -106,6 +114,14 @@
                             <a href="{{ route('receiving-notes.index') }}"
                                 class="@if (request()->routeIs('receiving-notes*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                                 {{ __('messages.receiving_notes') }}
+                            </a>
+                        @endcan
+
+                        <!-- Supplier Payments -->
+                        @can('view supplier payments')
+                            <a href="{{ route('supplier-receiving-payments.index') }}"
+                                class="@if (request()->routeIs('supplier-receiving-payments*')) bg-gray-900 text-white @else text-gray-300 hover:bg-gray-700 hover:text-white @endif group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                {{ __('messages.supplier_receiving_payments') }}
                             </a>
                         @endcan
 

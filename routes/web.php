@@ -19,6 +19,8 @@ use App\Http\Controllers\ShippingMarkController;
 use App\Http\Controllers\WarehouseFeeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ReceivingNoteController;
+use App\Http\Controllers\ClientPaymentController;
+use App\Http\Controllers\SupplierReceivingPaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -582,6 +584,56 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware('permission:delete receiving notes')->group(function () {
         Route::delete('receiving-notes/{receivingNote}', [ReceivingNoteController::class, 'destroy'])->name('receiving-notes.destroy');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLIENT PAYMENTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('permission:create client payments')->group(function () {
+        Route::get('client-payments/create', [ClientPaymentController::class, 'create'])->name('client-payments.create');
+        Route::post('client-payments', [ClientPaymentController::class, 'store'])->name('client-payments.store');
+    });
+
+    Route::middleware('permission:view client payments')->group(function () {
+        Route::get('client-payments', [ClientPaymentController::class, 'index'])->name('client-payments.index');
+    });
+
+    Route::middleware('permission:edit client payments')->group(function () {
+        Route::get('client-payments/{clientPayment}/edit', [ClientPaymentController::class, 'edit'])->name('client-payments.edit');
+        Route::put('client-payments/{clientPayment}', [ClientPaymentController::class, 'update'])->name('client-payments.update');
+        Route::patch('client-payments/{clientPayment}', [ClientPaymentController::class, 'update']);
+    });
+
+    Route::middleware('permission:delete client payments')->group(function () {
+        Route::delete('client-payments/{clientPayment}', [ClientPaymentController::class, 'destroy'])->name('client-payments.destroy');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUPPLIER RECEIVING PAYMENTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('permission:create supplier payments')->group(function () {
+        Route::get('supplier-receiving-payments/create', [SupplierReceivingPaymentController::class, 'create'])->name('supplier-receiving-payments.create');
+        Route::post('supplier-receiving-payments', [SupplierReceivingPaymentController::class, 'store'])->name('supplier-receiving-payments.store');
+    });
+
+    Route::middleware('permission:view supplier payments')->group(function () {
+        Route::get('supplier-receiving-payments', [SupplierReceivingPaymentController::class, 'index'])->name('supplier-receiving-payments.index');
+    });
+
+    Route::middleware('permission:edit supplier payments')->group(function () {
+        Route::get('supplier-receiving-payments/{supplierReceivingPayment}/edit', [SupplierReceivingPaymentController::class, 'edit'])->name('supplier-receiving-payments.edit');
+        Route::put('supplier-receiving-payments/{supplierReceivingPayment}', [SupplierReceivingPaymentController::class, 'update'])->name('supplier-receiving-payments.update');
+        Route::patch('supplier-receiving-payments/{supplierReceivingPayment}', [SupplierReceivingPaymentController::class, 'update']);
+    });
+
+    Route::middleware('permission:delete supplier payments')->group(function () {
+        Route::delete('supplier-receiving-payments/{supplierReceivingPayment}', [SupplierReceivingPaymentController::class, 'destroy'])->name('supplier-receiving-payments.destroy');
     });
 });
 

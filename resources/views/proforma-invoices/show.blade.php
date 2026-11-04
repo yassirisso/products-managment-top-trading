@@ -255,6 +255,69 @@
                     </tfoot>
                 </table>
             </div>
+
+            <!-- CLIENT PAYMENTS -->
+            <div class="mt-8 bg-white border border-gray-200 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                    {{ __('messages.client_payments') }}
+                </h3>
+
+                @php
+                    $totalPaid = $proformaInvoice->clientPayments->sum('amount');
+                    $remaining = max(0, $totalFob ?? ($fobTotal ?? 0)); // placeholder
+                    // Use the actual invoice total if available
+                    $invoiceTotal = 0;
+                    foreach ($proformaInvoice->products as $p) {
+                        $invoiceTotal += ($p->pivot->ctn ?? 0) * ($p->pcs_cts ?? 0) * ($p->pivot->unit_price ?? 0);
+                    }
+                    $remaining = $invoiceTotal - $totalPaid;
+                @endphp
+
+                <div class="flex flex-wrap gap-6 text-sm mb-4">
+                    <div><span class="text-gray-500">{{ __('messages.total') }}:</span>
+                        <strong>{{ number_format($invoiceTotal, 2) }} {{ $proformaInvoice->currency }}</strong></div>
+                    <div><span class="text-gray-500">{{ __('messages.paid') }}:</span> <strong
+                            class="text-green-600">{{ number_format($totalPaid, 2) }}
+                            {{ $proformaInvoice->currency }}</strong></div>
+                    <div><span class="text-gray-500">{{ __('messages.remaining') }}:</span> <strong
+                            class="text-red-600">{{ number_format($remaining, 2) }}
+                            {{ $proformaInvoice->currency }}</strong></div>
+                </div>
+
+                @if ($proformaInvoice->clientPayments->isEmpty())
+                    <p class="text-gray-500 text-sm">{{ __('messages.no_client_payments_found') }}</p>
+                @else
+                    <table class="min-w-full text-sm border border-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 py-2 text-left">{{ __('messages.date') }}</th>
+                                <th class="px-3 py-2 text-right">{{ __('messages.amount') }}</th>
+                                <th class="px-3 py-2 text-left">{{ __('messages.note') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($proformaInvoice->clientPayments as $payment)
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap">
+                                        {{ $payment->payment_date->format('Y-m-d') }}</td>
+                                    <td class="px-3 py-2 text-right font-medium">
+                                        {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                    <td class="px-3 py-2">{{ $payment->note ?? '—' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+
+                @can('create client payments')
+                    <div class="mt-3">
+                        <a href="{{ route('client-payments.create', ['proforma_invoice_id' => $proformaInvoice->id]) }}"
+                            class="text-blue-600 hover:underline text-sm">
+                            + {{ __('messages.new_client_payment') }}
+                        </a>
+                    </div>
+                @endcan
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -29,4 +29,9 @@ class ReceivingNote extends Model
             ->withPivot(['ctn', 'note', 'id'])
             ->withTimestamps();
     }
+
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\SupplierReceivingPayment::class);
+    }
 }

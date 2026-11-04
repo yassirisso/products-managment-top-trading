@@ -35,5 +35,8 @@
     "This proforma invoice has already been converted": "This proforma invoice has already been converted",
     "Receiving Note Created Successfully": "Receiving Note Created Successfully",
     "Receiving Note Updated Successfully": "Receiving Note Updated Successfully",
-    "Receiving Note Deleted Successfully": "Receiving Note Deleted Successfully"
+    "Receiving Note Deleted Successfully": "Receiving Note Deleted Successfully",
+    "Payment recorded successfully": "Payment recorded successfully",
+    "Payment updated successfully": "Payment updated successfully",
+    "Payment deleted successfully": "Payment deleted successfully"
 }

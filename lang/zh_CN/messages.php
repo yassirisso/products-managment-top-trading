@@ -394,4 +394,12 @@ return [
     'back_to_receiving_notes' => '返回收货单',
     'no_receiving_notes_found' => '未找到收货单。',
     'container_info' => '柜号信息',
+
+    // Payments
+    'client_payments' => '客户付款',
+    'new_client_payment' => '新客户付款',
+    'no_client_payments_found' => '未找到客户付款记录。',
+    'supplier_receiving_payments' => '供应商付款',
+    'new_supplier_payment' => '新供应商付款',
+    'no_supplier_payments_found' => '未找到供应商付款记录。',
 ];

@@ -47,5 +47,8 @@
     "Purchase updated successfully": "Achat mis à jour avec succès",
     "Receiving Note Created Successfully": "Bon de réception créé avec succès",
     "Receiving Note Updated Successfully": "Bon de réception mis à jour avec succès",
-    "Receiving Note Deleted Successfully": "Bon de réception supprimé avec succès"
+    "Receiving Note Deleted Successfully": "Bon de réception supprimé avec succès",
+    "Payment recorded successfully": "Paiement enregistré avec succès",
+    "Payment updated successfully": "Paiement mis à jour avec succès",
+    "Payment deleted successfully": "Paiement supprimé avec succès"
 }
