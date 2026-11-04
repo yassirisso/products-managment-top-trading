@@ -122,13 +122,30 @@ class ShippingCompanyController extends Controller
 
         $shippingCompany->fees()->create($validated);
 
+        $this->syncProformaLocalCharge($validated['proforma_invoice_id']);
+
         return back()->with('success', __('Shipping fee added successfully.'));
     }
 
     public function destroyFee(ShippingCompany $shippingCompany, ShippingFee $fee)
     {
+        $proformaId = $fee->proforma_invoice_id;
         $fee->delete();
+        $this->syncProformaLocalCharge($proformaId);
 
         return back()->with('success', __('Shipping fee removed successfully.'));
+    }
+
+    private function syncProformaLocalCharge($proformaInvoiceId)
+    {
+        if (!$proformaInvoiceId) return;
+
+        $proformaInvoice = \App\Models\ProformaInvoice::find($proformaInvoiceId);
+        if (!$proformaInvoice) return;
+
+        $warehouseTotal = \App\Models\WarehouseFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('montant_rmb');
+        $shippingTotal  = \App\Models\ShippingFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('amount');
+
+        $proformaInvoice->update(['local_charge' => $warehouseTotal + $shippingTotal]);
     }
 }

@@ -120,15 +120,14 @@ class WarehouseFeeController extends Controller
 
     private function updateProformaLocalCharge($proformaInvoiceId)
     {
-        if ($proformaInvoiceId) {
-            $proformaInvoice = \App\Models\ProformaInvoice::find($proformaInvoiceId);
-            if ($proformaInvoice) {
-                // Calculate the total of all warehouse fees for this invoice
-                $totalFees = \App\Models\WarehouseFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('montant_rmb');
+        if (!$proformaInvoiceId) return;
 
-                // Update the local_charge
-                $proformaInvoice->update(['local_charge' => $totalFees]);
-            }
-        }
+        $proformaInvoice = \App\Models\ProformaInvoice::find($proformaInvoiceId);
+        if (!$proformaInvoice) return;
+
+        $warehouseTotal = \App\Models\WarehouseFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('montant_rmb');
+        $shippingTotal  = \App\Models\ShippingFee::where('proforma_invoice_id', $proformaInvoiceId)->sum('amount');
+
+        $proformaInvoice->update(['local_charge' => $warehouseTotal + $shippingTotal]);
     }
 }
