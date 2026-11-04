@@ -178,9 +178,9 @@
         $startRow = 11;
         $currentRow = $startRow;
         $productCount = count($proformaInvoice->products);
-        
+
         // Using the isAdmin variable passed from the Export class
-        $isAdmin = $isAdmin ?? false; 
+        $isAdmin = $isAdmin ?? false;
     @endphp
 
     @foreach ($proformaInvoice->products as $product)
@@ -240,16 +240,15 @@
     @php
         $endRow = $startRow + $productCount - 1;
         $totalRow = $endRow + 1;
-        
-        // Adjust row numbers depending on whether Commission exists
+
         if ($isAdmin) {
             $commissionRow = $endRow + 2;
             $localChargeRow = $endRow + 3;
             $fobRow = $endRow + 4;
         } else {
             $commissionRow = null;
-            $localChargeRow = $endRow + 2;
-            $fobRow = $endRow + 3;
+            $localChargeRow = null;
+            $fobRow = $endRow + 2;
         }
     @endphp
 
@@ -264,26 +263,28 @@
     </tr>
 
     <!-- COMMISSION (Admin Only) -->
-    @if($isAdmin)
-    <tr style="font-weight:bold;text-align:center;">
-        <td colspan="7" style="border:1px solid black">
-            COMMISSION
-        </td>
-        <td style="border:1px solid black">
-            =H{{ $totalRow }}*3%
-        </td>
-    </tr>
+    @if ($isAdmin)
+        <tr style="font-weight:bold;text-align:center;">
+            <td colspan="7" style="border:1px solid black">
+                COMMISSION
+            </td>
+            <td style="border:1px solid black">
+                =H{{ $totalRow }}*3%
+            </td>
+        </tr>
     @endif
 
-    <!-- LOCAL -->
-    <tr style="font-weight:bold;text-align:center;">
-        <td colspan="7" style="border:1px solid black">
-            LOCAL CHARGE
-        </td>
-        <td style="border:1px solid black">
-            {{ $proformaInvoice->local_charge }}
-        </td>
-    </tr>
+    <!-- LOCAL (Admin only) -->
+    @if ($isAdmin)
+        <tr style="font-weight:bold;text-align:center;">
+            <td colspan="7" style="border:1px solid black">
+                LOCAL CHARGE
+            </td>
+            <td style="border:1px solid black">
+                {{ $proformaInvoice->local_charge }}
+            </td>
+        </tr>
+    @endif
 
     <!-- FOB -->
     <tr style="font-weight:bold;text-align:center;">
@@ -291,10 +292,10 @@
             TOTAL AMOUNT FOB BY {{ $proformaInvoice->currency }}
         </td>
         <td style="border:1px solid black">
-            @if($isAdmin)
+            @if ($isAdmin)
                 =H{{ $totalRow }}+H{{ $commissionRow }}+H{{ $localChargeRow }}
             @else
-                =H{{ $totalRow }}+H{{ $localChargeRow }}
+                =H{{ $totalRow }}
             @endif
         </td>
     </tr>

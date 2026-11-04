@@ -152,18 +152,20 @@
                                 {{ $proformaInvoice->currency }}</span>
                         </div>
                     @endif
-                    <div class="flex justify-between py-1">
-                        <span class="text-gray-600">{{ __('messages.local_charge') }}</span>
-                        <span class="font-semibold">{{ number_format($proformaInvoice->local_charge, 2) }}
-                            {{ $proformaInvoice->currency }}</span>
-                    </div>
+                    @if ($isAdmin)
+                        <div class="flex justify-between py-1">
+                            <span class="text-gray-600">{{ __('messages.local_charge') }}</span>
+                            <span class="font-semibold">{{ number_format($proformaInvoice->local_charge, 2) }}
+                                {{ $proformaInvoice->currency }}</span>
+                        </div>
+                    @endif
                     <div
                         class="flex justify-between py-2 mt-2 border-t border-gray-300 bg-yellow-100 -mx-3 px-3 rounded-b-lg">
                         <span class="font-bold">{{ __('messages.fob_total') }}</span>
                         <span class="font-bold">
                             @php
                                 $mobileFobTotal =
-                                    $total + $proformaInvoice->local_charge + ($isAdmin ? $total * 0.03 : 0);
+                                    $total + ($isAdmin ? $total * 0.03 + $proformaInvoice->local_charge : 0);
                             @endphp
                             {{ number_format($mobileFobTotal, 2) }} {{ $proformaInvoice->currency }}
                         </span>
@@ -231,18 +233,21 @@
                                     {{ $proformaInvoice->currency }}</td>
                             </tr>
                         @endif
-                        <tr>
-                            <td colspan="7" class="border p-2 text-right">{{ __('messages.local_charge') }}</td>
-                            <td class="border p-2 text-center">{{ number_format($proformaInvoice->local_charge, 2) }}
-                                {{ $proformaInvoice->currency }}</td>
-                        </tr>
+                        @if ($isAdmin)
+                            <tr>
+                                <td colspan="7" class="border p-2 text-right">{{ __('messages.local_charge') }}</td>
+                                <td class="border p-2 text-center">
+                                    {{ number_format($proformaInvoice->local_charge, 2) }}
+                                    {{ $proformaInvoice->currency }}</td>
+                            </tr>
+                        @endif
                         <tr class="bg-yellow-100">
                             <td colspan="7" class="border p-3 text-right text-lg">{{ __('messages.fob_total') }}
                             </td>
                             <td class="border p-3 text-center text-lg">
                                 @php
                                     $desktopFobTotal =
-                                        $total + $proformaInvoice->local_charge + ($isAdmin ? $total * 0.03 : 0);
+                                        $total + ($isAdmin ? $total * 0.03 + $proformaInvoice->local_charge : 0);
                                 @endphp
                                 {{ number_format($desktopFobTotal, 2) }} {{ $proformaInvoice->currency }}
                             </td>
