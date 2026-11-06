@@ -402,4 +402,6 @@ return [
     'supplier_receiving_payments' => '供应商付款',
     'new_supplier_payment' => '新供应商付款',
     'no_supplier_payments_found' => '未找到供应商付款记录。',
+
+    'total_amount' => '应付总金额',
 ];

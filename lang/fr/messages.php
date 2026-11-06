@@ -362,4 +362,6 @@ return [
     'supplier_receiving_payments' => 'Paiements fournisseurs',
     'new_supplier_payment' => 'Nouveau paiement fournisseur',
     'no_supplier_payments_found' => 'Aucun paiement fournisseur trouvé.',
+
+    'total_amount' => 'Montant total dû',
 ];

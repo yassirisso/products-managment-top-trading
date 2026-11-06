@@ -36,19 +36,26 @@ class ReceivingNoteController extends Controller
             'container_no' => 'nullable|string|max:255',
             'seal_no' => 'nullable|string|max:255',
             'note' => 'nullable|string',
+            'total_amount' => auth()->user()->hasRole('Admin') ? 'nullable|numeric|min:0' : 'nullable',
             'products' => 'nullable|array',
             'products.*.id' => 'required|exists:products,id',
             'products.*.ctn' => 'nullable|integer|min:0',
             'products.*.note' => 'nullable|string',
         ]);
 
-        $receivingNote = ReceivingNote::create([
-            'proforma_invoice_id' => $request->proforma_invoice_id,
-            'date' => $request->date,
-            'container_no' => $request->container_no,
-            'seal_no' => $request->seal_no,
-            'note' => $request->note,
-        ]);
+        $data = [
+            'proforma_invoice_id' => $validated['proforma_invoice_id'] ?? null,
+            'date' => $validated['date'] ?? null,
+            'container_no' => $validated['container_no'] ?? null,
+            'seal_no' => $validated['seal_no'] ?? null,
+            'note' => $validated['note'] ?? null,
+        ];
+
+        if (auth()->user()->hasRole('Admin')) {
+            $data['total_amount'] = $validated['total_amount'] ?? null;
+        }
+
+        $receivingNote = ReceivingNote::create($data);
 
         if ($request->has('products')) {
             $syncData = [];
@@ -70,7 +77,7 @@ class ReceivingNoteController extends Controller
 
     public function show(ReceivingNote $receivingNote)
     {
-        $receivingNote->load(['proformaInvoice', 'products.suppliers']);
+        $receivingNote->load(['proformaInvoice', 'products.suppliers', 'payments']);
 
         return view('receiving-notes.show', compact('receivingNote'));
     }
@@ -92,19 +99,26 @@ class ReceivingNoteController extends Controller
             'container_no' => 'nullable|string|max:255',
             'seal_no' => 'nullable|string|max:255',
             'note' => 'nullable|string',
+            'total_amount' => auth()->user()->hasRole('Admin') ? 'nullable|numeric|min:0' : 'nullable',
             'products' => 'nullable|array',
             'products.*.id' => 'required|exists:products,id',
             'products.*.ctn' => 'nullable|integer|min:0',
             'products.*.note' => 'nullable|string',
         ]);
 
-        $receivingNote->update([
-            'proforma_invoice_id' => $request->proforma_invoice_id,
-            'date' => $request->date,
-            'container_no' => $request->container_no,
-            'seal_no' => $request->seal_no,
-            'note' => $request->note,
-        ]);
+        $data = [
+            'proforma_invoice_id' => $validated['proforma_invoice_id'] ?? null,
+            'date' => $validated['date'] ?? null,
+            'container_no' => $validated['container_no'] ?? null,
+            'seal_no' => $validated['seal_no'] ?? null,
+            'note' => $validated['note'] ?? null,
+        ];
+
+        if (auth()->user()->hasRole('Admin')) {
+            $data['total_amount'] = $validated['total_amount'] ?? null;
+        }
+
+        $receivingNote->update($data);
 
         $syncData = [];
         if ($request->has('products')) {

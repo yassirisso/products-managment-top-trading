@@ -21,10 +21,16 @@ class SupplierReceivingPaymentController extends Controller
         return view('supplier-receiving-payments.index', compact('payments'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $receivingNotes = ReceivingNote::with('proformaInvoice.client')->latest()->get();
-        return view('supplier-receiving-payments.create', compact('receivingNotes'));
+
+        $lockedNote = null;
+        if ($request->filled('receiving_note_id')) {
+            $lockedNote = ReceivingNote::with('proformaInvoice.client')->find($request->receiving_note_id);
+        }
+
+        return view('supplier-receiving-payments.create', compact('receivingNotes', 'lockedNote'));
     }
 
     public function store(Request $request)

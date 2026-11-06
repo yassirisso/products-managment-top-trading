@@ -402,4 +402,6 @@ return [
     'supplier_receiving_payments' => 'Supplier Payments',
     'new_supplier_payment' => 'New Supplier Payment',
     'no_supplier_payments_found' => 'No supplier payments found.',
+
+    'total_amount' => 'Total Amount Owed',
 ];

@@ -61,6 +61,16 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.note') }}</label>
                         <textarea name="note" rows="2" class="border rounded w-full py-2 px-3">{{ old('note', $receivingNote->note) }}</textarea>
                     </div>
+                    
+                    @role('Admin')
+                        <div class="md:col-span-2">
+                            <label
+                                class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.total_amount') }}</label>
+                            <input type="number" step="0.01" min="0" name="total_amount"
+                                value="{{ old('total_amount', $receivingNote->total_amount) }}"
+                                class="border rounded w-full py-2 px-3" placeholder="0.00">
+                        </div>
+                    @endrole
                 </div>
 
                 <!-- PRODUCTS -->

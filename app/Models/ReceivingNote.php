@@ -12,10 +12,12 @@ class ReceivingNote extends Model
         'container_no',
         'seal_no',
         'note',
+        'total_amount',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'total_amount' => 'decimal:2',
     ];
 
     public function proformaInvoice()

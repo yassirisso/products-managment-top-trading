@@ -10,19 +10,33 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label for="receiving_note_id" class="block mb-1 font-medium">{{ __('messages.receiving_notes') }}
-                        *</label>
-                    <select name="receiving_note_id" id="receiving_note_id" required
-                        class="w-full border rounded-lg px-3 py-2">
-                        <option value="">—</option>
-                        @foreach ($receivingNotes as $note)
-                            <option value="{{ $note->id }}"
-                                {{ old('receiving_note_id') == $note->id ? 'selected' : '' }}>
-                                #{{ $note->id }} — {{ $note->proformaInvoice?->client?->name }}
-                                ({{ $note->date?->format('Y-m-d') }})
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium">{{ __('messages.receiving_notes') }} *</label>
+
+                        @if ($lockedNote)
+                            <div class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700">
+                                #{{ $lockedNote->id }} — {{ $lockedNote->proformaInvoice?->client?->name }}
+                                ({{ $lockedNote->date?->format('Y-m-d') }})
+                            </div>
+                            <input type="hidden" name="receiving_note_id" value="{{ $lockedNote->id }}">
+                        @else
+                            <select name="receiving_note_id" id="receiving_note_id" required
+                                class="w-full border rounded-lg px-3 py-2">
+                                <option value="">—</option>
+                                @foreach ($receivingNotes as $note)
+                                    <option value="{{ $note->id }}"
+                                        {{ old('receiving_note_id', request('receiving_note_id')) == $note->id ? 'selected' : '' }}>
+                                        #{{ $note->id }} — {{ $note->proformaInvoice?->client?->name }}
+                                        ({{ $note->date?->format('Y-m-d') }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        @endif
+
+                        @error('receiving_note_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                     @error('receiving_note_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror

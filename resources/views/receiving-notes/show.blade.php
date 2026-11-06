@@ -174,6 +174,58 @@
                     </tfoot>
                 </table>
             </div>
+            @role('Admin')
+                @php
+                    $totalPaid = $receivingNote->payments->sum('amount');
+                    $owed = $receivingNote->total_amount ?? 0;
+                    $remaining = $owed - $totalPaid;
+                @endphp
+                <div class="mt-8 bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ __('messages.supplier_payments') }}</h3>
+                        @can('create supplier payments')
+                            <a href="{{ route('supplier-receiving-payments.create', ['receiving_note_id' => $receivingNote->id]) }}"
+                                class="text-blue-600 hover:underline text-sm">
+                                + {{ __('messages.new_supplier_payment') }}
+                            </a>
+                        @endcan
+                    </div>
+
+                    <div class="flex flex-wrap gap-6 text-sm mb-4">
+                        <div><span class="text-gray-500">{{ __('messages.total') }}:</span>
+                            <strong>{{ number_format($owed, 2) }}</strong></div>
+                        <div><span class="text-gray-500">{{ __('messages.paid') }}:</span> <strong
+                                class="text-green-600">{{ number_format($totalPaid, 2) }}</strong></div>
+                        <div><span class="text-gray-500">{{ __('messages.remaining') }}:</span> <strong
+                                class="text-red-600">{{ number_format($remaining, 2) }}</strong></div>
+                    </div>
+
+                    @if ($receivingNote->payments->isEmpty())
+                        <p class="text-gray-500 text-sm">{{ __('messages.no_supplier_payments_found') }}</p>
+                    @else
+                        <table class="min-w-full text-sm border border-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left">{{ __('messages.date') }}</th>
+                                    <th class="px-3 py-2 text-right">{{ __('messages.amount') }}</th>
+                                    <th class="px-3 py-2 text-left">{{ __('messages.note') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @foreach ($receivingNote->payments as $payment)
+                                    <tr>
+                                        <td class="px-3 py-2 whitespace-nowrap">
+                                            {{ $payment->payment_date->format('Y-m-d') }}</td>
+                                        <td class="px-3 py-2 text-right font-medium">
+                                            {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                        <td class="px-3 py-2">{{ $payment->note ?? '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+            @endrole
         </div>
     </div>
 </x-app-layout>
