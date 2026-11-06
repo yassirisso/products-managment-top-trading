@@ -57,10 +57,22 @@ class ClientController extends Controller
 
     public function show(Client $client)
     {
-        return view('clients.show', [
-            'client' => $client,
-            'invoices' => $client->invoices()->with('items.product')->latest()->paginate(5)
-        ]);
+        // Regular invoices
+        $invoices = $client->invoices()->with('items.product')->latest()->paginate(5);
+
+        // All payments from this client's proforma invoices
+        $payments = \App\Models\ClientPayment::whereHas('proformaInvoice', function ($q) use ($client) {
+            $q->where('client_id', $client->id);
+        })->with('proformaInvoice')->latest('payment_date')->get();
+
+        // Totals
+        $totalPaid = $payments->sum('amount');
+        $totalInvoiced = \App\Models\ProformaInvoice::where('client_id', $client->id)->get()->sum(function ($p) {
+            return $p->products->sum(fn($prod) => ($prod->pivot->ctn ?? 0) * ($prod->pcs_cts ?? 0) * ($prod->pivot->unit_price ?? 0));
+        });
+        $remaining = $totalInvoiced - $totalPaid;
+
+        return view('clients.show', compact('client', 'invoices', 'payments', 'totalInvoiced', 'totalPaid', 'remaining'));
     }
 
     public function edit(Client $client)

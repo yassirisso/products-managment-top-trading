@@ -25,10 +25,16 @@ class ClientPaymentController extends Controller
         return view('client-payments.index', compact('payments'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $proformaInvoices = ProformaInvoice::with('client')->latest()->get();
-        return view('client-payments.create', compact('proformaInvoices'));
+
+        $lockedInvoice = null;
+        if ($request->filled('proforma_invoice_id')) {
+            $lockedInvoice = ProformaInvoice::with('client')->find($request->proforma_invoice_id);
+        }
+
+        return view('client-payments.create', compact('proformaInvoices', 'lockedInvoice'));
     }
 
     public function store(Request $request)

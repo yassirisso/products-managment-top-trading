@@ -10,18 +10,26 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label for="proforma_invoice_id" class="block mb-1 font-medium">{{ __('messages.proforma_invoices') }}
-                        *</label>
-                    <select name="proforma_invoice_id" id="proforma_invoice_id" required
-                        class="w-full border rounded-lg px-3 py-2">
-                        <option value="">—</option>
-                        @foreach ($proformaInvoices as $invoice)
-                            <option value="{{ $invoice->id }}"
-                                {{ old('proforma_invoice_id', request('proforma_invoice_id')) == $invoice->id ? 'selected' : '' }}>
-                                #{{ $invoice->id }} — {{ $invoice->client?->name }} ({{ $invoice->date }})
-                            </option>
-                        @endforeach
-                    </select>
+                    <label class="block mb-1 font-medium">{{ __('messages.proforma_invoices') }} *</label>
+
+                    @if ($lockedInvoice)
+                        <div class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700">
+                            #{{ $lockedInvoice->id }} — {{ $lockedInvoice->client?->name }} ({{ $lockedInvoice->date }})
+                        </div>
+                        <input type="hidden" name="proforma_invoice_id" value="{{ $lockedInvoice->id }}">
+                    @else
+                        <select name="proforma_invoice_id" id="proforma_invoice_id" required
+                            class="w-full border rounded-lg px-3 py-2">
+                            <option value="">—</option>
+                            @foreach ($proformaInvoices as $invoice)
+                                <option value="{{ $invoice->id }}"
+                                    {{ old('proforma_invoice_id', request('proforma_invoice_id')) == $invoice->id ? 'selected' : '' }}>
+                                    #{{ $invoice->id }} — {{ $invoice->client?->name }} ({{ $invoice->date }})
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
+
                     @error('proforma_invoice_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
