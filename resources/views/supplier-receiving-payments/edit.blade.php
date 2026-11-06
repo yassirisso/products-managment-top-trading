@@ -1,16 +1,20 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">{{ __('messages.edit') }}</h2>
+        <h2 class="font-semibold text-lg md:text-xl text-gray-800 leading-tight">
+            {{ __('messages.edit') }}
+        </h2>
     </x-slot>
 
     <div class="container mx-auto px-4 py-6 max-w-2xl">
         <div class="bg-white shadow rounded-lg p-6">
             <form action="{{ route('supplier-receiving-payments.update', $supplierReceivingPayment) }}" method="POST">
-                @csrf @method('PUT')
+                @csrf
+                @method('PUT')
 
                 <div class="mb-4">
-                    <label for="receiving_note_id" class="block mb-1 font-medium">{{ __('messages.receiving_notes') }}
-                        *</label>
+                    <label class="block mb-1 font-medium">{{ __('messages.receiving_notes') }} *</label>
+
                     <select name="receiving_note_id" id="receiving_note_id" required
                         class="w-full border rounded-lg px-3 py-2">
                         @foreach ($receivingNotes as $note)
@@ -21,7 +25,18 @@
                             </option>
                         @endforeach
                     </select>
+
                     @error('receiving_note_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="supplier_id" class="block mb-1 font-medium">{{ __('messages.supplier') }} *</label>
+                    <select name="supplier_id" id="supplier_id" required class="w-full border rounded-lg px-3 py-2">
+                        <option value="">—</option>
+                    </select>
+                    @error('supplier_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -73,4 +88,49 @@
             </form>
         </div>
     </div>
+
+    <script>
+        const noteSuppliers = {
+            @foreach ($receivingNotes as $note)
+                "{{ $note->id }}": [
+                    @foreach ($note->products->pluck('suppliers')->flatten()->unique('id') as $s)
+                        {
+                            id: {{ $s->id }},
+                            name: "{{ addslashes($s->name) }}"
+                        },
+                    @endforeach
+                ],
+            @endforeach
+        };
+
+        function populateSuppliers(noteId, currentSupplierId = null) {
+            const supplierSelect = document.getElementById('supplier_id');
+            if (!supplierSelect) return;
+
+            supplierSelect.innerHTML = '<option value="">—</option>';
+
+            if (noteId && noteSuppliers[noteId]) {
+                noteSuppliers[noteId].forEach(function(s) {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.text = s.name;
+                    if (currentSupplierId && String(s.id) === String(currentSupplierId)) {
+                        opt.selected = true;
+                    }
+                    supplierSelect.appendChild(opt);
+                });
+            }
+        }
+
+        document.getElementById('receiving_note_id')?.addEventListener('change', function() {
+            populateSuppliers(this.value);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const noteSelect = document.getElementById('receiving_note_id');
+            const currentSupplier = "{{ $supplierReceivingPayment->supplier_id ?? '' }}";
+            if (noteSelect) populateSuppliers(noteSelect.value, currentSupplier);
+        });
+    </script>
+
 </x-app-layout>

@@ -10,7 +10,7 @@ class SupplierReceivingPaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SupplierReceivingPayment::with('receivingNote.proformaInvoice.client');
+        $query = SupplierReceivingPayment::with(['receivingNote.proformaInvoice.client', 'supplier']);
 
         if ($request->search) {
             $query->where('note', 'like', '%' . $request->search . '%');
@@ -23,14 +23,15 @@ class SupplierReceivingPaymentController extends Controller
 
     public function create(Request $request)
     {
-        $receivingNotes = ReceivingNote::with('proformaInvoice.client')->latest()->get();
+        $receivingNotes = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest()->get();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
 
         $lockedNote = null;
         if ($request->filled('receiving_note_id')) {
-            $lockedNote = ReceivingNote::with('proformaInvoice.client')->find($request->receiving_note_id);
+            $lockedNote = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->find($request->receiving_note_id);
         }
 
-        return view('supplier-receiving-payments.create', compact('receivingNotes', 'lockedNote'));
+        return view('supplier-receiving-payments.create', compact('receivingNotes', 'suppliers', 'lockedNote'));
     }
 
     public function store(Request $request)
@@ -41,6 +42,7 @@ class SupplierReceivingPaymentController extends Controller
             'currency' => 'required|in:RMB,USD',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
+            'supplier_id' => 'required|exists:suppliers,id',
         ]);
 
         SupplierReceivingPayment::create($validated);
@@ -51,8 +53,10 @@ class SupplierReceivingPaymentController extends Controller
 
     public function edit(SupplierReceivingPayment $supplierReceivingPayment)
     {
-        $receivingNotes = ReceivingNote::with('proformaInvoice.client')->latest()->get();
-        return view('supplier-receiving-payments.edit', compact('supplierReceivingPayment', 'receivingNotes'));
+        $receivingNotes = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest()->get();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
+
+        return view('supplier-receiving-payments.edit', compact('supplierReceivingPayment', 'receivingNotes', 'suppliers'));
     }
 
     public function update(Request $request, SupplierReceivingPayment $supplierReceivingPayment)
@@ -63,6 +67,7 @@ class SupplierReceivingPaymentController extends Controller
             'currency' => 'required|in:RMB,USD',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
+            'supplier_id' => 'required|exists:suppliers,id',
         ]);
 
         $supplierReceivingPayment->update($validated);

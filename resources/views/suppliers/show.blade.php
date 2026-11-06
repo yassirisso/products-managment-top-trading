@@ -180,6 +180,107 @@
                 </div>
             @endif
         </div>
+
+        <!-- SUPPLIER PAYMENTS -->
+        <div class="bg-white shadow-md rounded-lg overflow-hidden mt-6">
+            <div
+                class="px-4 md:px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                <h3 class="text-lg font-medium text-gray-900">
+                    {{ __('messages.supplier_receiving_payments') }}
+                </h3>
+                @can('create supplier payments')
+                    <a href="{{ route('supplier-receiving-payments.create') }}"
+                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                        + {{ __('messages.new_supplier_payment') }}
+                    </a>
+                @endcan
+            </div>
+
+            <div class="px-4 md:px-6 py-4 flex flex-wrap gap-4 md:gap-6 text-sm border-b border-gray-100">
+                <div>
+                    <span class="text-gray-500">{{ __('messages.total') }} {{ __('messages.paid') }}:</span>
+                    <strong class="text-green-600">{{ number_format($totalPaid, 2) }}</strong>
+                </div>
+            </div>
+
+            @if ($payments->isEmpty())
+                <div class="px-4 md:px-6 py-4 text-center text-gray-500 text-sm">
+                    {{ __('messages.no_supplier_payments_found') }}
+                </div>
+            @else
+                <!-- Mobile cards -->
+                <div class="lg:hidden divide-y divide-gray-200">
+                    @foreach ($payments as $payment)
+                        <div class="px-4 py-3 text-sm">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="font-semibold text-gray-900">
+                                    {{ number_format($payment->amount, 2) }} {{ $payment->currency }}
+                                </span>
+                                <span class="text-gray-500 text-xs shrink-0">
+                                    {{ $payment->payment_date->format('Y-m-d') }}
+                                </span>
+                            </div>
+                            <p class="text-gray-700 mt-1">
+                                <span class="text-gray-500">{{ __('messages.receiving_notes') }}:</span>
+                                @if ($payment->receivingNote)
+                                    <a href="{{ route('receiving-notes.show', $payment->receivingNote) }}"
+                                        class="text-blue-600 hover:underline">
+                                        #{{ $payment->receivingNote->id }}
+                                    </a>
+                                @else
+                                    —
+                                @endif
+                            </p>
+                            @if ($payment->note)
+                                <p class="text-gray-600 text-xs mt-1 break-words">
+                                    <span class="text-gray-500">{{ __('messages.note') }}:</span>
+                                    {{ $payment->note }}
+                                </p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Desktop table -->
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                                    {{ __('messages.date') }}</th>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                                    {{ __('messages.receiving_notes') }}</th>
+                                <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase">
+                                    {{ __('messages.amount') }}</th>
+                                <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                                    {{ __('messages.note') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($payments as $payment)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        {{ $payment->payment_date->format('Y-m-d') }}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        @if ($payment->receivingNote)
+                                            <a href="{{ route('receiving-notes.show', $payment->receivingNote) }}"
+                                                class="text-blue-600 hover:underline">
+                                                #{{ $payment->receivingNote->id }}
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-3 text-right font-medium">
+                                        {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                    <td class="px-6 py-3">{{ $payment->note ?? '—' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
     </div>
 
     <!-- ADD PRODUCT MODAL -->

@@ -69,7 +69,16 @@ class SupplierController extends Controller
     public function show(Supplier $supplier)
     {
         $supplier->load(['products', 'contacts']);
-        return view('suppliers.show', compact('supplier'));
+
+        // All payments specifically for this supplier
+        $payments = \App\Models\SupplierReceivingPayment::where('supplier_id', $supplier->id)
+            ->with('receivingNote')
+            ->latest('payment_date')
+            ->get();
+
+        $totalPaid = $payments->sum('amount');
+
+        return view('suppliers.show', compact('supplier', 'payments', 'totalPaid'));
     }
 
     public function edit(Supplier $supplier)

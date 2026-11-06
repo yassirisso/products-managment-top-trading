@@ -47,7 +47,12 @@
                             <span class="text-gray-500 text-xs">{{ $payment->payment_date->format('Y-m-d') }}</span>
                         </div>
                         <div class="space-y-1 text-gray-700 mb-3">
-                            <p><span class="text-gray-500">{{ __('messages.receiving_notes') }}:</span>
+                            <p class="break-words">
+                                <span class="text-gray-500">{{ __('messages.supplier') }}:</span>
+                                {{ $payment->supplier?->name ?? '—' }}
+                            </p>
+                            <p class="break-words">
+                                <span class="text-gray-500">{{ __('messages.receiving_notes') }}:</span>
                                 @if ($payment->receivingNote)
                                     <a href="{{ route('receiving-notes.show', $payment->receivingNote) }}"
                                         class="text-blue-600 hover:underline">#{{ $payment->receivingNote->id }}</a>
@@ -102,6 +107,9 @@
                                     {{ __('messages.date') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    {{ __('messages.supplier') }}</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {{ __('messages.receiving_notes') }}</th>
                                 <th
                                     class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -119,6 +127,8 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         {{ $payment->payment_date->format('Y-m-d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        {{ $payment->supplier?->name ?? '—' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         @if ($payment->receivingNote)
                                             <a href="{{ route('receiving-notes.show', $payment->receivingNote) }}"

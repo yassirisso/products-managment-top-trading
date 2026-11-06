@@ -13,6 +13,7 @@ class SupplierReceivingPayment extends Model
         'currency',
         'payment_date',
         'note',
+        'supplier_id',
     ];
 
     protected $casts = [
@@ -23,5 +24,10 @@ class SupplierReceivingPayment extends Model
     public function receivingNote(): BelongsTo
     {
         return $this->belongsTo(ReceivingNote::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }

@@ -77,7 +77,7 @@ class ReceivingNoteController extends Controller
 
     public function show(ReceivingNote $receivingNote)
     {
-        $receivingNote->load(['proformaInvoice', 'products.suppliers', 'payments']);
+        $receivingNote->load(['proformaInvoice', 'products.suppliers', 'payments.supplier']);
 
         return view('receiving-notes.show', compact('receivingNote'));
     }
