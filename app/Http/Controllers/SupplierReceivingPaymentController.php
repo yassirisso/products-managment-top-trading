@@ -23,7 +23,19 @@ class SupplierReceivingPaymentController extends Controller
 
     public function create(Request $request)
     {
-        $receivingNotes = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest()->get();
+        $preselectedSupplierId = $request->query('supplier_id');
+
+        // If a supplier is preselected, only show notes that contain this supplier's products
+        $notesQuery = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest();
+
+        if ($preselectedSupplierId) {
+            $notesQuery->whereHas('products.suppliers', function ($q) use ($preselectedSupplierId) {
+                $q->where('suppliers.id', $preselectedSupplierId);
+            });
+        }
+
+        $receivingNotes = $notesQuery->get();
+
         $suppliers = \App\Models\Supplier::orderBy('name')->get();
 
         $lockedNote = null;
@@ -31,7 +43,12 @@ class SupplierReceivingPaymentController extends Controller
             $lockedNote = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->find($request->receiving_note_id);
         }
 
-        return view('supplier-receiving-payments.create', compact('receivingNotes', 'suppliers', 'lockedNote'));
+        return view('supplier-receiving-payments.create', compact(
+            'receivingNotes',
+            'suppliers',
+            'lockedNote',
+            'preselectedSupplierId'
+        ));
     }
 
     public function store(Request $request)

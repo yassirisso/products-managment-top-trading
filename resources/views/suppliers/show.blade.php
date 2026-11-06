@@ -189,8 +189,8 @@
                     {{ __('messages.supplier_receiving_payments') }}
                 </h3>
                 @can('create supplier payments')
-                    <a href="{{ route('supplier-receiving-payments.create') }}"
-                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center justify-center whitespace-nowrap w-full sm:w-auto">
+                    <a href="{{ route('supplier-receiving-payments.create', ['supplier_id' => $supplier->id]) }}"
+                        class="...">
                         + {{ __('messages.new_supplier_payment') }}
                     </a>
                 @endcan

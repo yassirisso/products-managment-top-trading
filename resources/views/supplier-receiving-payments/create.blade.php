@@ -25,9 +25,9 @@
                         <select name="receiving_note_id" id="receiving_note_id" required
                             class="w-full border rounded-lg px-3 py-2">
                             <option value="">—</option>
-                            @foreach ($receivingNotes as $note)
+                            @foreach ($receivingNotes as $loop_index => $note)
                                 <option value="{{ $note->id }}"
-                                    {{ old('receiving_note_id', request('receiving_note_id')) == $note->id ? 'selected' : '' }}>
+                                    {{ old('receiving_note_id', request('receiving_note_id') ?? ($preselectedSupplierId && $loop_index === 0 ? $note->id : null)) == $note->id ? 'selected' : '' }}>
                                     #{{ $note->id }} — {{ $note->proformaInvoice?->client?->name }}
                                     ({{ $note->date?->format('Y-m-d') }})
                                 </option>
@@ -42,9 +42,21 @@
 
                 <div class="mb-4">
                     <label for="supplier_id" class="block mb-1 font-medium">{{ __('messages.supplier') }} *</label>
-                    <select name="supplier_id" id="supplier_id" required class="w-full border rounded-lg px-3 py-2">
-                        <option value="">—</option>
-                    </select>
+
+                    @if ($preselectedSupplierId)
+                        @php
+                            $preselectedSupplier = \App\Models\Supplier::find($preselectedSupplierId);
+                        @endphp
+                        <div class="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-700">
+                            {{ $preselectedSupplier?->name ?? '—' }}
+                        </div>
+                        <input type="hidden" name="supplier_id" id="supplier_id" value="{{ $preselectedSupplierId }}">
+                    @else
+                        <select name="supplier_id" id="supplier_id" required class="w-full border rounded-lg px-3 py-2">
+                            <option value="">—</option>
+                        </select>
+                    @endif
+
                     @error('supplier_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
@@ -106,9 +118,11 @@
             @endforeach
         };
 
+        const preselectedSupplierId = "{{ $preselectedSupplierId ?? '' }}";
+
         function populateSuppliers(noteId, currentSupplierId = null) {
             const supplierSelect = document.getElementById('supplier_id');
-            if (!supplierSelect) return;
+            if (!supplierSelect || supplierSelect.tagName !== 'SELECT') return;
 
             supplierSelect.innerHTML = '<option value="">—</option>';
 
@@ -125,13 +139,21 @@
             }
         }
 
-        document.getElementById('receiving_note_id')?.addEventListener('change', function() {
-            populateSuppliers(this.value);
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             const noteSelect = document.getElementById('receiving_note_id');
-            if (noteSelect) populateSuppliers(noteSelect.value);
+
+            if (!noteSelect) return;
+
+            // If the supplier is locked (hidden input), we don't need to rebuild the supplier list
+            if (!preselectedSupplierId) {
+                populateSuppliers(noteSelect.value);
+            }
+
+            noteSelect.addEventListener('change', function() {
+                if (!preselectedSupplierId) {
+                    populateSuppliers(this.value);
+                }
+            });
         });
     </script>
 
