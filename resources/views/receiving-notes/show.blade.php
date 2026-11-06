@@ -71,32 +71,37 @@
                 $totalNw = $receivingNote->products->sum(fn($p) => $p->pivot->ctn * ($p->unit_nw ?? 0));
             @endphp
 
-            <!-- MOBILE / TABLET : CARDS -->
+            <!-- MOBILE / TABLET : CARDS (grouped by supplier) -->
             <div class="lg:hidden space-y-3">
-                @foreach ($receivingNote->products as $product)
+                @foreach ($receivingNote->products->groupBy(fn($p) => $p->suppliers->first()?->id) as $supplierId => $products)
                     @php
-                        $qty = $product->pivot->ctn * ($product->pcs_cts ?? 0);
-                        $cbm = $product->pivot->ctn * ($product->unit_cbm ?? 0);
-                        $gw = $product->pivot->ctn * ($product->unit_gw ?? 0);
-                        $nw = $product->pivot->ctn * ($product->unit_nw ?? 0);
+                        $supplier = $products->first()->suppliers->first();
+                        $sumCtn = $products->sum(fn($p) => $p->pivot->ctn);
+                        $sumQty = $products->sum(fn($p) => $p->pivot->ctn * ($p->pcs_cts ?? 0));
+                        $sumCbm = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_cbm ?? 0));
+                        $sumGw = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_gw ?? 0));
+                        $sumNw = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_nw ?? 0));
                     @endphp
                     <div class="border rounded-lg p-3 text-sm">
-                        <p class="font-semibold text-gray-900 break-words">{{ $product->reference }}</p>
-                        <p class="text-gray-500 text-xs mb-2">{{ $product->suppliers->first()?->name ?? '—' }}</p>
+                        <p class="font-semibold text-gray-900 break-words mb-2">
+                            @if ($supplier)
+                                <a href="{{ route('receiving-notes.supplier-details', [$receivingNote, $supplier]) }}"
+                                    class="text-blue-600 hover:underline">
+                                    {{ $supplier->name }}
+                                </a>
+                            @else
+                                —
+                            @endif
+                        </p>
                         <div class="grid grid-cols-2 gap-2 text-gray-700">
-                            <p><span class="text-gray-500">{{ __('messages.ctn') }}:</span> {{ $product->pivot->ctn }}
-                            </p>
-                            <p><span class="text-gray-500">{{ __('messages.pcs_cts') }}:</span>
-                                {{ $product->pcs_cts }}</p>
-                            <p><span class="text-gray-500">{{ __('messages.qty') }}:</span> {{ $qty }}</p>
-                            <p><span class="text-gray-500">CBM:</span> {{ number_format($cbm, 3) }}</p>
-                            <p><span class="text-gray-500">GW:</span> {{ number_format($gw, 2) }}</p>
-                            <p><span class="text-gray-500">NW:</span> {{ number_format($nw, 2) }}</p>
+                            <p><span class="text-gray-500">{{ __('messages.product') }}:</span>
+                                {{ $products->count() }}</p>
+                            <p><span class="text-gray-500">{{ __('messages.ctn') }}:</span> {{ $sumCtn }}</p>
+                            <p><span class="text-gray-500">{{ __('messages.qty') }}:</span> {{ $sumQty }}</p>
+                            <p><span class="text-gray-500">CBM:</span> {{ number_format($sumCbm, 3) }}</p>
+                            <p><span class="text-gray-500">GW:</span> {{ number_format($sumGw, 2) }}</p>
+                            <p><span class="text-gray-500">NW:</span> {{ number_format($sumNw, 2) }}</p>
                         </div>
-                        @if ($product->pivot->note)
-                            <p class="mt-2 text-xs text-gray-600"><strong>{{ __('messages.note') }}:</strong>
-                                {{ $product->pivot->note }}</p>
-                        @endif
                     </div>
                 @endforeach
 
@@ -113,40 +118,47 @@
                 </div>
             </div>
 
-            <!-- DESKTOP : TABLE -->
+            <!-- DESKTOP : TABLE (grouped by supplier) -->
             <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full border border-gray-400">
                     <thead class="bg-gray-200">
                         <tr>
-                            <th class="border p-2">{{ __('messages.product') }}</th>
                             <th class="border p-2">{{ __('messages.supplier') }}</th>
+                            <th class="border p-2">{{ __('messages.product') }} Count</th>
                             <th class="border p-2">{{ __('messages.ctn') }}</th>
-                            <th class="border p-2">{{ __('messages.pcs_cts') }}</th>
                             <th class="border p-2">{{ __('messages.qty') }}</th>
                             <th class="border p-2">{{ __('messages.total_cbm') }}</th>
                             <th class="border p-2">{{ __('messages.total_gw') }}</th>
                             <th class="border p-2">{{ __('messages.total_nw') }}</th>
-                            <th class="border p-2">{{ __('messages.note') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($receivingNote->products as $product)
+                        @foreach ($receivingNote->products->groupBy(fn($p) => $p->suppliers->first()?->id) as $supplierId => $products)
                             @php
-                                $qty = $product->pivot->ctn * ($product->pcs_cts ?? 0);
-                                $cbm = $product->pivot->ctn * ($product->unit_cbm ?? 0);
-                                $gw = $product->pivot->ctn * ($product->unit_gw ?? 0);
-                                $nw = $product->pivot->ctn * ($product->unit_nw ?? 0);
+                                $supplier = $products->first()->suppliers->first();
+                                $sumCtn = $products->sum(fn($p) => $p->pivot->ctn);
+                                $sumQty = $products->sum(fn($p) => $p->pivot->ctn * ($p->pcs_cts ?? 0));
+                                $sumCbm = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_cbm ?? 0));
+                                $sumGw = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_gw ?? 0));
+                                $sumNw = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_nw ?? 0));
                             @endphp
                             <tr>
-                                <td class="border p-2 text-center">{{ $product->reference }}</td>
-                                <td class="border p-2">{{ $product->suppliers->first()?->name ?? '—' }}</td>
-                                <td class="border p-2 text-center">{{ $product->pivot->ctn }}</td>
-                                <td class="border p-2 text-center">{{ $product->pcs_cts }}</td>
-                                <td class="border p-2 text-center">{{ $qty }}</td>
-                                <td class="border p-2 text-center">{{ number_format($cbm, 3) }}</td>
-                                <td class="border p-2 text-center">{{ number_format($gw, 2) }}</td>
-                                <td class="border p-2 text-center">{{ number_format($nw, 2) }}</td>
-                                <td class="border p-2">{{ $product->pivot->note ?? '—' }}</td>
+                                <td class="border p-2">
+                                    @if ($supplier)
+                                        <a href="{{ route('receiving-notes.supplier-details', [$receivingNote, $supplier]) }}"
+                                            class="text-blue-600 hover:underline">
+                                            {{ $supplier->name }}
+                                        </a>
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td class="border p-2 text-center">{{ $products->count() }}</td>
+                                <td class="border p-2 text-center">{{ $sumCtn }}</td>
+                                <td class="border p-2 text-center">{{ $sumQty }}</td>
+                                <td class="border p-2 text-center">{{ number_format($sumCbm, 3) }}</td>
+                                <td class="border p-2 text-center">{{ number_format($sumGw, 2) }}</td>
+                                <td class="border p-2 text-center">{{ number_format($sumNw, 2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -154,12 +166,10 @@
                         <tr>
                             <td colspan="2" class="border p-2 text-right">{{ __('messages.total') }}</td>
                             <td class="border p-2 text-center">{{ $totalCtn }}</td>
-                            <td class="border p-2"></td>
                             <td class="border p-2 text-center">{{ $totalQty }}</td>
                             <td class="border p-2 text-center">{{ number_format($totalCbm, 3) }}</td>
                             <td class="border p-2 text-center">{{ number_format($totalGw, 2) }}</td>
                             <td class="border p-2 text-center">{{ number_format($totalNw, 2) }}</td>
-                            <td class="border p-2"></td>
                         </tr>
                     </tfoot>
                 </table>

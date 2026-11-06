@@ -142,4 +142,22 @@ class ReceivingNoteController extends Controller
             'receiving-note-' . $receivingNote->id . '.xlsx'
         );
     }
+
+    public function supplierDetails(ReceivingNote $receivingNote, \App\Models\Supplier $supplier)
+    {
+        $products = $receivingNote->products()
+            ->whereHas('suppliers', fn($q) => $q->where('suppliers.id', $supplier->id))
+            ->with('suppliers')
+            ->get();
+
+        return view('receiving-notes.supplier-details', compact('receivingNote', 'supplier', 'products'));
+    }
+
+    public function downloadSupplierExcel(ReceivingNote $receivingNote, \App\Models\Supplier $supplier)
+    {
+        return Excel::download(
+            new \App\Exports\ReceivingNoteSupplierExport($receivingNote, $supplier),
+            'receiving-note-' . $receivingNote->id . '-supplier-' . $supplier->id . '.xlsx'
+        );
+    }
 }

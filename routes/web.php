@@ -635,6 +635,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('permission:delete supplier payments')->group(function () {
         Route::delete('supplier-receiving-payments/{supplierReceivingPayment}', [SupplierReceivingPaymentController::class, 'destroy'])->name('supplier-receiving-payments.destroy');
     });
+
+    Route::get('receiving-notes/{receivingNote}/supplier/{supplier}', [ReceivingNoteController::class, 'supplierDetails'])->name('receiving-notes.supplier-details');
+    Route::get('receiving-notes/{receivingNote}/supplier/{supplier}/download', [ReceivingNoteController::class, 'downloadSupplierExcel'])->name('receiving-notes.supplier-download');
 });
 
 
