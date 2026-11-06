@@ -198,8 +198,16 @@
 
             <div class="px-4 md:px-6 py-4 flex flex-wrap gap-4 md:gap-6 text-sm border-b border-gray-100">
                 <div>
-                    <span class="text-gray-500">{{ __('messages.total') }} {{ __('messages.paid') }}:</span>
+                    <span class="text-gray-500">{{ __('messages.total') }}:</span>
+                    <strong>{{ number_format($totalOwed, 2) }}</strong>
+                </div>
+                <div>
+                    <span class="text-gray-500">{{ __('messages.paid') }}:</span>
                     <strong class="text-green-600">{{ number_format($totalPaid, 2) }}</strong>
+                </div>
+                <div>
+                    <span class="text-gray-500">{{ __('messages.remaining') }}:</span>
+                    <strong class="text-red-600">{{ number_format($remaining, 2) }}</strong>
                 </div>
             </div>
 

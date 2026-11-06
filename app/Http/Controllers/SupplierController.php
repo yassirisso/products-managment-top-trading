@@ -70,15 +70,22 @@ class SupplierController extends Controller
     {
         $supplier->load(['products', 'contacts']);
 
-        // All payments specifically for this supplier
+        // All receiving notes that contain products of this supplier
+        $receivingNotes = \App\Models\ReceivingNote::whereHas('products.suppliers', function ($q) use ($supplier) {
+            $q->where('suppliers.id', $supplier->id);
+        })->get();
+
+        // Payments for this supplier
         $payments = \App\Models\SupplierReceivingPayment::where('supplier_id', $supplier->id)
             ->with('receivingNote')
             ->latest('payment_date')
             ->get();
 
+        $totalOwed = $receivingNotes->sum('total_amount');
         $totalPaid = $payments->sum('amount');
+        $remaining = $totalOwed - $totalPaid;
 
-        return view('suppliers.show', compact('supplier', 'payments', 'totalPaid'));
+        return view('suppliers.show', compact('supplier', 'payments', 'totalOwed', 'totalPaid', 'remaining'));
     }
 
     public function edit(Supplier $supplier)

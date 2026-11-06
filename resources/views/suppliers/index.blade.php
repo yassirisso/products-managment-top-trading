@@ -58,7 +58,7 @@
                 @foreach ($suppliers as $supplier)
                     <div class="bg-white shadow-md rounded-lg p-4">
                         <div class="flex justify-between items-start gap-2 mb-2">
-                            <a href="{{ route('suppliers.clients', $supplier) }}"
+                            <a href="{{ route('suppliers.show', $supplier) }}"
                                 class="text-blue-600 hover:text-blue-800 font-semibold text-base break-words min-w-0">
                                 {{ $supplier->name }}
                             </a>
@@ -91,10 +91,6 @@
                                     <span class="text-gray-400 text-xs">({{ $supplier->shop_number }})</span>
                                 @endif
                             </p>
-                            <p>
-                                <span class="text-gray-500">{{ __('messages.clients') }}:</span>
-                                {{ $supplier->clients_count }}
-                            </p>
                         </div>
                     </div>
                 @endforeach
@@ -116,9 +112,6 @@
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {{ __('messages.type') }}</th>
                                 <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('messages.clients') }}</th>
-                                <th
                                     class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     {{ __('messages.actions') }}</th>
                             </tr>
@@ -127,7 +120,7 @@
                             @foreach ($suppliers as $supplier)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('suppliers.clients', $supplier) }}"
+                                        <a href="{{ route('suppliers.show', $supplier) }}"
                                             class="text-blue-600 hover:text-blue-800 font-medium">
                                             {{ $supplier->name }}
                                         </a>
@@ -137,9 +130,6 @@
                                         @if ($supplier->type === 'shop' && $supplier->shop_number)
                                             <span class="text-gray-400 text-xs">({{ $supplier->shop_number }})</span>
                                         @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-                                        {{ $supplier->clients_count }} {{ __('messages.clients') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end items-center space-x-3">
