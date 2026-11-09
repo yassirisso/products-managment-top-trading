@@ -364,4 +364,8 @@ return [
     'no_supplier_payments_found' => 'Aucun paiement fournisseur trouvé.',
 
     'total_amount' => 'Montant total dû',
+
+    'screenshot' => 'Capture du paiement',
+    'upload_new_to_replace' => 'Téléchargez une nouvelle image pour remplacer l\'actuelle.',
+    'view_screenshot' => 'Voir la capture',
 ];

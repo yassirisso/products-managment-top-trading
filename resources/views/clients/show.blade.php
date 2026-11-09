@@ -37,7 +37,6 @@
                         <p class="text-gray-600 mt-1">{{ __('messages.fax') }}: {{ $client->fax ?? '—' }}</p>
                         <p class="text-gray-600 mt-1">{{ __('messages.shipping_marks') }}:
                             {{ $client->shipping_mark ?? '—' }}
-
                         </p>
                     </div>
                 </div>
@@ -114,6 +113,14 @@
                                     <span class="text-gray-500">{{ __('messages.note') }}:</span> {{ $payment->note }}
                                 </p>
                             @endif
+                            @if ($payment->screenshot)
+                                <p class="mt-2">
+                                    <a href="{{ asset('storage/' . $payment->screenshot) }}" target="_blank"
+                                        class="text-blue-600 hover:underline text-xs">
+                                        📎 {{ __('messages.view_screenshot') }}
+                                    </a>
+                                </p>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -131,6 +138,8 @@
                                     {{ __('messages.amount') }}</th>
                                 <th class="px-6 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                                     {{ __('messages.note') }}</th>
+                                <th class="px-6 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                                    {{ __('messages.screenshot') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -152,6 +161,17 @@
                                         {{ number_format($payment->amount, 2) }}
                                         {{ $payment->currency }}</td>
                                     <td class="px-6 py-3">{{ $payment->note ?? '—' }}</td>
+                                    <td class="px-6 py-3 text-center">
+                                        @if ($payment->screenshot)
+                                            <a href="{{ asset('storage/' . $payment->screenshot) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $payment->screenshot) }}"
+                                                    alt="Screenshot"
+                                                    class="w-10 h-10 object-cover rounded border mx-auto">
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -160,4 +180,5 @@
             @endif
         </div>
     </div>
+
 </x-app-layout>

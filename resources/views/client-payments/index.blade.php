@@ -63,6 +63,14 @@
                                 <p><span class="text-gray-500">{{ __('messages.note') }}:</span> {{ $payment->note }}
                                 </p>
                             @endif
+                            @if ($payment->screenshot)
+                                <p class="mt-2">
+                                    <a href="{{ asset('storage/' . $payment->screenshot) }}" target="_blank"
+                                        class="text-blue-600 hover:underline text-xs">
+                                        📎 {{ __('messages.view_screenshot') }}
+                                    </a>
+                                </p>
+                            @endif
                         </div>
                         <div class="flex justify-end items-center space-x-3 pt-2 border-t">
                             @can('edit client payments')
@@ -140,6 +148,17 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
                                     <td class="px-6 py-4 text-sm">{{ $payment->note ?? '—' }}</td>
+                                    <td class="px-6 py-4 text-center text-sm">
+                                        @if ($payment->screenshot)
+                                            <a href="{{ asset('storage/' . $payment->screenshot) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $payment->screenshot) }}"
+                                                    alt="Screenshot"
+                                                    class="w-12 h-12 object-cover rounded border mx-auto">
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end items-center space-x-3">
                                             @can('edit client payments')

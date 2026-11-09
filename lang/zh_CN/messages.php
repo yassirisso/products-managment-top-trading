@@ -404,4 +404,8 @@ return [
     'no_supplier_payments_found' => '未找到供应商付款记录。',
 
     'total_amount' => '应付总金额',
+
+    'screenshot' => '付款截图',
+    'upload_new_to_replace' => '上传新图片以替换当前图片。',
+    'view_screenshot' => '查看截图',
 ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ClientPayment;
 use App\Models\ProformaInvoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ClientPaymentController extends Controller
 {
@@ -45,7 +46,12 @@ class ClientPaymentController extends Controller
             'currency' => 'required|in:RMB,USD',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
+            'screenshot' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
+
+        if ($request->hasFile('screenshot')) {
+            $validated['screenshot'] = $request->file('screenshot')->store('payments', 'public');
+        }
 
         ClientPayment::create($validated);
 
@@ -67,7 +73,16 @@ class ClientPaymentController extends Controller
             'currency' => 'required|in:RMB,USD',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
+            'screenshot' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
+
+        if ($request->hasFile('screenshot')) {
+            // Delete the old screenshot if it exists
+            if ($clientPayment->screenshot) {
+                Storage::disk('public')->delete($clientPayment->screenshot);
+            }
+            $validated['screenshot'] = $request->file('screenshot')->store('payments', 'public');
+        }
 
         $clientPayment->update($validated);
 

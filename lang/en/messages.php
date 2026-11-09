@@ -404,4 +404,8 @@ return [
     'no_supplier_payments_found' => 'No supplier payments found.',
 
     'total_amount' => 'Total Amount Owed',
+
+    'screenshot' => 'Payment Screenshot',
+    'upload_new_to_replace' => 'Upload a new image to replace the current one.',
+    'view_screenshot' => 'View Screenshot',
 ];

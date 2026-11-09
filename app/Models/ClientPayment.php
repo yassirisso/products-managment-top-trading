@@ -13,6 +13,7 @@ class ClientPayment extends Model
         'currency',
         'payment_date',
         'note',
+        'screenshot',
     ];
 
     protected $casts = [

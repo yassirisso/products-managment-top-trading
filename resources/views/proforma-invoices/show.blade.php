@@ -275,7 +275,8 @@
 
                 <div class="flex flex-wrap gap-6 text-sm mb-4">
                     <div><span class="text-gray-500">{{ __('messages.total') }}:</span>
-                        <strong>{{ number_format($invoiceTotal, 2) }} {{ $proformaInvoice->currency }}</strong></div>
+                        <strong>{{ number_format($invoiceTotal, 2) }} {{ $proformaInvoice->currency }}</strong>
+                    </div>
                     <div><span class="text-gray-500">{{ __('messages.paid') }}:</span> <strong
                             class="text-green-600">{{ number_format($totalPaid, 2) }}
                             {{ $proformaInvoice->currency }}</strong></div>
@@ -293,6 +294,7 @@
                                 <th class="px-3 py-2 text-left">{{ __('messages.date') }}</th>
                                 <th class="px-3 py-2 text-right">{{ __('messages.amount') }}</th>
                                 <th class="px-3 py-2 text-left">{{ __('messages.note') }}</th>
+                                <th class="px-3 py-2 text-center">{{ __('messages.screenshot') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -303,6 +305,18 @@
                                     <td class="px-3 py-2 text-right font-medium">
                                         {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
                                     <td class="px-3 py-2">{{ $payment->note ?? '—' }}</td>
+                                    <td class="px-3 py-2 text-center">
+                                        @if ($payment->screenshot)
+                                            <a href="{{ asset('storage/' . $payment->screenshot) }}"
+                                                target="_blank">
+                                                <img src="{{ asset('storage/' . $payment->screenshot) }}"
+                                                    alt="Screenshot"
+                                                    class="w-10 h-10 object-cover rounded border mx-auto">
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

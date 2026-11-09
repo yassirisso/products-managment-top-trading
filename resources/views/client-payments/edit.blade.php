@@ -5,7 +5,8 @@
 
     <div class="container mx-auto px-4 py-6 max-w-2xl">
         <div class="bg-white shadow rounded-lg p-6">
-            <form action="{{ route('client-payments.update', $clientPayment) }}" method="POST">
+            <form action="{{ route('client-payments.update', $clientPayment) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf @method('PUT')
 
                 <div class="mb-4">
@@ -59,6 +60,23 @@
                 <div class="mb-4">
                     <label for="note" class="block mb-1 font-medium">{{ __('messages.note') }}</label>
                     <textarea name="note" id="note" rows="3" class="w-full border rounded-lg px-3 py-2">{{ old('note', $clientPayment->note) }}</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="screenshot" class="block mb-1 font-medium">{{ __('messages.screenshot') }}</label>
+                    <input type="file" name="screenshot" id="screenshot" accept="image/*"
+                        class="w-full border rounded-lg px-3 py-2 text-sm">
+                    @error('screenshot')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+
+                    @if ($clientPayment->screenshot)
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/' . $clientPayment->screenshot) }}" alt="Screenshot"
+                                class="w-32 h-32 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-1">{{ __('messages.upload_new_to_replace') }}</p>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex justify-end gap-2 mt-6">
