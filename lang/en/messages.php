@@ -30,6 +30,7 @@ return [
     'date' => 'Date',
     'client' => 'Client',
     'product' => 'Product',
+    'item_number' => 'Item Number',
     'quantity' => 'Quantity',
     'unit_price' => 'Unit Price',
     'total' => 'Total',

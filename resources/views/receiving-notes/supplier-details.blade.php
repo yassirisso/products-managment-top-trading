@@ -41,18 +41,19 @@
                     @endphp
                     <div class="border rounded-lg p-3 text-sm">
                         <p class="font-semibold text-gray-900 break-words">{{ $product->reference }}</p>
+                        <p class="text-gray-600 break-words mb-2">{{ $product->description }}</p>
                         <div class="grid grid-cols-2 gap-2 text-gray-700 mt-2">
                             <p><span class="text-gray-500">{{ __('messages.ctn') }}:</span> {{ $product->pivot->ctn }}
                             </p>
-                            <p><span class="text-gray-500">{{ __('messages.unit_cbm') }}:</span>
-                                {{ number_format($product->unit_cbm ?? 0, 3) }}</p>
-                            <p><span class="text-gray-500">{{ __('messages.unit_gw') }}:</span>
-                                {{ number_format($product->unit_gw ?? 0, 2) }}</p>
                             <p><span class="text-gray-500">{{ __('messages.pcs_cts') }}:</span>
                                 {{ $product->pcs_cts }}</p>
                             <p><span class="text-gray-500">{{ __('messages.qty') }}:</span> {{ $qty }}</p>
+                            <p><span class="text-gray-500">{{ __('messages.unit_cbm') }}:</span>
+                                {{ number_format($product->unit_cbm ?? 0, 3) }}</p>
                             <p><span class="text-gray-500">{{ __('messages.total_cbm') }}:</span>
                                 {{ number_format($cbm, 3) }}</p>
+                            <p><span class="text-gray-500">{{ __('messages.unit_gw') }}:</span>
+                                {{ number_format($product->unit_gw ?? 0, 2) }}</p>
                             <p><span class="text-gray-500">{{ __('messages.total_gw') }}:</span>
                                 {{ number_format($gw, 2) }}</p>
                             <p><span class="text-gray-500">{{ __('messages.total_nw') }}:</span>
@@ -71,13 +72,14 @@
                 <table class="w-full border border-gray-400">
                     <thead class="bg-gray-200">
                         <tr>
-                            <th class="border p-2">{{ __('messages.product') }}</th>
+                            <th class="border p-2">{{ __('messages.item_number') }}</th>
+                            <th class="border p-2">{{ __('messages.description') }}</th>
                             <th class="border p-2">{{ __('messages.ctn') }}</th>
-                            <th class="border p-2">{{ __('messages.unit_cbm') }}</th>
                             <th class="border p-2">{{ __('messages.pcs_cts') }}</th>
-                            <th class="border p-2">{{ __('messages.qty') }}</th>
-                            <th class="border p-2">{{ __('messages.unit_gw') }}</th>
+                            <th class="border p-2">{{ __('messages.qty') }}/PCS</th>
+                            <th class="border p-2">{{ __('messages.unit_cbm') }}</th>
                             <th class="border p-2">{{ __('messages.total_cbm') }}</th>
+                            <th class="border p-2">{{ __('messages.unit_gw') }}</th>
                             <th class="border p-2">{{ __('messages.total_gw') }}</th>
                             <th class="border p-2">{{ __('messages.total_nw') }}</th>
                             <th class="border p-2">{{ __('messages.note') }}</th>
@@ -93,12 +95,13 @@
                             @endphp
                             <tr>
                                 <td class="border p-2 text-center">{{ $product->reference }}</td>
+                                <td class="border p-2">{{ $product->description }}</td>
                                 <td class="border p-2 text-center">{{ $product->pivot->ctn }}</td>
-                                <td class="border p-2 text-center">{{ number_format($product->unit_cbm ?? 0, 3) }}</td>
                                 <td class="border p-2 text-center">{{ $product->pcs_cts }}</td>
                                 <td class="border p-2 text-center">{{ $qty }}</td>
-                                <td class="border p-2 text-center">{{ number_format($product->unit_gw ?? 0, 2) }}</td>
+                                <td class="border p-2 text-center">{{ number_format($product->unit_cbm ?? 0, 3) }}</td>
                                 <td class="border p-2 text-center">{{ number_format($cbm, 3) }}</td>
+                                <td class="border p-2 text-center">{{ number_format($product->unit_gw ?? 0, 2) }}</td>
                                 <td class="border p-2 text-center">{{ number_format($gw, 2) }}</td>
                                 <td class="border p-2 text-center">{{ number_format($nw, 2) }}</td>
                                 <td class="border p-2">{{ $product->pivot->note ?? '—' }}</td>
@@ -114,13 +117,13 @@
                             $supplierTotalNw = $products->sum(fn($p) => $p->pivot->ctn * ($p->unit_nw ?? 0));
                         @endphp
                         <tr>
-                            <td colspan="1" class="border p-2 text-right">{{ __('messages.total') }}</td>
+                            <td colspan="2" class="border p-2 text-right">{{ __('messages.total') }}</td>
                             <td class="border p-2 text-center">{{ $supplierTotalCtn }}</td>
-                            <td class="border p-2"></td>
                             <td class="border p-2"></td>
                             <td class="border p-2 text-center">{{ $supplierTotalQty }}</td>
                             <td class="border p-2"></td>
                             <td class="border p-2 text-center">{{ number_format($supplierTotalCbm, 3) }}</td>
+                            <td class="border p-2"></td>
                             <td class="border p-2 text-center">{{ number_format($supplierTotalGw, 2) }}</td>
                             <td class="border p-2 text-center">{{ number_format($supplierTotalNw, 2) }}</td>
                             <td class="border p-2"></td>
