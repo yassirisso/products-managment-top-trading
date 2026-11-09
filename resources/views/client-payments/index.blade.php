@@ -44,8 +44,7 @@
                 @foreach ($payments as $payment)
                     <div class="bg-white shadow-md rounded-lg p-4 text-sm">
                         <div class="flex justify-between items-start gap-2 mb-2">
-                            <span class="font-semibold text-gray-900">{{ number_format($payment->amount, 2) }}
-                                {{ $payment->currency }}</span>
+                            <span class="font-semibold text-gray-900">{{ $payment->formatted_amount }}</span>
                             <span class="text-gray-500 text-xs">{{ $payment->payment_date->format('Y-m-d') }}</span>
                         </div>
                         <div class="space-y-1 text-gray-700 mb-3">
@@ -146,7 +145,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         {{ $payment->proformaInvoice?->client?->name ?? '—' }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                        {{ $payment->formatted_amount }}</td>
                                     <td class="px-6 py-4 text-sm">{{ $payment->note ?? '—' }}</td>
                                     <td class="px-6 py-4 text-center text-sm">
                                         @if ($payment->screenshot)

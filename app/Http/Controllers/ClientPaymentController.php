@@ -44,10 +44,13 @@ class ClientPaymentController extends Controller
             'proforma_invoice_id' => 'required|exists:proforma_invoices,id',
             'amount' => 'required|numeric|min:0',
             'currency' => 'required|in:RMB,USD',
+            'exchange_rate' => 'nullable|required_if:currency,USD|numeric|gt:0',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
             'screenshot' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
+
+        $validated = $this->applyCurrencyConversion($validated);
 
         if ($request->hasFile('screenshot')) {
             $validated['screenshot'] = $request->file('screenshot')->store('payments', 'public');
@@ -71,13 +74,15 @@ class ClientPaymentController extends Controller
             'proforma_invoice_id' => 'required|exists:proforma_invoices,id',
             'amount' => 'required|numeric|min:0',
             'currency' => 'required|in:RMB,USD',
+            'exchange_rate' => 'nullable|required_if:currency,USD|numeric|gt:0',
             'payment_date' => 'required|date',
             'note' => 'nullable|string',
             'screenshot' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
 
+        $validated = $this->applyCurrencyConversion($validated);
+
         if ($request->hasFile('screenshot')) {
-            // Delete the old screenshot if it exists
             if ($clientPayment->screenshot) {
                 Storage::disk('public')->delete($clientPayment->screenshot);
             }
@@ -96,5 +101,25 @@ class ClientPaymentController extends Controller
 
         return redirect()->route('client-payments.index')
             ->with('success', __('Payment deleted successfully'));
+    }
+
+    /**
+     * Normalise the currency fields before saving.
+     *  - USD: store exchange_rate and amount_rmb = amount / exchange_rate
+     *  - RMB: null out exchange_rate and amount_rmb = amount
+     */
+    private function applyCurrencyConversion(array $data): array
+    {
+        if (($data['currency'] ?? null) === 'USD') {
+            $rate = (float) ($data['exchange_rate'] ?? 0);
+            $data['amount_rmb'] = $rate > 0
+                ? round($data['amount'] / $rate, 2)
+                : null;
+        } else {
+            $data['exchange_rate'] = null;
+            $data['amount_rmb'] = $data['amount'];
+        }
+
+        return $data;
     }
 }

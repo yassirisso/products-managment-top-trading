@@ -47,6 +47,23 @@
                     </div>
                 </div>
 
+                {{-- Exchange rate (only shown when USD is selected) --}}
+                <div class="mb-4" id="exchange_rate_wrapper"
+                    style="{{ old('currency', $clientPayment->currency) == 'USD' ? '' : 'display:none' }}">
+                    <label for="exchange_rate" class="block mb-1 font-medium">
+                        {{ __('messages.exchange_rate') ?? 'Exchange Rate' }} *
+                    </label>
+                    <input type="number" step="0.0001" min="0" name="exchange_rate" id="exchange_rate"
+                        value="{{ old('exchange_rate', $clientPayment->exchange_rate ?? 6.6) }}"
+                        class="w-full border rounded-lg px-3 py-2" title="e.g. 6.60">
+                    <p class="text-xs text-gray-500 mt-1" id="exchange_rate_preview">
+                        RMB equivalent: —
+                    </p>
+                    @error('exchange_rate')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="mb-4">
                     <label for="payment_date" class="block mb-1 font-medium">{{ __('messages.date') }} *</label>
                     <input type="date" name="payment_date" id="payment_date" required
@@ -88,4 +105,53 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currencySelect = document.getElementById('currency');
+            const rateWrapper = document.getElementById('exchange_rate_wrapper');
+            const rateInput = document.getElementById('exchange_rate');
+            const amountInput = document.getElementById('amount');
+            const preview = document.getElementById('exchange_rate_preview');
+
+            // Show / hide the exchange-rate field based on currency
+            function toggleRate() {
+                if (!currencySelect || !rateWrapper) return;
+                const isUsd = currencySelect.value === 'USD';
+
+                rateWrapper.style.display = isUsd ? '' : 'none';
+                if (!isUsd && rateInput) {
+                    rateInput.value = '';
+                }
+                updatePreview();
+            }
+
+            // Preview: USD amount / exchange rate = RMB equivalent
+            //   e.g. 300 USD / 6.6 = 45.45 RMB
+            function updatePreview() {
+                if (!preview || !currencySelect || !amountInput) return;
+
+                if (currencySelect.value !== 'USD') {
+                    preview.textContent = 'RMB equivalent: —';
+                    return;
+                }
+
+                const amount = parseFloat(amountInput.value);
+                const rate = parseFloat(rateInput.value);
+
+                if (!isNaN(amount) && !isNaN(rate) && rate > 0) {
+                    preview.textContent = 'RMB equivalent: ¥' + (amount / rate).toFixed(2);
+                } else {
+                    preview.textContent = 'RMB equivalent: —';
+                }
+            }
+
+            if (currencySelect) currencySelect.addEventListener('change', toggleRate);
+            if (rateInput) rateInput.addEventListener('input', updatePreview);
+            if (amountInput) amountInput.addEventListener('input', updatePreview);
+
+            // Initial state (respects saved currency + old() on validation errors)
+            toggleRate();
+        });
+    </script>
 </x-app-layout>
