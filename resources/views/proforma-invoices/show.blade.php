@@ -263,26 +263,53 @@
                 </h3>
 
                 @php
-                    $totalPaid = $proformaInvoice->clientPayments->sum('amount');
-                    $remaining = max(0, $totalFob ?? ($fobTotal ?? 0)); // placeholder
-                    // Use the actual invoice total if available
-                    $invoiceTotal = 0;
+                    // ---- Invoice FOB total (same formula as the table above) ----
+                    $invoiceTotalOriginal = 0;
                     foreach ($proformaInvoice->products as $p) {
-                        $invoiceTotal += ($p->pivot->ctn ?? 0) * ($p->pcs_cts ?? 0) * ($p->pivot->unit_price ?? 0);
+                        $invoiceTotalOriginal +=
+                            ($p->pivot->ctn ?? 0) * ($p->pcs_cts ?? 0) * ($p->pivot->unit_price ?? 0);
                     }
-                    $remaining = $invoiceTotal - $totalPaid;
+                    if ($isAdmin) {
+                        $invoiceTotalOriginal += $invoiceTotalOriginal * 0.03 + $proformaInvoice->local_charge;
+                    }
+
+                    // ---- Everything below is expressed in RMB ----
+                    // For a USD invoice we need a rate to convert it. The rate comes from
+                    // the most recent USD payment that has one; if there is none, fall back
+                    // to 1 so RMB invoices keep working untouched.
+                    $latestUsdPayment = $proformaInvoice->clientPayments
+                        ->where('currency', 'USD')
+                        ->whereNotNull('exchange_rate')
+                        ->sortByDesc('payment_date')
+                        ->first();
+
+                    $usdInvoiceRate = (float) ($latestUsdPayment->exchange_rate ?? 0);
+
+                    $invoiceTotalRmb =
+                        $proformaInvoice->currency === 'USD'
+                            ? ($usdInvoiceRate > 0
+                                ? round($invoiceTotalOriginal / $usdInvoiceRate, 2)
+                                : round($invoiceTotalOriginal, 2))
+                            : round($invoiceTotalOriginal, 2);
+
+                    $totalPaidRmb = $proformaInvoice->clientPayments->sum(function ($payment) {
+                        if ($payment->currency === 'USD') {
+                            return $payment->amount_in_rmb ?? 0;
+                        }
+                        return (float) $payment->amount;
+                    });
+
+                    $remainingRmb = $invoiceTotalRmb - $totalPaidRmb;
                 @endphp
 
                 <div class="flex flex-wrap gap-6 text-sm mb-4">
                     <div><span class="text-gray-500">{{ __('messages.total') }}:</span>
-                        <strong>{{ number_format($invoiceTotal, 2) }} {{ $proformaInvoice->currency }}</strong>
+                        <strong>{{ number_format($invoiceTotalRmb, 2) }} RMB</strong>
                     </div>
                     <div><span class="text-gray-500">{{ __('messages.paid') }}:</span> <strong
-                            class="text-green-600">{{ number_format($totalPaid, 2) }}
-                            {{ $proformaInvoice->currency }}</strong></div>
+                            class="text-green-600">{{ number_format($totalPaidRmb, 2) }} RMB</strong></div>
                     <div><span class="text-gray-500">{{ __('messages.remaining') }}:</span> <strong
-                            class="text-red-600">{{ number_format($remaining, 2) }}
-                            {{ $proformaInvoice->currency }}</strong></div>
+                            class="text-red-600">{{ number_format($remainingRmb, 2) }} RMB</strong></div>
                 </div>
 
                 @if ($proformaInvoice->clientPayments->isEmpty())
@@ -303,7 +330,7 @@
                                     <td class="px-3 py-2 whitespace-nowrap">
                                         {{ $payment->payment_date->format('Y-m-d') }}</td>
                                     <td class="px-3 py-2 text-right font-medium">
-                                        {{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                        {{ $payment->formatted_amount }}</td>
                                     <td class="px-3 py-2">{{ $payment->note ?? '—' }}</td>
                                     <td class="px-3 py-2 text-center">
                                         @if ($payment->screenshot)
