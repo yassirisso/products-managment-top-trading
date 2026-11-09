@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReceivingNote extends Model
 {
     protected $fillable = [
-        'proforma_invoice_id',
+        'packing_list_id',
         'date',
         'container_no',
         'seal_no',
@@ -20,9 +20,9 @@ class ReceivingNote extends Model
         'total_amount' => 'decimal:2',
     ];
 
-    public function proformaInvoice()
+    public function packingList()
     {
-        return $this->belongsTo(ProformaInvoice::class);
+        return $this->belongsTo(PackingList::class);
     }
 
     public function products()

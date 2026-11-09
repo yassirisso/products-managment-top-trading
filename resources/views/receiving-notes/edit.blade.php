@@ -21,15 +21,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="min-w-0">
                         <label
-                            class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.proforma_invoices') }}</label>
-                        <select name="proforma_invoice_id" id="proforma_invoice_id"
-                            class="border rounded w-full py-2 px-3">
+                            class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.packing_lists') }}</label>
+                        <select name="packing_list_id" id="packing_list_id" class="border rounded w-full py-2 px-3">
                             <option value="">—</option>
-                            @foreach ($proformaInvoices as $invoice)
-                                <option value="{{ $invoice->id }}" data-container="{{ $invoice->container_no }}"
-                                    data-date="{{ $invoice->date }}"
-                                    {{ old('proforma_invoice_id', $receivingNote->proforma_invoice_id) == $invoice->id ? 'selected' : '' }}>
-                                    #{{ $invoice->id }} — {{ $invoice->client?->name }} ({{ $invoice->date }})
+                            @foreach ($packingLists as $list)
+                                <option value="{{ $list->id }}" data-container="{{ $list->container_no }}"
+                                    data-date="{{ $list->date }}"
+                                    {{ old('packing_list_id', $receivingNote->packing_list_id) == $list->id ? 'selected' : '' }}>
+                                    #{{ $list->id }} — {{ $list->client?->name }} ({{ $list->date }})
                                 </option>
                             @endforeach
                         </select>
@@ -61,7 +60,7 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.note') }}</label>
                         <textarea name="note" rows="2" class="border rounded w-full py-2 px-3">{{ old('note', $receivingNote->note) }}</textarea>
                     </div>
-                    
+
                     @role('Admin')
                         <div class="md:col-span-2">
                             <label
@@ -284,7 +283,8 @@
             document.getElementById('total-nw').innerText = tNw.toFixed(2);
         }
 
-        document.getElementById('proforma_invoice_id')?.addEventListener('change', function() {
+        // CHANGED THIS LINE: proforma_invoice_id -> packing_list_id
+        document.getElementById('packing_list_id')?.addEventListener('change', function() {
             let opt = this.options[this.selectedIndex];
             if (opt.dataset.container) document.getElementById('container_no').value = opt.dataset.container;
             if (opt.dataset.date) document.getElementById('date').value = opt.dataset.date;

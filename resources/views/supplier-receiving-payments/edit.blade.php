@@ -20,7 +20,7 @@
                         @foreach ($receivingNotes as $note)
                             <option value="{{ $note->id }}"
                                 {{ old('receiving_note_id', $supplierReceivingPayment->receiving_note_id) == $note->id ? 'selected' : '' }}>
-                                #{{ $note->id }} — {{ $note->proformaInvoice?->client?->name }}
+                                #{{ $note->id }} — {{ $note->packingList?->client?->name }}
                                 ({{ $note->date?->format('Y-m-d') }})
                             </option>
                         @endforeach

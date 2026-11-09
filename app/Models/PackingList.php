@@ -30,4 +30,9 @@ class PackingList extends Model
             ->withPivot('ctn')
             ->withTimestamps();
     }
+
+    public function receivingNotes()
+    {
+        return $this->hasMany(ReceivingNote::class);
+    }
 }

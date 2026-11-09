@@ -19,15 +19,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="min-w-0">
                         <label
-                            class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.proforma_invoices') }}</label>
-                        <select name="proforma_invoice_id" id="proforma_invoice_id"
-                            class="border rounded w-full py-2 px-3">
+                            class="block text-sm font-bold text-gray-700 mb-2">{{ __('messages.packing_lists') }}</label>
+                        <select name="packing_list_id" id="packing_list_id" class="border rounded w-full py-2 px-3">
                             <option value="">—</option>
-                            @foreach ($proformaInvoices as $invoice)
-                                <option value="{{ $invoice->id }}" data-container="{{ $invoice->container_no }}"
-                                    data-date="{{ $invoice->date }}"
-                                    {{ old('proforma_invoice_id') == $invoice->id ? 'selected' : '' }}>
-                                    #{{ $invoice->id }} — {{ $invoice->client?->name }} ({{ $invoice->date }})
+                            @foreach ($packingLists as $list)
+                                <option value="{{ $list->id }}" data-container="{{ $list->container_no }}"
+                                    data-date="{{ $list->date }}"
+                                    {{ old('packing_list_id') == $list->id ? 'selected' : '' }}>
+                                    #{{ $list->id }} — {{ $list->client?->name }} ({{ $list->date }})
                                 </option>
                             @endforeach
                         </select>
@@ -128,13 +127,13 @@
     </style>
 
     <script>
-        const proformaData = {
-            @foreach ($proformaInvoices as $invoice)
-                "{{ $invoice->id }}": {
-                    container: "{{ $invoice->container_no ?? '' }}",
-                    date: "{{ $invoice->date ?? '' }}",
+        const packingListData = {
+            @foreach ($packingLists as $list)
+                "{{ $list->id }}": {
+                    container: "{{ $list->container_no ?? '' }}",
+                    date: "{{ $list->date ?? '' }}",
                     products: [
-                        @foreach ($invoice->products as $p)
+                        @foreach ($list->products as $p)
                             {
                                 id: {{ $p->id }},
                                 ctn: {{ $p->pivot->ctn ?? 0 }},
@@ -290,8 +289,8 @@
             document.getElementById('total-nw').innerText = tNw.toFixed(2);
         }
 
-        document.getElementById('proforma_invoice_id')?.addEventListener('change', function() {
-            let invoiceId = this.value;
+        document.getElementById('packing_list_id')?.addEventListener('change', function() {
+            let listId = this.value;
             let opt = this.options[this.selectedIndex];
 
             if (opt.dataset.container) document.getElementById('container_no').value = opt.dataset.container;
@@ -300,10 +299,10 @@
             document.getElementById('products-table-body').innerHTML = '';
             rowIndex = 0;
 
-            if (invoiceId && proformaData[invoiceId]) {
-                let invProducts = proformaData[invoiceId].products;
-                if (invProducts.length > 0) {
-                    invProducts.forEach(function(p) {
+            if (listId && packingListData[listId]) {
+                let listProducts = packingListData[listId].products;
+                if (listProducts.length > 0) {
+                    listProducts.forEach(function(p) {
                         addRow({
                             id: p.id,
                             ctn: p.ctn,

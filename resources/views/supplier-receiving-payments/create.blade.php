@@ -28,7 +28,7 @@
                             @foreach ($receivingNotes as $loop_index => $note)
                                 <option value="{{ $note->id }}"
                                     {{ old('receiving_note_id', request('receiving_note_id') ?? ($preselectedSupplierId && $loop_index === 0 ? $note->id : null)) == $note->id ? 'selected' : '' }}>
-                                    #{{ $note->id }} — {{ $note->proformaInvoice?->client?->name }}
+                                    #{{ $note->id }} — {{ $note->packingList?->client?->name }}
                                     ({{ $note->date?->format('Y-m-d') }})
                                 </option>
                             @endforeach

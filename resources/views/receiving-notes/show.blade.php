@@ -41,16 +41,16 @@
                 </div>
 
                 <div class="min-w-0 text-sm md:text-base">
-                    <h2 class="font-bold text-base md:text-lg mb-3">{{ __('messages.proforma_invoices') }}</h2>
-                    @if ($receivingNote->proformaInvoice)
+                    <h2 class="font-bold text-base md:text-lg mb-3">{{ __('messages.packing_lists') }}</h2>
+                    @if ($receivingNote->packingList)
                         <p class="mb-2">
-                            <a href="{{ route('proforma-invoices.show', $receivingNote->proformaInvoice) }}"
+                            <a href="{{ route('packing-lists.show', $receivingNote->packingList) }}"
                                 class="text-blue-600 hover:underline">
-                                #{{ $receivingNote->proformaInvoice->id }}
+                                #{{ $receivingNote->packingList->id }}
                             </a>
                         </p>
                         <p class="mb-2"><strong>{{ __('messages.client') }}:</strong>
-                            {{ $receivingNote->proformaInvoice->client?->name }}</p>
+                            {{ $receivingNote->packingList->client?->name }}</p>
                     @else
                         <p class="text-gray-500">—</p>
                     @endif

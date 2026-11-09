@@ -31,8 +31,8 @@
         <td colspan="4" style="border:1px solid black;vertical-align:top;padding:5px;">
             <strong>{{ __('messages.date') }}:</strong>
             {{ $receivingNote->date ? $receivingNote->date->format('Y-m-d') : '—' }}<br>
-            @if ($receivingNote->proformaInvoice)
-                <strong>{{ __('messages.proforma_invoices') }}:</strong> #{{ $receivingNote->proformaInvoice->id }}
+            @if ($receivingNote->packingList)
+                <strong>{{ __('messages.packing_lists') }}:</strong> #{{ $receivingNote->packingList->id }}
             @endif
         </td>
     </tr>

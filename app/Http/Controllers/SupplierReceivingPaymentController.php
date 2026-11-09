@@ -10,7 +10,7 @@ class SupplierReceivingPaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SupplierReceivingPayment::with(['receivingNote.proformaInvoice.client', 'supplier']);
+        $query = SupplierReceivingPayment::with(['receivingNote.packingList.client', 'supplier']);
 
         if ($request->search) {
             $query->where('note', 'like', '%' . $request->search . '%');
@@ -26,7 +26,7 @@ class SupplierReceivingPaymentController extends Controller
         $preselectedSupplierId = $request->query('supplier_id');
 
         // If a supplier is preselected, only show notes that contain this supplier's products
-        $notesQuery = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest();
+        $notesQuery = ReceivingNote::with(['packingList.client', 'products.suppliers'])->latest();
 
         if ($preselectedSupplierId) {
             $notesQuery->whereHas('products.suppliers', function ($q) use ($preselectedSupplierId) {
@@ -40,7 +40,7 @@ class SupplierReceivingPaymentController extends Controller
 
         $lockedNote = null;
         if ($request->filled('receiving_note_id')) {
-            $lockedNote = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->find($request->receiving_note_id);
+            $lockedNote = ReceivingNote::with(['packingList.client', 'products.suppliers'])->find($request->receiving_note_id);
         }
 
         return view('supplier-receiving-payments.create', compact(
@@ -70,7 +70,7 @@ class SupplierReceivingPaymentController extends Controller
 
     public function edit(SupplierReceivingPayment $supplierReceivingPayment)
     {
-        $receivingNotes = ReceivingNote::with(['proformaInvoice.client', 'products.suppliers'])->latest()->get();
+        $receivingNotes = ReceivingNote::with(['packingList.client', 'products.suppliers'])->latest()->get();
         $suppliers = \App\Models\Supplier::orderBy('name')->get();
 
         return view('supplier-receiving-payments.edit', compact('supplierReceivingPayment', 'receivingNotes', 'suppliers'));

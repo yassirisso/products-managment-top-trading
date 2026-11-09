@@ -13,7 +13,7 @@ class ReceivingNoteController extends Controller
 {
     public function index()
     {
-        $receivingNotes = ReceivingNote::with('proformaInvoice')
+        $receivingNotes = ReceivingNote::with('packingList')
             ->latest()
             ->paginate(10);
 
@@ -22,16 +22,16 @@ class ReceivingNoteController extends Controller
 
     public function create()
     {
-        $proformaInvoices = ProformaInvoice::with(['client', 'products'])->latest()->get();
+        $packingLists = \App\Models\PackingList::with(['client', 'products'])->latest()->get();
         $products = Product::with('suppliers')->get();
 
-        return view('receiving-notes.create', compact('proformaInvoices', 'products'));
+        return view('receiving-notes.create', compact('packingLists', 'products'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
+            'packing_list_id' => 'nullable|exists:packing_lists,id',
             'date' => 'nullable|date',
             'container_no' => 'nullable|string|max:255',
             'seal_no' => 'nullable|string|max:255',
@@ -44,7 +44,7 @@ class ReceivingNoteController extends Controller
         ]);
 
         $data = [
-            'proforma_invoice_id' => $validated['proforma_invoice_id'] ?? null,
+            'packing_list_id' => $validated['packing_list_id'] ?? null,
             'date' => $validated['date'] ?? null,
             'container_no' => $validated['container_no'] ?? null,
             'seal_no' => $validated['seal_no'] ?? null,
@@ -77,7 +77,7 @@ class ReceivingNoteController extends Controller
 
     public function show(ReceivingNote $receivingNote)
     {
-        $receivingNote->load(['proformaInvoice', 'products.suppliers', 'payments.supplier']);
+        $receivingNote->load(['packingList.client', 'products.suppliers', 'payments.supplier']);
 
         return view('receiving-notes.show', compact('receivingNote'));
     }
@@ -85,16 +85,16 @@ class ReceivingNoteController extends Controller
     public function edit(ReceivingNote $receivingNote)
     {
         $receivingNote->load('products');
-        $proformaInvoices = ProformaInvoice::with('client')->latest()->get();
+        $packingLists = \App\Models\PackingList::with('client')->latest()->get();
         $products = Product::with('suppliers')->get();
 
-        return view('receiving-notes.edit', compact('receivingNote', 'proformaInvoices', 'products'));
+        return view('receiving-notes.edit', compact('receivingNote', 'packingLists', 'products'));
     }
 
     public function update(Request $request, ReceivingNote $receivingNote)
     {
         $validated = $request->validate([
-            'proforma_invoice_id' => 'nullable|exists:proforma_invoices,id',
+            'packing_list_id' => 'nullable|exists:packing_lists,id',
             'date' => 'nullable|date',
             'container_no' => 'nullable|string|max:255',
             'seal_no' => 'nullable|string|max:255',
@@ -107,7 +107,7 @@ class ReceivingNoteController extends Controller
         ]);
 
         $data = [
-            'proforma_invoice_id' => $validated['proforma_invoice_id'] ?? null,
+            'packing_list_id' => $validated['packing_list_id'] ?? null,
             'date' => $validated['date'] ?? null,
             'container_no' => $validated['container_no'] ?? null,
             'seal_no' => $validated['seal_no'] ?? null,
@@ -149,7 +149,7 @@ class ReceivingNoteController extends Controller
 
     public function downloadExcel(ReceivingNote $receivingNote)
     {
-        $receivingNote->load(['proformaInvoice', 'products.suppliers']);
+        $receivingNote->load(['packingList.client', 'products.suppliers']);
 
         return Excel::download(
             new ReceivingNoteExport($receivingNote),
