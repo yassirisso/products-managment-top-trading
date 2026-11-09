@@ -61,6 +61,17 @@ class ReceivingNoteController extends Controller
             $syncData = [];
             foreach ($request->products as $productData) {
                 if (!empty($productData['id'])) {
+
+                    // Update the product's default values if changed
+                    $product = \App\Models\Product::find($productData['id']);
+                    if ($product) {
+                        $product->update([
+                            'pcs_cts'  => $productData['pcs_cts'] ?? $product->pcs_cts,
+                            'unit_cbm' => $productData['unit_cbm'] ?? $product->unit_cbm,
+                            'unit_gw'  => $productData['unit_gw'] ?? $product->unit_gw,
+                        ]);
+                    }
+
                     $syncData[$productData['id']] = [
                         'ctn' => $productData['ctn'] ?? 0,
                         'note' => $productData['note'] ?? null,
@@ -124,6 +135,17 @@ class ReceivingNoteController extends Controller
         if ($request->has('products')) {
             foreach ($request->products as $productData) {
                 if (!empty($productData['id'])) {
+
+                    // Update the product's default values if changed
+                    $product = \App\Models\Product::find($productData['id']);
+                    if ($product) {
+                        $product->update([
+                            'pcs_cts'  => $productData['pcs_cts'] ?? $product->pcs_cts,
+                            'unit_cbm' => $productData['unit_cbm'] ?? $product->unit_cbm,
+                            'unit_gw'  => $productData['unit_gw'] ?? $product->unit_gw,
+                        ]);
+                    }
+
                     $syncData[$productData['id']] = [
                         'ctn' => $productData['ctn'] ?? 0,
                         'note' => $productData['note'] ?? null,

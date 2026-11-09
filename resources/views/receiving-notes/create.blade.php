@@ -79,16 +79,18 @@
                                 <th class="border p-2">{{ __('messages.ctn') }}</th>
                                 <th class="border p-2">{{ __('messages.pcs_cts') }}</th>
                                 <th class="border p-2">{{ __('messages.qty') }}</th>
+                                <th class="border p-2">{{ __('messages.unit_cbm') }}</th>
                                 <th class="border p-2">{{ __('messages.total_cbm') }}</th>
+                                <th class="border p-2">{{ __('messages.unit_gw') }}</th>
                                 <th class="border p-2">{{ __('messages.total_gw') }}</th>
                                 <th class="border p-2">{{ __('messages.total_nw') }}</th>
                                 <th class="border p-2">{{ __('messages.note') }}</th>
-                                <th class="border p-2">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
-                        <tbody id="products-table-body" class="block lg:table-row-group"></tbody>
+                        <tbody id="products-table-body" class="block lg:table-row-group">
+                            <!-- Rows injected via JS -->
+                        </tbody>
                     </table>
-
                 </div>
 
                 <!-- TOTALS -->
@@ -174,7 +176,6 @@
             document.querySelectorAll('.product-select').forEach(sel => {
                 let curr = sel.value;
                 sel.innerHTML = '<option value="">{{ __('messages.product') }}</option>';
-
                 allOptions.forEach(opt => {
                     if (!selectedIds.includes(opt.value) || opt.value === curr) {
                         let o = document.createElement('option');
@@ -204,24 +205,27 @@
                 <td class="block lg:table-cell border-0 lg:border p-2" data-label="{{ __('messages.ctn') }}">
                     <input type="number" name="products[${currentIndex}][ctn]" min="0" value="0" class="w-full border rounded p-2 ctn-input" oninput="calculateTotals()">
                 </td>
-                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center pcs-cell" data-label="{{ __('messages.pcs_cts') }}">-</td>
+                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center pcs-cell" data-label="{{ __('messages.pcs_cts') }}">
+                    <input type="number" name="products[${currentIndex}][pcs_cts]" min="0" class="w-full border rounded p-2 pcs-input text-center" oninput="calculateTotals()">
+                </td>
                 <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center qty-cell" data-label="{{ __('messages.qty') }}">0</td>
-                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center cbm-cell" data-label="{{ __('messages.total_cbm') }}">-</td>
-                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center gw-cell" data-label="{{ __('messages.total_gw') }}">-</td>
+                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center cbm-cell" data-label="{{ __('messages.unit_cbm') }}">
+                    <input type="number" step="0.001" name="products[${currentIndex}][unit_cbm]" min="0" class="w-full border rounded p-2 cbm-input text-center" oninput="calculateTotals()">
+                </td>
+                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center total-cbm-cell" data-label="{{ __('messages.total_cbm') }}">0.000</td>
+                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center gw-cell" data-label="{{ __('messages.unit_gw') }}">
+                    <input type="number" step="0.01" name="products[${currentIndex}][unit_gw]" min="0" class="w-full border rounded p-2 gw-input text-center" oninput="calculateTotals()">
+                </td>
+                <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center total-gw-cell" data-label="{{ __('messages.total_gw') }}">0.00</td>
                 <td class="block lg:table-cell border-0 lg:border p-2 text-sm text-center nw-cell" data-label="{{ __('messages.total_nw') }}">-</td>
                 <td class="block lg:table-cell border-0 lg:border p-2" data-label="{{ __('messages.note') }}">
                     <input type="text" name="products[${currentIndex}][note]" class="w-full border rounded p-2">
                 </td>
-                <td class="block lg:table-cell border-0 lg:border p-2 text-center" data-label="">
-                    <button type="button" onclick="this.closest('tr').remove(); updateDropdowns(); calculateTotals();" class="text-red-600 hover:text-red-800">✕</button>
-                </td>
             `;
             tbody.appendChild(row);
 
-            // 1. First, populate the dropdown
             updateDropdowns();
 
-            // 2. THEN set the prefill values
             if (prefill) {
                 let sel = row.querySelector('.product-select');
                 sel.value = String(prefill.id);
@@ -239,14 +243,14 @@
             let p = productsData.find(x => String(x.id) === String(id));
             if (!p) {
                 row.querySelector('.supplier-cell').innerText = '—';
-                row.querySelector('.pcs-cell').innerText = '-';
-                row.querySelector('.qty-cell').innerText = '0';
-                row.querySelector('.cbm-cell').innerText = '-';
-                row.querySelector('.gw-cell').innerText = '-';
-                row.querySelector('.nw-cell').innerText = '-';
+                row.querySelector('.pcs-input').value = '';
+                row.querySelector('.cbm-input').value = '';
+                row.querySelector('.gw-input').value = '';
             } else {
                 row.querySelector('.supplier-cell').innerText = p.supplier;
-                row.querySelector('.pcs-cell').innerText = p.pcs ?? '-';
+                row.querySelector('.pcs-input').value = p.pcs || 0;
+                row.querySelector('.cbm-input').value = p.cbm || 0;
+                row.querySelector('.gw-input').value = p.gw || 0;
             }
             updateDropdowns();
             calculateTotals();
@@ -262,24 +266,29 @@
                 let sel = row.querySelector('.product-select');
                 let id = sel.value;
                 let p = productsData.find(x => String(x.id) === String(id));
+
                 let ctn = parseFloat(row.querySelector('.ctn-input').value) || 0;
+                let pcs = parseFloat(row.querySelector('.pcs-input').value) || 0;
+                let cbm = parseFloat(row.querySelector('.cbm-input').value) || 0;
+                let gw = parseFloat(row.querySelector('.gw-input').value) || 0;
+                let nw = p ? (p.nw || 0) : 0;
 
                 if (p) {
-                    let qty = ctn * (p.pcs || 0);
-                    let cbm = ctn * (p.cbm || 0);
-                    let gw = ctn * (p.gw || 0);
-                    let nw = ctn * (p.nw || 0);
+                    let qty = ctn * pcs;
+                    let totalCbm = ctn * cbm;
+                    let totalGw = ctn * gw;
+                    let totalNw = ctn * nw;
 
                     row.querySelector('.qty-cell').innerText = qty;
-                    row.querySelector('.cbm-cell').innerText = cbm.toFixed(3);
-                    row.querySelector('.gw-cell').innerText = gw.toFixed(2);
-                    row.querySelector('.nw-cell').innerText = nw.toFixed(2);
+                    row.querySelector('.total-cbm-cell').innerText = totalCbm.toFixed(3);
+                    row.querySelector('.total-gw-cell').innerText = totalGw.toFixed(2);
+                    row.querySelector('.nw-cell').innerText = totalNw.toFixed(2);
 
                     tCtn += ctn;
                     tQty += qty;
-                    tCbm += cbm;
-                    tGw += gw;
-                    tNw += nw;
+                    tCbm += totalCbm;
+                    tGw += totalGw;
+                    tNw += totalNw;
                 }
             });
             document.getElementById('total-ctn').innerText = tCtn;
@@ -316,8 +325,6 @@
                 addRow();
             }
         });
-
-        document.getElementById('add-product-row').addEventListener('click', () => addRow());
 
         document.addEventListener('DOMContentLoaded', () => {
             addRow();
