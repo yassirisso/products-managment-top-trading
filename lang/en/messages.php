@@ -409,4 +409,22 @@ return [
     'screenshot' => 'Payment Screenshot',
     'upload_new_to_replace' => 'Upload a new image to replace the current one.',
     'view_screenshot' => 'View Screenshot',
+
+    // Receiving Notes
+    'view receiving notes'      => 'View Receiving Notes',
+    'create receiving notes'    => 'Create Receiving Notes',
+    'edit receiving notes'      => 'Edit Receiving Notes',
+    'delete receiving notes'    => 'Delete Receiving Notes',
+
+    // Client Payments
+    'view client payments'      => 'View Client Payments',
+    'create client payments'    => 'Create Client Payments',
+    'edit client payments'      => 'Edit Client Payments',
+    'delete client payments'    => 'Delete Client Payments',
+
+    // Supplier Payments
+    'view supplier payments'    => 'View Supplier Payments',
+    'create supplier payments'  => 'Create Supplier Payments',
+    'edit supplier payments'    => 'Edit Supplier Payments',
+    'delete supplier payments'  => 'Delete Supplier Payments',
 ];

@@ -408,4 +408,19 @@ return [
     'screenshot' => '付款截图',
     'upload_new_to_replace' => '上传新图片以替换当前图片。',
     'view_screenshot' => '查看截图',
+
+    'view receiving notes'      => '查看收货单',
+    'create receiving notes'    => '创建收货单',
+    'edit receiving notes'      => '编辑收货单',
+    'delete receiving notes'    => '删除收货单',
+
+    'view client payments'      => '查看客户付款',
+    'create client payments'    => '创建客户付款',
+    'edit client payments'      => '编辑客户付款',
+    'delete client payments'    => '删除客户付款',
+
+    'view supplier payments'    => '查看供应商付款',
+    'create supplier payments'  => '创建供应商付款',
+    'edit supplier payments'    => '编辑供应商付款',
+    'delete supplier payments'  => '删除供应商付款',
 ];

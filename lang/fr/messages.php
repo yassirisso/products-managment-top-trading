@@ -368,4 +368,14 @@ return [
     'screenshot' => 'Capture du paiement',
     'upload_new_to_replace' => 'Téléchargez une nouvelle image pour remplacer l\'actuelle.',
     'view_screenshot' => 'Voir la capture',
+
+    'view client payments'      => 'Voir les paiements clients',
+    'create client payments'    => 'Créer des paiements clients',
+    'edit client payments'      => 'Modifier les paiements clients',
+    'delete client payments'    => 'Supprimer les paiements clients',
+
+    'view supplier payments'    => 'Voir les paiements fournisseurs',
+    'create supplier payments'  => 'Créer des paiements fournisseurs',
+    'edit supplier payments'    => 'Modifier les paiements fournisseurs',
+    'delete supplier payments'  => 'Supprimer les paiements fournisseurs',
 ];
