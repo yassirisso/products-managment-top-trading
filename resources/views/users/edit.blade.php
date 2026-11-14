@@ -93,12 +93,29 @@
             const roles = document.querySelectorAll('.role-radio');
             const permissions = document.querySelectorAll('.permission-checkbox');
 
+            // Save the initial state of the checked boxes
+            let previousRole = document.querySelector('.role-radio:checked');
+
             roles.forEach(function(role) {
                 role.addEventListener('change', function() {
-                    let rolePermissions = JSON.parse(this.dataset.permissions);
-                    permissions.forEach(function(permission) {
-                        permission.checked = rolePermissions.includes(permission.value);
-                    });
+                    // Ask the user if they want to overwrite their custom selections
+                    let confirmReset = confirm(
+                        "Changing the role will overwrite this user's current permissions with the role's defaults. Do you want to proceed?"
+                    );
+
+                    if (confirmReset) {
+                        // Apply the role's default permissions
+                        let rolePermissions = JSON.parse(this.dataset.permissions);
+                        permissions.forEach(function(permission) {
+                            permission.checked = rolePermissions.includes(permission.value);
+                        });
+                        previousRole = this;
+                    } else {
+                        // If they click "Cancel", revert the radio button back to the previous role
+                        if (previousRole) {
+                            previousRole.checked = true;
+                        }
+                    }
                 });
             });
         });

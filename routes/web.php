@@ -530,16 +530,24 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('shipping-marks/create', [ShippingMarkController::class, 'create'])->name('shipping-marks.create');
-    Route::post('shipping-marks', [ShippingMarkController::class, 'store'])->name('shipping-marks.store');
+    Route::middleware('permission:create shipping marks')->group(function () {
+        Route::get('shipping-marks/create', [ShippingMarkController::class, 'create'])->name('shipping-marks.create');
+        Route::post('shipping-marks', [ShippingMarkController::class, 'store'])->name('shipping-marks.store');
+    });
 
-    Route::get('shipping-marks', [ShippingMarkController::class, 'index'])->name('shipping-marks.index');
+    Route::middleware('permission:view shipping marks')->group(function () {
+        Route::get('shipping-marks', [ShippingMarkController::class, 'index'])->name('shipping-marks.index');
+    });
 
-    Route::get('shipping-marks/{shippingMark}/edit', [ShippingMarkController::class, 'edit'])->name('shipping-marks.edit');
-    Route::put('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update'])->name('shipping-marks.update');
-    Route::patch('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update']);
+    Route::middleware('permission:edit shipping marks')->group(function () {
+        Route::get('shipping-marks/{shippingMark}/edit', [ShippingMarkController::class, 'edit'])->name('shipping-marks.edit');
+        Route::put('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update'])->name('shipping-marks.update');
+        Route::patch('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'update']);
+    });
 
-    Route::delete('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'destroy'])->name('shipping-marks.destroy');
+    Route::middleware('permission:delete shipping marks')->group(function () {
+        Route::delete('shipping-marks/{shippingMark}', [ShippingMarkController::class, 'destroy'])->name('shipping-marks.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -547,16 +555,24 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('warehouse-fees/create', [WarehouseFeeController::class, 'create'])->name('warehouse-fees.create');
-    Route::post('warehouse-fees', [WarehouseFeeController::class, 'store'])->name('warehouse-fees.store');
+    Route::middleware('permission:create warehouse fees')->group(function () {
+        Route::get('warehouse-fees/create', [WarehouseFeeController::class, 'create'])->name('warehouse-fees.create');
+        Route::post('warehouse-fees', [WarehouseFeeController::class, 'store'])->name('warehouse-fees.store');
+    });
 
-    Route::get('warehouse-fees', [WarehouseFeeController::class, 'index'])->name('warehouse-fees.index');
+    Route::middleware('permission:view warehouse fees')->group(function () {
+        Route::get('warehouse-fees', [WarehouseFeeController::class, 'index'])->name('warehouse-fees.index');
+    });
 
-    Route::get('warehouse-fees/{warehouseFee}/edit', [WarehouseFeeController::class, 'edit'])->name('warehouse-fees.edit');
-    Route::put('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update'])->name('warehouse-fees.update');
-    Route::patch('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update']);
+    Route::middleware('permission:edit warehouse fees')->group(function () {
+        Route::get('warehouse-fees/{warehouseFee}/edit', [WarehouseFeeController::class, 'edit'])->name('warehouse-fees.edit');
+        Route::put('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update'])->name('warehouse-fees.update');
+        Route::patch('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'update']);
+    });
 
-    Route::delete('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'destroy'])->name('warehouse-fees.destroy');
+    Route::middleware('permission:delete warehouse fees')->group(function () {
+        Route::delete('warehouse-fees/{warehouseFee}', [WarehouseFeeController::class, 'destroy'])->name('warehouse-fees.destroy');
+    });
 
     /*
     |--------------------------------------------------------------------------

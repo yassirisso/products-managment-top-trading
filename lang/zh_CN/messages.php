@@ -425,4 +425,16 @@ return [
     'delete supplier payments'  => '删除供应商付款',
 
     'permissions_user_scoped_warning' => '这些权限仅适用于此用户。其他拥有该角色的用户：',
+
+    // Warehouse Fees (仓库费用)
+    'view warehouse fees'       => '查看仓库费用',
+    'create warehouse fees'     => '创建仓库费用',
+    'edit warehouse fees'       => '编辑仓库费用',
+    'delete warehouse fees'     => '删除仓库费用',
+
+    // Shipping Marks (唛头管理)
+    'view shipping marks'       => '查看唛头',
+    'create shipping marks'     => '创建唛头',
+    'edit shipping marks'       => '编辑唛头',
+    'delete shipping marks'     => '删除唛头',
 ];

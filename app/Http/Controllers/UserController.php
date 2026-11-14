@@ -56,7 +56,6 @@ class UserController extends Controller
         $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
 
-        // Permissions the user currently has (direct + inherited via role)
         $userPermissions = $user->getAllPermissions()->pluck('name');
 
         return view('users.edit', compact('user', 'roles', 'permissions', 'userPermissions'));
@@ -74,12 +73,10 @@ class UserController extends Controller
         DB::transaction(function () use ($validated, $user) {
             $user->update(['is_active' => $validated['is_active']]);
 
-            // Only sync the role if it actually changed
             if (! $user->hasRole($validated['role'])) {
                 $user->syncRoles([$validated['role']]);
             }
 
-            // Assign permissions directly to the USER (not the role)
             $user->syncPermissions($validated['permissions'] ?? []);
         });
 

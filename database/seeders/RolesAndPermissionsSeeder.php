@@ -22,6 +22,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'commercial invoices',
             'bank accounts',
             'users',
+            'warehouse fees', 
+            'shipping marks',
         ];
 
         Permission::firstOrCreate(['name' => 'view dashboard', 'guard_name' => 'web']);

@@ -429,4 +429,15 @@ return [
     'delete supplier payments'  => 'Delete Supplier Payments',
 
     'permissions_user_scoped_warning' => 'These permissions apply only to this user. Other users with the role',
+    // Warehouse Fees
+    'view warehouse fees'       => 'View Warehouse Fees',
+    'create warehouse fees'     => 'Create Warehouse Fees',
+    'edit warehouse fees'       => 'Edit Warehouse Fees',
+    'delete warehouse fees'     => 'Delete Warehouse Fees',
+
+    // Shipping Marks
+    'view shipping marks'       => 'View Shipping Marks',
+    'create shipping marks'     => 'Create Shipping Marks',
+    'edit shipping marks'       => 'Edit Shipping Marks',
+    'delete shipping marks'     => 'Delete Shipping Marks',
 ];

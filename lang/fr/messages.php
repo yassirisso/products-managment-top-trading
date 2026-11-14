@@ -380,4 +380,16 @@ return [
     'delete supplier payments'  => 'Supprimer les paiements fournisseurs',
 
     'permissions_user_scoped_warning' => 'Ces permissions ne s\'appliquent qu\'à cet utilisateur. Les autres utilisateurs avec le rôle',
+
+    // Warehouse Fees
+    'view warehouse fees'       => 'Voir les frais d\'entrepôt',
+    'create warehouse fees'     => 'Créer des frais d\'entrepôt',
+    'edit warehouse fees'       => 'Modifier les frais d\'entrepôt',
+    'delete warehouse fees'     => 'Supprimer les frais d\'entrepôt',
+
+    // Shipping Marks
+    'view shipping marks'       => 'Voir les marques d\'expédition',
+    'create shipping marks'     => 'Créer des marques d\'expédition',
+    'edit shipping marks'       => 'Modifier les marques d\'expédition',
+    'delete shipping marks'     => 'Supprimer les marques d\'expédition',
 ];
