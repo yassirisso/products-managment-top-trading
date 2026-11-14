@@ -59,7 +59,7 @@
                 <!-- Permissions -->
                 <div class="mb-6 border-t pt-6">
                     <label class="block text-gray-700 font-bold mb-2">{{ __('messages.permissions') }}</label>
-                    @php $rolePermissions = $user->getPermissionsViaRoles()->pluck('name'); @endphp
+                    @php $rolePermissions = $userPermissions; @endphp
                     <div
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 bg-gray-50 p-4 rounded-lg border">
                         @foreach ($permissions as $permission)
@@ -71,8 +71,8 @@
                             </label>
                         @endforeach
                     </div>
-                    <p class="text-sm text-red-600 mt-3">
-                        {{ __('messages.changing_permissions_warning') }}
+                    <p class="text-sm text-amber-600 mt-3">
+                        {{ __('messages.permissions_user_scoped_warning') }}
                         "<strong>{{ request()->old('role', $user->roles->first()?->name) }}</strong>"
                     </p>
                 </div>

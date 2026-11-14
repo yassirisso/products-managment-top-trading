@@ -423,4 +423,6 @@ return [
     'create supplier payments'  => '创建供应商付款',
     'edit supplier payments'    => '编辑供应商付款',
     'delete supplier payments'  => '删除供应商付款',
+
+    'permissions_user_scoped_warning' => '这些权限仅适用于此用户。其他拥有该角色的用户：',
 ];

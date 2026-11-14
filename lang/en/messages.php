@@ -427,4 +427,6 @@ return [
     'create supplier payments'  => 'Create Supplier Payments',
     'edit supplier payments'    => 'Edit Supplier Payments',
     'delete supplier payments'  => 'Delete Supplier Payments',
+
+    'permissions_user_scoped_warning' => 'These permissions apply only to this user. Other users with the role',
 ];

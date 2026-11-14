@@ -378,4 +378,6 @@ return [
     'create supplier payments'  => 'Créer des paiements fournisseurs',
     'edit supplier payments'    => 'Modifier les paiements fournisseurs',
     'delete supplier payments'  => 'Supprimer les paiements fournisseurs',
+
+    'permissions_user_scoped_warning' => 'Ces permissions ne s\'appliquent qu\'à cet utilisateur. Les autres utilisateurs avec le rôle',
 ];
