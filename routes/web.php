@@ -654,6 +654,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('receiving-notes/{receivingNote}/supplier/{supplier}', [ReceivingNoteController::class, 'supplierDetails'])->name('receiving-notes.supplier-details');
     Route::get('receiving-notes/{receivingNote}/supplier/{supplier}/download', [ReceivingNoteController::class, 'downloadSupplierExcel'])->name('receiving-notes.supplier-download');
+
+    // Add these AJAX endpoints
+    Route::post('/ajax/clients', [ClientController::class, 'ajaxStore'])->name('ajax.clients.store')->middleware('auth');
+    Route::post('/ajax/products', [ProductController::class, 'ajaxStore'])->name('ajax.products.store')->middleware('auth');
 });
 
 

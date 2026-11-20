@@ -561,4 +561,31 @@ class ProductController extends Controller
             'purchases'
         ));
     }
+
+    public function ajaxStore(Request $request)
+    {
+        $validated = $request->validate([
+            'reference' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'pcs_cts' => 'nullable|numeric',
+            'unit_cbm' => 'nullable|numeric',
+            'unit_gw' => 'nullable|numeric',
+            'unit_nw' => 'nullable|numeric',
+            'image' => 'nullable|image|max:2048', // Optional
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $validated['image'] = $path;
+        }
+
+        // ONLY creates in 'products' table. No Packing List logic here.
+        $product = Product::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'product' => $product
+        ]);
+    }
 }

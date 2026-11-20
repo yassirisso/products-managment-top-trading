@@ -27,8 +27,16 @@ class PackingList extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)
-            ->withPivot('ctn')
-            ->withTimestamps();
+            ->withPivot([
+                'ctn',
+                'pcs_cts',
+                'unit_cbm',
+                'unit_gw',
+                'unit_nw',
+                'total_cbm',
+                'total_gw',
+                'total_nw'
+            ]);
     }
 
     public function receivingNotes()

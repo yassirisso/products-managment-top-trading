@@ -118,4 +118,21 @@ class ClientController extends Controller
         return redirect()->route('clients.index')
             ->with('success', __('Client permanently deleted.'));
     }
+
+    public function ajaxStore(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            // Add other validation rules as needed based on your create blade
+        ]);
+
+        $client = Client::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'client' => $client
+        ]);
+    }
 }
