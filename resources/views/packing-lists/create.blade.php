@@ -309,24 +309,30 @@
             let row = select.closest('tr');
             let option = select.options[select.selectedIndex];
 
-            // Fill the editable inputs with the product data
-            row.querySelector('.pcs-input').value = option.dataset.pcs || '';
-            row.querySelector('.cbm-input').value = option.dataset.cbm || '';
-            row.querySelector('.gw-input').value = option.dataset.gw || '';
-            row.querySelector('.nw-input').value = option.dataset.nw || '';
+            // 1. Fill the editable inputs with the product data from the option dataset
+            // If the data is empty, default to 0
+            row.querySelector('.pcs-input').value = option.dataset.pcs || 0;
+            row.querySelector('.cbm-input').value = option.dataset.cbm || 0;
+            row.querySelector('.gw-input').value = option.dataset.gw || 0;
+            row.querySelector('.nw-input').value = option.dataset.nw || 0;
 
+            // 2. Recalculate the row immediately
             calculateRowTotals(row);
             updateProductDropdowns();
         }
 
         function calculateRowTotals(row) {
-            // Read values from the INPUTS, not the innerText of the cells
+            // Read values from the INPUTS
             let ctn = parseFloat(row.querySelector('.ctn-input').value) || 0;
+            let pcs = parseFloat(row.querySelector('.pcs-input').value) || 0;
             let cbm = parseFloat(row.querySelector('.cbm-input').value) || 0;
             let gw = parseFloat(row.querySelector('.gw-input').value) || 0;
             let nw = parseFloat(row.querySelector('.nw-input').value) || 0;
 
-            // Write the calculated totals back to the TD elements
+            // Calculate Totals
+            // Qty is usually CTN * PCS/CTS. 
+            // If you want to display Qty in the UI, you can add a cell for it. 
+            // Here we just calculate the total CBM, GW, NW.
             row.querySelector('.total-cbm-cell').innerText = (ctn * cbm).toFixed(3);
             row.querySelector('.total-gw-cell').innerText = (ctn * gw).toFixed(2);
             row.querySelector('.total-nw-cell').innerText = (ctn * nw).toFixed(2);

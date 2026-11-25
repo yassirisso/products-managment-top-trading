@@ -13,7 +13,9 @@ class PackingListController extends Controller
      */
     public function index()
     {
-        $packingLists = PackingList::with('client')->latest()->get();
+        // Change ->get() to ->paginate()
+        $packingLists = PackingList::with('client')->latest()->paginate(10);
+
         return view('packing-lists.index', compact('packingLists'));
     }
 

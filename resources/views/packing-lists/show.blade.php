@@ -123,10 +123,20 @@
                     <tbody>
                         @foreach ($packingList->products as $product)
                             @php
-                                $rowQty = ($product->pivot->ctn ?? 0) * ($product->pcs_cts ?? 0);
-                                $rowCbm = ($product->pivot->ctn ?? 0) * ($product->unit_cbm ?? 0);
-                                $rowGw = ($product->pivot->ctn ?? 0) * ($product->unit_gw ?? 0);
-                                $rowNw = ($product->pivot->ctn ?? 0) * ($product->unit_nw ?? 0);
+                                // Get CTN from pivot (what you typed in the form)
+                                $ctn = $product->pivot->ctn ?? 0;
+
+                                // Get unit values from pivot first, fallback to product table if pivot is empty
+                                $pcs = $product->pivot->pcs_cts ?? ($product->pcs_cts ?? 0);
+                                $unitCbm = $product->pivot->unit_cbm ?? ($product->unit_cbm ?? 0);
+                                $unitGw = $product->pivot->unit_gw ?? ($product->unit_gw ?? 0);
+                                $unitNw = $product->pivot->unit_nw ?? ($product->unit_nw ?? 0);
+
+                                // Calculate row totals
+                                $rowQty = $ctn * $pcs;
+                                $rowCbm = $ctn * $unitCbm;
+                                $rowGw = $ctn * $unitGw;
+                                $rowNw = $ctn * $unitNw;
                             @endphp
                             <tr>
                                 <td class="border p-2">
@@ -137,8 +147,8 @@
                                 </td>
                                 <td class="border p-2 text-center">{{ $product->reference }}</td>
                                 <td class="border p-2">{{ $product->description }}</td>
-                                <td class="border p-2 text-center">{{ $product->pivot->ctn }}</td>
-                                <td class="border p-2 text-center">{{ $product->pcs_cts }}</td>
+                                <td class="border p-2 text-center">{{ $ctn }}</td>
+                                <td class="border p-2 text-center">{{ $pcs }}</td>
                                 <td class="border p-2 text-center">{{ $rowQty }}</td>
                                 <td class="border p-2 text-center">{{ number_format($rowCbm, 3) }}</td>
                                 <td class="border p-2 text-center">{{ number_format($rowGw, 2) }}</td>
